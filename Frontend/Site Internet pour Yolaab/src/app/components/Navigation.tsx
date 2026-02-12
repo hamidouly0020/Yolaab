@@ -23,9 +23,9 @@ export function Navigation({ currentPage, onNavigate }: NavigationProps) {
               className="flex items-center space-x-2 cursor-pointer"
               onClick={() => onNavigate('home')}
             >
-              <div className="bg-white text-blue-600 rounded-full p-2">
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 2.18l8 4v8.82c0 4.2-2.95 8.07-7 9.55V4.18H12z"/>
+              <div className="bg-white text-blue-600 rounded-full p-2 flex items-center justify-center w-12 h-12">
+                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 100 100">
+                  <text x="50" y="75" fontSize="80" fontWeight="bold" textAnchor="middle" fill="currentColor">Y</text>
                 </svg>
               </div>
               <span className="text-3xl font-bold">YOLAAB</span>
