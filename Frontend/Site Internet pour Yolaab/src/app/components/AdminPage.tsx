@@ -364,8 +364,7 @@ export function AdminPage({ reservations, applications, orders }: AdminPageProps
                             <span className="ml-2 text-sm">({res.nombreFauteuils} fauteuils)</span>
                           )}
                         </td>
-                        <td className="p-4">{res.date}</td>
-                        <td className="p-4">{res.heure}</td>
+                        <td className="p-4">{res.duree}</td>
                       </tr>
                     ))}
                   </tbody>

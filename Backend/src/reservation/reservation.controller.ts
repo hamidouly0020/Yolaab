@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 
 @Controller('reservations')
@@ -11,8 +11,13 @@ export class ReservationController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  async findAll() {
+    try {
+      return await this.service.findAll();
+    } catch (err) {
+      console.error('Error fetching reservations', err);
+      throw new InternalServerErrorException('Erreur serveur lors du chargement des réservations');
+    }
   }
 
   @Get(':id')

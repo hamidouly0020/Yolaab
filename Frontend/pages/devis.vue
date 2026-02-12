@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <div class="max-w-4xl mx-auto px-4 py-12">
       <h1 class="text-4xl md:text-5xl font-bold text-center text-blue-600 mb-12">
-        Réserver Un Service
+        Demander Un Devis
       </h1>
 
       <form @submit.prevent="handleSubmit" class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 space-y-8">
@@ -82,35 +82,24 @@
           </div>
         </div>
 
-        <!-- Durée de l'intervention -->
+        <!-- Description du Projet -->
         <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Durée souhaitée</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button
-              v-for="d in durees"
-              :key="d.id"
-              type="button"
-              @click="formData.duree = d.id"
-              :class="[
-                'p-4 rounded-2xl border-2 transition-all text-center cursor-pointer',
-                formData.duree === d.id
-                  ? 'border-blue-600 bg-blue-50 shadow-lg'
-                  : 'border-gray-300 hover:border-blue-400'
-              ]"
-            >
-              <div class="text-lg mb-1">{{ d.label }}</div>
-            </button>
-          </div>
+          <h2 class="text-2xl font-bold text-blue-600">Description du Projet</h2>
+          <textarea
+            v-model="formData.description"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none h-32 resize-none"
+            placeholder="Décrivez votre projet, surface, détails importants, etc."
+          ></textarea>
         </div>
 
         <!-- Submit Button -->
         <div class="flex gap-4">
           <button
             type="submit"
-            :disabled="isLoading"
-            class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-lg disabled:opacity-50"
+            class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-2xl hover:from-green-600 hover:to-green-700 transition-all font-bold text-lg flex items-center justify-center gap-2"
           >
-            {{ isLoading ? '⏳ En cours...' : '✅ RÉSERVER' }}
+            <span class="text-2xl">💬</span>
+            <span>ENVOYER PAR WHATSAPP</span>
           </button>
           <NuxtLink
             to="/home"
@@ -120,9 +109,6 @@
           </NuxtLink>
         </div>
 
-        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-4 rounded-xl">
-          {{ successMessage }}
-        </div>
         <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-4 rounded-xl">
           {{ errorMessage }}
         </div>
@@ -140,11 +126,9 @@ const formData = ref({
   telephone: '',
   email: '',
   typeService: 'nettoyage-automobile',
-  duree: '1 semaine',
+  description: '',
 })
 
-const isLoading = ref(false)
-const successMessage = ref('')
 const errorMessage = ref('')
 
 const services = [
@@ -155,56 +139,41 @@ const services = [
   { id: 'entretien-bureaux', label: 'Entretien Bureaux', emoji: '🏢' },
 ]
 
-const durees = [
-  { id: '1_semaine', label: '1 semaine' },
-  { id: '10_jours', label: '10 jours' },
-  { id: '15_jours', label: '15 jours' },
-  { id: '1_mois', label: '1 mois' },
-]
+const getServiceLabel = (serviceId: string): string => {
+  const service = services.find(s => s.id === serviceId)
+  return service ? service.label : serviceId
+}
 
-const handleSubmit = async () => {
-  isLoading.value = true
+const handleSubmit = () => {
   errorMessage.value = ''
-  successMessage.value = ''
 
-  try {
-    const response = await fetch('http://localhost:3000/reservations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        nom: formData.value.nom,
-        prenom: formData.value.prenom,
-        telephone: formData.value.telephone,
-        email: formData.value.email || null,
-        typeService: formData.value.typeService,
-        duree: formData.value.duree,
-      }),
-    })
-
-    if (!response.ok) {
-      throw new Error('Erreur lors de la réservation')
-    }
-
-    successMessage.value = '✅ Réservation confirmée ! Merci de votre confiance.'
-    formData.value = {
-      nom: '',
-      prenom: '',
-      telephone: '',
-      email: '',
-      typeService: 'nettoyage-automobile',
-      duree: '1_semaine',
-    }
-
-    setTimeout(() => {
-      navigateTo('/home')
-    }, 2000)
-  } catch (error) {
-    errorMessage.value = '❌ Erreur lors de la réservation. Veuillez réessayer.'
-    console.error(error)
-  } finally {
-    isLoading.value = false
+  // Validation
+  if (!formData.value.nom || !formData.value.prenom || !formData.value.telephone) {
+    errorMessage.value = '❌ Veuillez remplir tous les champs obligatoires'
+    return
   }
+
+  // Construire le message WhatsApp
+  const message = `
+*DEMANDE DE DEVIS*
+
+👤 *Client:* ${formData.value.prenom} ${formData.value.nom}
+📞 *Téléphone:* ${formData.value.telephone}
+📧 *Email:* ${formData.value.email || 'Non fourni'}
+🔧 *Service:* ${getServiceLabel(formData.value.typeService)}
+📝 *Détails:* ${formData.value.description || 'Aucun détail fourni'}
+  `.trim()
+
+  // Encoder le message pour l'URL
+  const encodedMessage = encodeURIComponent(message)
+  
+  // Numéro WhatsApp de Yolaab (sans les + pour le lien)
+  const whatsappNumber = '221767957899'
+  
+  // Générer le lien WhatsApp
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
+  
+  // Rediriger vers WhatsApp
+  window.open(whatsappLink, '_blank')
 }
 </script>

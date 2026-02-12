@@ -5,6 +5,7 @@
       <div class="flex items-center justify-between h-20">
         <NuxtLink
           to="/home"
+          @click="handleLogoClick"
           class="flex items-center space-x-2 hover:opacity-90 transition"
         >
           <div class="bg-white text-blue-600 rounded-full p-2">
@@ -28,18 +29,7 @@
             <span class="text-2xl">{{ item.emoji }}</span>
             <span class="mt-1 text-sm">{{ item.label }}</span>
           </NuxtLink>
-          <NuxtLink
-            to="/admin"
-            :class="[
-              'flex flex-col items-center px-6 py-3 rounded-lg transition-all',
-              isActive('admin')
-                ? 'bg-white text-blue-600 shadow-lg'
-                : 'hover:bg-blue-500'
-            ]"
-          >
-            <span class="text-2xl">🔐</span>
-            <span class="mt-1 text-sm">Admin</span>
-          </NuxtLink>
+          <!-- Admin link hidden intentionally for discreet access -->
         </div>
       </div>
     </div>
@@ -61,13 +51,7 @@
             <span class="text-2xl">{{ item.emoji }}</span>
             <span class="text-xs mt-1">{{ item.label }}</span>
           </NuxtLink>
-          <NuxtLink
-            to="/admin"
-            class="flex flex-col items-center justify-center flex-1 h-full hover:bg-blue-500 transition"
-          >
-            <span class="text-2xl">🔐</span>
-            <span class="text-xs mt-1">Admin</span>
-          </NuxtLink>
+          <!-- Admin mobile link hidden intentionally for discreet access -->
         </div>
       </nav>
     </div>
@@ -75,16 +59,43 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const navItems = [
   { id: 'home', emoji: '🏠', label: 'Accueil' },
   { id: 'reservation', emoji: '📅', label: 'Réserver' },
-  { id: 'recruitment', emoji: '👥', label: 'Travailler' },
+  { id: 'devis', emoji: '📋', label: 'Devis' },
+  { id: 'realisation', emoji: '🎬', label: 'Réalisations' },
   { id: 'shop', emoji: '🛒', label: 'Boutique' },
 ]
 
 const route = useRoute()
+const router = useRouter()
+
+// Hidden admin access: click logo 5 times within 2 seconds to go to /admin
+const clickCount = ref(0)
+let clickTimer: ReturnType<typeof setTimeout> | null = null
+
+const handleLogoClick = () => {
+  clickCount.value++
+
+  if (clickCount.value === 1) {
+    // start/reset timer
+    clickTimer = setTimeout(() => {
+      clickCount.value = 0
+      clickTimer = null
+    }, 2000)
+  }
+
+  if (clickCount.value >= 5) {
+    if (clickTimer) {
+      clearTimeout(clickTimer)
+      clickTimer = null
+    }
+    clickCount.value = 0
+    router.push('/admin')
+  }
+}
 
 const isActive = (path: string) => {
   return route.path === `/${path}` || (path === 'home' && route.path === '/')

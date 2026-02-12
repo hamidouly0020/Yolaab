@@ -6,6 +6,7 @@ import { ApplicationModule } from './application/application.module';
 import { OrderModule } from './order/order.module';
 import { WorkerModule } from './worker/worker.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { RealisationModule } from './realisation/realisation.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     OrderModule,
     WorkerModule,
     InvoiceModule,
+    RealisationModule,
   ],
   controllers: [],
   providers: [],

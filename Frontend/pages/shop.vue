@@ -35,7 +35,8 @@
               <img
                 :src="`http://localhost:3000${product.image}`"
                 :alt="product.nom"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover object-center"
+                loading="lazy"
                 @error="handleImageError"
               />
             </template>
@@ -131,9 +132,11 @@ const getEmoji = (categorie: string): string => {
 }
 
 const handleImageError = (event: Event) => {
-  // Si image échoue, afficher emoji à la place
   const img = event.target as HTMLImageElement
-  img.style.display = 'none'
+  // Remplacer par une image de secours SVG (placeholder) et garder le conteneur
+  const placeholder = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="100%" height="100%" fill="%23E6EEF9"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-size="24">Image indisponible</text></svg>'
+  img.src = placeholder
+  img.classList.add('bg-gray-100')
 }
 
 const addToCart = (product: Product) => {

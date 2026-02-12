@@ -17,7 +17,17 @@ export class ProductController {
   constructor(private readonly service: ProductService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image', { storage }))
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage,
+      limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB for product images
+      fileFilter: (req, file, cb) => {
+        const isImage = file.mimetype.startsWith('image/');
+        if (isImage) cb(null, true);
+        else cb(new Error('Type de fichier non autorisé'), false);
+      },
+    }),
+  )
   create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
     if (file) {
       data.image = `/uploads/${file.filename}`;

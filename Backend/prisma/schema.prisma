@@ -14,8 +14,7 @@ model Reservation {
   telephone    String
   email        String?
   typeService  String
-  date         String
-  heure        String
+  duree        String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -78,4 +77,14 @@ model Invoice {
   statut    String   @default("en attente")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Realisation {
+  id          String   @id @default(cuid())
+  titre       String
+  description String?
+  type        String
+  url         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

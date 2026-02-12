@@ -8,7 +8,6 @@
         <h1 class="text-3xl font-bold text-blue-600 mb-2">Espace Admin</h1>
         <p class="text-gray-600">Connexion requise</p>
       </div>
-
       <form @submit.prevent="handleLogin">
         <div class="mb-6">
           <label class="block mb-2 font-bold">🔐 Mot de passe</label>
@@ -74,52 +73,6 @@
             </span>
           </button>
 
-          <!-- Applications merged into Travailleurs tab -->
-
-          <button
-            @click="activeTab = 'workers'"
-            :class="[
-              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
-              activeTab === 'workers' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
-            ]"
-          >
-            <span>👥</span>
-            <span class="hidden md:inline">Travailleurs</span>
-            <span class="md:hidden">Trav.</span>
-            <span
-              :class="[
-                'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'workers'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
-              ]"
-            >
-              {{ workers.length }}
-            </span>
-          </button>
-
-          <button
-            @click="activeTab = 'invoices'"
-            :class="[
-              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
-              activeTab === 'invoices' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
-            ]"
-          >
-            <span>💰</span>
-            <span class="hidden md:inline">Factures</span>
-            <span class="md:hidden">Fact.</span>
-            <span
-              :class="[
-                'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'invoices'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
-              ]"
-            >
-              {{ invoices.length }}
-            </span>
-          </button>
-
           <button
             @click="activeTab = 'products'"
             :class="[
@@ -163,6 +116,28 @@
               {{ orders.length }}
             </span>
           </button>
+
+          <button
+            @click="activeTab = 'realisations'"
+            :class="[
+              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
+              activeTab === 'realisations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
+            ]"
+          >
+            <span>🎬</span>
+            <span class="hidden md:inline">Réalisations</span>
+            <span class="md:hidden">Réal.</span>
+            <span
+              :class="[
+                'px-2 py-1 rounded-full text-sm font-bold',
+                activeTab === 'realisations'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-blue-600'
+              ]"
+            >
+              {{ realisations.length }}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -180,8 +155,7 @@
                 <th class="text-left p-4">Client</th>
                 <th class="text-left p-4">Téléphone</th>
                 <th class="text-left p-4">Service</th>
-                <th class="text-left p-4">Date</th>
-                <th class="text-left p-4">Heure</th>
+                <th class="text-left p-4">Durée</th>
               </tr>
             </thead>
             <tbody>
@@ -196,8 +170,7 @@
                     {{ res.typeService }}
                   </span>
                 </td>
-                <td class="p-4">{{ res.date }}</td>
-                <td class="p-4">{{ res.heure }}</td>
+                <td class="p-4">{{ res.date }} - {{ res.heure }}</td>
               </tr>
             </tbody>
           </table>
@@ -558,6 +531,8 @@
           </table>
         </div>
       </div>
+
+      <!-- Orders Tab -->
       <div v-if="activeTab === 'orders'" class="bg-white rounded-2xl shadow-lg p-6">
         <h2 class="text-2xl font-bold text-blue-600 mb-6">🛒 Commandes ({{ orders.length }})</h2>
         <div v-if="orders.length === 0" class="text-center py-12">
@@ -583,6 +558,155 @@
                   <span class="font-bold">x{{ item.quantity }}</span>
                   <span class="ml-4">{{ (item.price * item.quantity).toLocaleString() }} FCFA</span>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realisations Tab -->
+      <div v-if="activeTab === 'realisations'" class="bg-white rounded-2xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-blue-600">🎬 Réalisations ({{ realisations.length }})</h2>
+          <button
+            @click="showAddRealisation = true"
+            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
+          >
+            <span>➕</span> Ajouter
+          </button>
+        </div>
+
+        <!-- Add Realisation Form -->
+        <form v-if="showAddRealisation" @submit.prevent="addRealisation" class="bg-blue-50 p-6 rounded-xl mb-6">
+          <h3 class="font-bold text-xl mb-4">➕ Nouvelle Réalisation</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <input
+              v-model="newRealisation.titre"
+              type="text"
+              placeholder="Titre de la réalisation"
+              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+              required
+            />
+            <select
+              v-model="newRealisation.type"
+              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+            >
+              <option value="image">📷 Image</option>
+              <option value="video">🎥 Vidéo</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description (optionnel)</label>
+            <textarea
+              v-model="newRealisation.description"
+              placeholder="Description du projet..."
+              rows="3"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <!-- Image Upload or Video URL -->
+          <div v-if="newRealisation.type === 'image'" class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
+            <input
+              @change="handleRealisationImageUpload"
+              type="file"
+              accept="image/*"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+              required
+            />
+          </div>
+
+          <div v-if="newRealisation.type === 'video'" class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Source Vidéo *</label>
+            <div class="flex gap-4 mb-2">
+              <label class="flex items-center gap-2">
+                <input type="radio" value="url" v-model="newRealisation.videoSource" /> URL
+              </label>
+              <label class="flex items-center gap-2">
+                <input type="radio" value="file" v-model="newRealisation.videoSource" /> Fichier (ordinateur/téléphone)
+              </label>
+            </div>
+
+            <div v-if="newRealisation.videoSource === 'url'">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">URL Vidéo (YouTube ou Vimeo) *</label>
+              <input
+                v-model="newRealisation.url"
+                type="text"
+                placeholder="https://www.youtube.com/embed/..."
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+                required
+              />
+            </div>
+
+            <div v-else>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Fichier Vidéo *</label>
+              <input
+                @change="handleRealisationVideoUpload"
+                type="file"
+                accept="video/*"
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+                required
+              />
+              <p class="text-sm text-gray-500 mt-2">Formats courants: .mp4, .mov — taille maximale conseillée: 100MB</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all"
+            >
+              Ajouter
+            </button>
+            <button
+              type="button"
+              @click="showAddRealisation = false"
+              class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all"
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+
+        <!-- Realisations List -->
+        <div v-if="realisations.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">🎬</div>
+          <p class="text-xl text-gray-600">Aucune réalisation enregistrée</p>
+        </div>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="realisation in realisations" :key="realisation.id" class="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
+            <!-- Thumbnail -->
+            <div class="h-40 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+              <img
+                v-if="realisation.type === 'image'"
+                :src="realisation.url"
+                :alt="realisation.titre"
+                class="w-full h-full object-cover object-center"
+                loading="lazy"
+              />
+              <div v-else class="w-full h-full flex items-center justify-center text-4xl">
+                🎥
+              </div>
+            </div>
+
+            <!-- Info -->
+            <div class="p-4">
+              <h4 class="font-bold text-lg text-gray-800 mb-1">{{ realisation.titre }}</h4>
+              <p v-if="realisation.description" class="text-sm text-gray-600 line-clamp-2 mb-3">
+                {{ realisation.description }}
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">
+                  {{ realisation.type === 'image' ? '📷 Image' : '🎥 Vidéo' }}
+                </span>
+                <button
+                  @click="deleteRealisation(realisation.id)"
+                  class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all"
+                >
+                  🗑️
+                </button>
               </div>
             </div>
           </div>
@@ -693,7 +817,7 @@ interface Product {
 
 const isAuthenticated = ref(false)
 const password = ref('')
-const activeTab = ref<'reservations' | 'applications' | 'workers' | 'invoices' | 'orders' | 'products'>('reservations')
+const activeTab = ref<'reservations' | 'applications' | 'workers' | 'invoices' | 'orders' | 'products' | 'realisations'>('reservations')
 const workers = ref<Worker[]>([])
 const invoices = ref<Invoice[]>([])
 const products = ref<Product[]>([])
@@ -978,7 +1102,125 @@ const closeOrderModal = () => {
   showOrderModal.value = false
 }
 
+// Realisations Management
+const realisations = ref<any[]>([])
+const showAddRealisation = ref(false)
+const realisationImageFile = ref<File | null>(null)
+
+const newRealisation = ref({
+  titre: '',
+  description: '',
+  type: 'image' as 'image' | 'video',
+  url: '',
+  videoSource: 'url' as 'url' | 'file',
+})
+
+const handleRealisationImageUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    realisationImageFile.value = input.files[0]
+  }
+}
+
+const realisationVideoFile = ref<File | null>(null)
+
+const handleRealisationVideoUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    realisationVideoFile.value = input.files[0]
+  }
+}
+
+const addRealisation = async () => {
+  try {
+    if (newRealisation.value.type === 'image' && !realisationImageFile.value) {
+      alert('❌ Veuillez sélectionner une image')
+      return
+    }
+
+    if (newRealisation.value.type === 'video') {
+      if (newRealisation.value.videoSource === 'url' && !newRealisation.value.url) {
+        alert('❌ Veuillez entrer une URL vidéo')
+        return
+      }
+      if (newRealisation.value.videoSource === 'file' && !realisationVideoFile.value) {
+        alert('❌ Veuillez sélectionner un fichier vidéo')
+        return
+      }
+    }
+
+    const formData = new FormData()
+    formData.append('titre', newRealisation.value.titre)
+    formData.append('description', newRealisation.value.description)
+    formData.append('type', newRealisation.value.type)
+
+    if (newRealisation.value.type === 'image' && realisationImageFile.value) {
+      formData.append('file', realisationImageFile.value)
+    } else if (newRealisation.value.type === 'video') {
+      if (newRealisation.value.videoSource === 'file' && realisationVideoFile.value) {
+        formData.append('file', realisationVideoFile.value)
+      } else {
+        formData.append('url', newRealisation.value.url)
+      }
+    }
+
+    const response = await fetch('http://localhost:3000/realisations', {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!response.ok) throw new Error('Erreur lors de l\'ajout')
+
+    const newItem = await response.json()
+    realisations.value.push(newItem)
+
+    newRealisation.value = {
+      titre: '',
+      description: '',
+      type: 'image',
+      url: '',
+      videoSource: 'url',
+    }
+    realisationImageFile.value = null
+    realisationVideoFile.value = null
+    showAddRealisation.value = false
+    alert('✅ Réalisation ajoutée')
+  } catch (error) {
+    alert('❌ Erreur lors de l\'ajout de la réalisation')
+    console.error(error)
+  }
+}
+
+const deleteRealisation = async (id: string) => {
+  if (confirm('Êtes-vous sûr de vouloir supprimer cette réalisation ?')) {
+    try {
+      const response = await fetch(`http://localhost:3000/realisations/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        realisations.value = realisations.value.filter(r => r.id !== id)
+        alert('✅ Réalisation supprimée')
+      }
+    } catch (error) {
+      alert('❌ Erreur lors de la suppression')
+      console.error(error)
+    }
+  }
+}
+
+const loadRealisations = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/realisations')
+    if (response.ok) {
+      realisations.value = await response.json()
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des réalisations', error)
+  }
+}
+
 onMounted(() => {
-  // Les données se chargeront au login
+  loadRealisations()
 })
 </script>
