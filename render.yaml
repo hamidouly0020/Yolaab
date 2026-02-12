@@ -1,0 +1,28 @@
+# Render.com Web Service Configuration for Yolaab Backend
+# Commit this file to your repository at the root level (or in .render folder)
+
+services:
+  - type: web
+    name: yolaab-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: yolaab-mysql
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: "https://yolaab-frontend.onrender.com"
+
+databases:
+  - name: yolaab-mysql
+    databaseName: yolaab
+    user: yolaab_user
