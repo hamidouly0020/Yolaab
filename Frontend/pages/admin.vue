@@ -875,8 +875,6 @@ const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
-
 const handleLogin = () => {
   if (password.value === 'yolaab2026') {
     isAuthenticated.value = true
