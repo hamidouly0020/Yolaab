@@ -156,9 +156,9 @@ const services = [
 ]
 
 const durees = [
+  { id: '2_jours', label: '2 jours' },
   { id: '1_semaine', label: '1 semaine' },
-  { id: '10_jours', label: '10 jours' },
-  { id: '15_jours', label: '15 jours' },
+  { id: '2_semaines', label: '2 semaines' },
   { id: '1_mois', label: '1 mois' },
 ]
 
