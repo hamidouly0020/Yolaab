@@ -867,10 +867,15 @@ const newProduct = ref({
 
 const imageFile = ref<File | null>(null)
 
+// API URL configuration
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+
 // Mock data - À remplacer par des appels API
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
+
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 
 const handleLogin = () => {
   if (password.value === 'yolaab2026') {
@@ -886,31 +891,31 @@ const loadData = async () => {
   isLoadingData.value = true
   try {
     // Charger réservations
-    const resRes = await fetch('http://localhost:3000/reservations')
+    const resRes = await fetch(`${apiUrl}/reservations`)
     if (resRes.ok) {
       reservations.value = await resRes.json()
     }
 
     // Charger candidatures
-    const appRes = await fetch('http://localhost:3000/applications')
+    const appRes = await fetch(`${apiUrl}/applications`)
     if (appRes.ok) {
       applications.value = await appRes.json()
     }
 
     // Charger workers
-    const workerRes = await fetch('http://localhost:3000/workers')
+    const workerRes = await fetch(`${apiUrl}/workers`)
     if (workerRes.ok) {
       workers.value = await workerRes.json()
     }
 
     // Charger produits
-    const prodRes = await fetch('http://localhost:3000/products')
+    const prodRes = await fetch(`${apiUrl}/products`)
     if (prodRes.ok) {
       products.value = await prodRes.json()
     }
 
     // Charger commandes
-    const ordRes = await fetch('http://localhost:3000/orders')
+    const ordRes = await fetch(`${apiUrl}/orders`)
     if (ordRes.ok) {
       orders.value = await ordRes.json()
     }
@@ -939,7 +944,7 @@ const addWorker = async () => {
 
   // Try to persist to backend if available
   try {
-    const resp = await fetch('http://localhost:3000/workers', {
+    const resp = await fetch(`${apiUrl}/workers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1044,7 +1049,7 @@ const addProduct = async () => {
     formData.append('categorie', newProduct.value.categorie)
     formData.append('image', imageFile.value)
 
-    const response = await fetch('http://localhost:3000/products', {
+    const response = await fetch(`${apiUrl}/products`, {
       method: 'POST',
       body: formData,
     })
@@ -1074,7 +1079,7 @@ const editProduct = (product: Product) => {
 const deleteProduct = async (id: string) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
     try {
-      const response = await fetch(`http://localhost:3000/products/${id}`, {
+      const response = await fetch(`${apiUrl}/products/${id}`, {
         method: 'DELETE',
       })
 
@@ -1164,7 +1169,7 @@ const addRealisation = async () => {
       }
     }
 
-    const response = await fetch('http://localhost:3000/realisations', {
+    const response = await fetch(`${apiUrl}/realisations`, {
       method: 'POST',
       body: formData,
     })
@@ -1194,7 +1199,7 @@ const addRealisation = async () => {
 const deleteRealisation = async (id: string) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer cette réalisation ?')) {
     try {
-      const response = await fetch(`http://localhost:3000/realisations/${id}`, {
+      const response = await fetch(`${apiUrl}/realisations/${id}`, {
         method: 'DELETE',
       })
 
@@ -1211,7 +1216,7 @@ const deleteRealisation = async (id: string) => {
 
 const loadRealisations = async () => {
   try {
-    const response = await fetch('http://localhost:3000/realisations')
+    const response = await fetch(`${apiUrl}/realisations`)
     if (response.ok) {
       realisations.value = await response.json()
     }

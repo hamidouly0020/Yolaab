@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-8">
     <div class="max-w-4xl mx-auto px-4 py-12">
       <h1 class="text-4xl md:text-5xl font-bold text-center text-blue-600 mb-12">
         🛒 Mon Panier
@@ -188,6 +188,8 @@ const orderData = ref<OrderData>({
   localisation: '',
 })
 
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+
 const isLoading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
@@ -234,6 +236,9 @@ const handleCheckout = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
+  
+  const config = useRuntimeConfig()
+  const apiUrl = config.public.apiUrl || 'http://localhost:3000'
 
   try {
     const items = cartItems.value.map(item => ({
@@ -243,7 +248,7 @@ const handleCheckout = async () => {
       emoji: item.emoji,
     }))
 
-    const response = await fetch('http://localhost:3000/orders', {
+    const response = await fetch(`${apiUrl}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

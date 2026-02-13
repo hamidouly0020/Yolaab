@@ -166,9 +166,12 @@ const handleSubmit = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
+  
+  const config = useRuntimeConfig()
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
   try {
-    const response = await fetch('http://localhost:3000/reservations', {
+    const response = await fetch(`${apiBaseUrl}/reservations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

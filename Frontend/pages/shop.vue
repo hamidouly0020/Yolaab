@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-8">
     <div class="max-w-6xl mx-auto px-4 py-12">
       <div class="flex items-center justify-between mb-12">
         <h1 class="text-4xl md:text-5xl font-bold text-blue-600">
@@ -33,9 +33,9 @@
           <div class="relative h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
             <template v-if="product.image">
               <img
-                :src="`http://localhost:3000${product.image}`"
+                :src="`${apiBaseUrl}${product.image}`"
                 :alt="product.nom"
-                class="w-full h-full object-cover object-center"
+                class="w-full h-full object-contain object-center"
                 loading="lazy"
                 @error="handleImageError"
               />
@@ -108,8 +108,11 @@ const cartCount = computed(() => {
 })
 
 onMounted(async () => {
+  const config = useRuntimeConfig()
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+  
   try {
-    const response = await fetch('http://localhost:3000/products')
+    const response = await fetch(`${apiBaseUrl}/products`)
     if (!response.ok) throw new Error('Erreur de chargement')
     
     const data = await response.json()

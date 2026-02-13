@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-8">
     <div class="max-w-7xl mx-auto px-4 py-12">
       <!-- Header -->
       <div class="text-center mb-12">
@@ -184,8 +184,11 @@ const filteredRealisations = computed(() => {
 })
 
 onMounted(async () => {
+  const config = useRuntimeConfig()
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+  
   try {
-    const response = await fetch('http://localhost:3000/realisations')
+    const response = await fetch(`${apiBaseUrl}/realisations`)
     if (!response.ok) throw new Error('Erreur de chargement')
 
     const data = await response.json()
