@@ -678,13 +678,27 @@
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="realisation in realisations" :key="realisation.id" class="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
             <!-- Thumbnail -->
-            <div class="h-40 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+            <div class="h-60 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
               <img
                 v-if="realisation.type === 'image'"
                 :src="resolveRealisationUrl(realisation.url)"
                 :alt="realisation.titre"
                 class="w-full h-full object-cover object-center"
                 loading="lazy"
+              />
+              <video
+                v-else-if="realisation.type === 'video' && isLocalVideo(realisation.url)"
+                :src="resolveRealisationUrl(realisation.url)"
+                class="w-full h-full object-cover object-center"
+                controls
+              />
+              <iframe
+                v-else-if="realisation.type === 'video'"
+                :src="realisation.url"
+                title="Vidéo Yolaab"
+                class="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
               />
               <div v-else class="w-full h-full flex items-center justify-center text-4xl">
                 🎥
@@ -884,6 +898,15 @@ const resolveRealisationUrl = (raw: string | undefined | null): string => {
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
   const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
   return `${base.replace(/\/$/, '')}${path}`
+}
+
+const isLocalVideo = (url: string | undefined): boolean => {
+  if (!url) return false
+  const trimmed = url.trim()
+  // Si c'est une URL externe (YouTube, Vimeo, etc.), retourne false
+  if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return false
+  // Sinon c'est une vidéo locale
+  return true
 }
 
 const handleLogin = () => {
