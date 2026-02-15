@@ -36,7 +36,7 @@ model Application {
   nom         String
   prenom      String
   telephone   String
-  email       String
+  email       String?
   poste       String
   experience  String
   message     String?

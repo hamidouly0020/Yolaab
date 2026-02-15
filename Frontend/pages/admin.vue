@@ -170,7 +170,7 @@
                     {{ res.typeService }}
                   </span>
                 </td>
-                <td class="p-4">{{ res.date }} - {{ res.heure }}</td>
+                <td class="p-4">{{ res.duree }}</td>
               </tr>
             </tbody>
           </table>

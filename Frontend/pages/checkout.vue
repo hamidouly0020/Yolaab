@@ -257,7 +257,7 @@ const handleCheckout = async () => {
         nom: orderData.value.nom,
         prenom: orderData.value.prenom,
         telephone: orderData.value.telephone,
-        email: orderData.value.email,
+        email: orderData.value.email || null,
         localisation: orderData.value.localisation,
         items: items,
         total: total.value,
