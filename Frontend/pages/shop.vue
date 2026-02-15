@@ -142,6 +142,14 @@ const handleImageError = (event: Event) => {
   img.classList.add('bg-gray-100')
 }
 
+const resolveProductImageUrl = (image: string | undefined, apiBaseUrl: string) => {
+  if (!image) return ''
+  const trimmed = image.trim()
+  if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
+  const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
+  return `${apiBaseUrl.replace(/\/$/, '')}${path}`
+}
+
 const addToCart = (product: Product) => {
   const cart: CartItem[] = JSON.parse((typeof window !== 'undefined' && window.localStorage.getItem('cart')) || '[]')
   const existing = cart.find(item => item.id === product.id)

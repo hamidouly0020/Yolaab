@@ -176,6 +176,10 @@ const error = ref('')
 const filterType = ref<'all' | 'image' | 'video'>('all')
 const selectedItem = ref<Realisation | null>(null)
 
+// runtime config and API base used to normalize URLs
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+
 const filteredRealisations = computed(() => {
   if (filterType.value === 'all') {
     return realisations.value
@@ -183,10 +187,16 @@ const filteredRealisations = computed(() => {
   return realisations.value.filter(r => r.type === filterType.value)
 })
 
+const resolveUrl = (raw: string | undefined | null) => {
+  if (!raw) return ''
+  const trimmed = raw.trim()
+  if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
+  // if the backend stored a full uploads path or just a filename, handle both
+  const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
+  return `${apiBaseUrl.replace(/\/$/, '')}${path}`
+}
+
 onMounted(async () => {
-  const config = useRuntimeConfig()
-  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
-  
   try {
     const response = await fetch(`${apiBaseUrl}/realisations`)
     if (!response.ok) throw new Error('Erreur de chargement')
