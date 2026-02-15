@@ -75,7 +75,7 @@
         >
           <div class="relative h-64 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
             <img
-              :src="item.url"
+              :src="resolveUrl(item.url)"
               :alt="item.titre"
               class="w-full h-full object-cover"
             />
@@ -99,7 +99,7 @@
         >
           <div class="relative h-64 bg-black flex items-center justify-center overflow-hidden">
             <iframe
-              :src="item.url"
+              :src="resolveUrl(item.url)"
               title="Vidéo Yolaab"
               class="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -132,7 +132,7 @@
             ✕
           </button>
           <img
-            :src="selectedItem.url"
+            :src="resolveUrl(selectedItem.url)"
             :alt="selectedItem.titre"
             class="w-full h-auto rounded-2xl"
           />

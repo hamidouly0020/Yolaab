@@ -95,6 +95,7 @@ interface CartItem {
 const products = ref<Product[]>([])
 const loading = ref(true)
 const error = ref('')
+const apiBaseUrl = ref('')
 
 const cartCount = computed(() => {
   if (typeof window === 'undefined' || !window.localStorage) return 0
@@ -109,10 +110,10 @@ const cartCount = computed(() => {
 
 onMounted(async () => {
   const config = useRuntimeConfig()
-  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
   
   try {
-    const response = await fetch(`${apiBaseUrl}/products`)
+    const response = await fetch(`${apiBaseUrl.value}/products`)
     if (!response.ok) throw new Error('Erreur de chargement')
     
     const data = await response.json()
