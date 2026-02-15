@@ -8,7 +8,7 @@
       href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande."
       target="_blank"
       rel="noopener noreferrer"
-      class="fixed right-6 bottom-6 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition-transform transform hover:scale-105"
+      class="fixed right-6 md:bottom-6 bottom-24 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition-transform transform hover:scale-105"
       aria-label="Contactez Yoolab sur WhatsApp"
       title="Contactez Yoolab sur WhatsApp"
     >

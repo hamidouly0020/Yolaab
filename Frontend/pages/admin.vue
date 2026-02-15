@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-40 md:pb-12">
+  <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <!-- Header -->
     <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 md:py-12">
       <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -50,20 +50,20 @@
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Tabs -->
       <div class="bg-white rounded-2xl shadow-lg overflow-x-auto mb-8">
-        <div class="flex min-w-max md:min-w-auto">
+        <div class="flex">
           <button
             @click="activeTab = 'reservations'"
             :class="[
-              'flex-shrink-0 md:flex-1 py-3 md:py-4 px-3 md:px-6 flex items-center justify-center gap-1 md:gap-2 transition-all text-sm md:text-base',
+              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
               activeTab === 'reservations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
             <span>📅</span>
             <span class="hidden md:inline">Réservations</span>
-            <span class="md:hidden text-xs">Rés.</span>
+            <span class="md:hidden">Rés.</span>
             <span
               :class="[
-                'px-2 py-1 rounded-full text-xs font-bold',
+                'px-2 py-1 rounded-full text-sm font-bold',
                 activeTab === 'reservations'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-blue-600'
@@ -76,16 +76,16 @@
           <button
             @click="activeTab = 'products'"
             :class="[
-              'flex-shrink-0 md:flex-1 py-3 md:py-4 px-3 md:px-6 flex items-center justify-center gap-1 md:gap-2 transition-all text-sm md:text-base',
+              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
               activeTab === 'products' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
             <span>🛍️</span>
             <span class="hidden md:inline">Produits</span>
-            <span class="md:hidden text-xs">Prod.</span>
+            <span class="md:hidden">Prod.</span>
             <span
               :class="[
-                'px-2 py-1 rounded-full text-xs font-bold',
+                'px-2 py-1 rounded-full text-sm font-bold',
                 activeTab === 'products'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-blue-600'
@@ -98,16 +98,16 @@
           <button
             @click="activeTab = 'orders'"
             :class="[
-              'flex-shrink-0 md:flex-1 py-3 md:py-4 px-3 md:px-6 flex items-center justify-center gap-1 md:gap-2 transition-all text-sm md:text-base',
+              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
               activeTab === 'orders' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
             <span>🛒</span>
             <span class="hidden md:inline">Commandes</span>
-            <span class="md:hidden text-xs">Cmd.</span>
+            <span class="md:hidden">Cmd.</span>
             <span
               :class="[
-                'px-2 py-1 rounded-full text-xs font-bold',
+                'px-2 py-1 rounded-full text-sm font-bold',
                 activeTab === 'orders'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-blue-600'
@@ -120,16 +120,16 @@
           <button
             @click="activeTab = 'realisations'"
             :class="[
-              'flex-shrink-0 md:flex-1 py-3 md:py-4 px-3 md:px-6 flex items-center justify-center gap-1 md:gap-2 transition-all text-sm md:text-base',
+              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
               activeTab === 'realisations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
             <span>🎬</span>
             <span class="hidden md:inline">Réalisations</span>
-            <span class="md:hidden text-xs">Réal.</span>
+            <span class="md:hidden">Réal.</span>
             <span
               :class="[
-                'px-2 py-1 rounded-full text-xs font-bold',
+                'px-2 py-1 rounded-full text-sm font-bold',
                 activeTab === 'realisations'
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-blue-600'

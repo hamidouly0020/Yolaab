@@ -6,7 +6,8 @@
         <NuxtLink
           to="/home"
           @click="handleLogoClick"
-          class="flex items-center space-x-2 hover:opacity-90 transition"
+          class="flex items-center space-x-2 hover:opacity-90 transition cursor-pointer"
+          title="Click 3 times para acceso de admin"
         >
           <div class="bg-white text-blue-600 rounded-full p-2">
             <span class="text-2xl font-bold">Y</span>
@@ -14,7 +15,7 @@
           <span class="text-3xl font-bold">YOLAAB</span>
         </NuxtLink>
 
-        <div class="flex space-x-2">
+        <div class="flex space-x-2 items-center gap-4">
           <NuxtLink
             v-for="item in navItems"
             :key="item.id"
@@ -29,18 +30,41 @@
             <span class="text-2xl">{{ item.emoji }}</span>
             <span class="mt-1 text-sm">{{ item.label }}</span>
           </NuxtLink>
-          <!-- Admin link hidden intentionally for discreet access -->
+          <!-- Admin button appears after 3 clicks -->
+          <NuxtLink
+            v-if="showAdminButton"
+            to="/admin"
+            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold text-sm transition-all"
+            title="Admin Panel"
+          >
+            🔐 Admin
+          </NuxtLink>
         </div>
       </div>
     </div>
 
     <!-- Mobile Navigation -->
     <div class="md:hidden">
-      <div class="text-center py-4">
-        <NuxtLink to="/home" class="text-2xl font-bold">YOLAAB</NuxtLink>
-        <p class="text-sm mt-1">Keur Massar, Dakar</p>
+      <div class="text-center py-4 flex items-center justify-between px-4">
+        <NuxtLink
+          to="/home"
+          @click="handleLogoClick"
+          class="text-2xl font-bold hover:opacity-80 transition cursor-pointer flex-1 text-center"
+          title="Click 3 times para acceso de admin"
+        >
+          YOLAAB
+        </NuxtLink>
+        <!-- Admin button for mobile -->
+        <NuxtLink
+          v-if="showAdminButton"
+          to="/admin"
+          class="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-bold text-xs transition-all"
+        >
+          🔐
+        </NuxtLink>
       </div>
-      <nav class="fixed bottom-0 left-0 right-0 bg-blue-600 shadow-lg z-50 border-t border-blue-500">
+      <p class="text-center text-sm pb-4">Keur Massar, Dakar</p>
+      <nav class="fixed bottom-0 left-0 right-0 bg-blue-600 shadow-lg z-40 border-t border-blue-500">
         <div class="flex justify-around items-center h-20">
           <NuxtLink
             v-for="item in navItems"
@@ -72,8 +96,9 @@ const navItems = [
 const route = useRoute()
 const router = useRouter()
 
-// Hidden admin access: click logo 5 times within 2 seconds to go to /admin
+// Admin access: click logo 3 times within 2 seconds to show Admin button
 const clickCount = ref(0)
+const showAdminButton = ref(false)
 let clickTimer: ReturnType<typeof setTimeout> | null = null
 
 const handleLogoClick = () => {
@@ -83,17 +108,18 @@ const handleLogoClick = () => {
     // start/reset timer
     clickTimer = setTimeout(() => {
       clickCount.value = 0
+      showAdminButton.value = false
       clickTimer = null
     }, 2000)
   }
 
-  if (clickCount.value >= 5) {
+  if (clickCount.value >= 3) {
     if (clickTimer) {
       clearTimeout(clickTimer)
       clickTimer = null
     }
+    showAdminButton.value = true
     clickCount.value = 0
-    router.push('/admin')
   }
 }
 
