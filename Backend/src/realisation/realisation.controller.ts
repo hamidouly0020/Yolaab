@@ -34,7 +34,7 @@ export class RealisationController {
       console.log('Realisation create called', { body: data, file: file ? { originalname: file.originalname, mimetype: file.mimetype, filename: file.filename } : null });
 
       if (file) {
-        data.url = `http://localhost:3000/uploads/${file.filename}`;
+        data.url = `/uploads/${file.filename}`;
       }
 
       // ensure type is present

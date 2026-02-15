@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { ProductModule } from './product/product.module';
@@ -12,10 +10,6 @@ import { RealisationModule } from './realisation/realisation.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'uploads'),
-      serveRoot: '/uploads',
-    }),
     PrismaModule,
     ReservationModule,
     ProductModule,
