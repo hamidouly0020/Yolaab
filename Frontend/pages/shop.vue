@@ -30,12 +30,12 @@
           :key="product.id"
           class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
         >
-          <div class="relative h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
+          <div class="relative h-96 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
             <template v-if="product.image">
               <img
-                :src="`${apiBaseUrl}${product.image}`"
+                :src="resolveProductImageUrl(product.image, apiBaseUrl)"
                 :alt="product.nom"
-                class="w-full h-full object-contain object-center"
+                class="w-full h-full object-cover object-center"
                 loading="lazy"
                 @error="handleImageError"
               />

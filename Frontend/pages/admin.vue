@@ -681,7 +681,7 @@
             <div class="h-40 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
               <img
                 v-if="realisation.type === 'image'"
-                :src="realisation.url"
+                :src="resolveRealisationUrl(realisation.url)"
                 :alt="realisation.titre"
                 class="w-full h-full object-cover object-center"
                 loading="lazy"
@@ -826,6 +826,8 @@ const showAddInvoice = ref(false)
 const showAddProduct = ref(false)
 const isLoadingData = ref(false)
 
+const apiBaseUrl = ref('')
+
 const newWorkerForm = ref({
   nom: '',
   prenom: '',
@@ -875,6 +877,15 @@ const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
 
+const resolveRealisationUrl = (raw: string | undefined | null): string => {
+  if (!raw) return ''
+  const trimmed = raw.trim()
+  if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
+  const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
+  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+  return `${base.replace(/\/$/, '')}${path}`
+}
+
 const handleLogin = () => {
   if (password.value === 'yolaab2026') {
     isAuthenticated.value = true
@@ -887,33 +898,36 @@ const handleLogin = () => {
 
 const loadData = async () => {
   isLoadingData.value = true
+  const config = useRuntimeConfig()
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
+  
   try {
     // Charger réservations
-    const resRes = await fetch(`${apiUrl}/reservations`)
+    const resRes = await fetch(`${apiBaseUrl.value}/reservations`)
     if (resRes.ok) {
       reservations.value = await resRes.json()
     }
 
     // Charger candidatures
-    const appRes = await fetch(`${apiUrl}/applications`)
+    const appRes = await fetch(`${apiBaseUrl.value}/applications`)
     if (appRes.ok) {
       applications.value = await appRes.json()
     }
 
     // Charger workers
-    const workerRes = await fetch(`${apiUrl}/workers`)
+    const workerRes = await fetch(`${apiBaseUrl.value}/workers`)
     if (workerRes.ok) {
       workers.value = await workerRes.json()
     }
 
     // Charger produits
-    const prodRes = await fetch(`${apiUrl}/products`)
+    const prodRes = await fetch(`${apiBaseUrl.value}/products`)
     if (prodRes.ok) {
       products.value = await prodRes.json()
     }
 
     // Charger commandes
-    const ordRes = await fetch(`${apiUrl}/orders`)
+    const ordRes = await fetch(`${apiBaseUrl.value}/orders`)
     if (ordRes.ok) {
       orders.value = await ordRes.json()
     }
