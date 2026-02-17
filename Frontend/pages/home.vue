@@ -205,79 +205,79 @@
     </div>
 
     <!-- Contact Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-16">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-16">
       <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold mb-12">
+        <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-12">
           Contactez Yolaab
         </h2>
-        <p class="text-lg mb-8">Contactez-nous pour un devis gratuit ou plus d'informations</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-          <div class="flex flex-col items-center">
-            <div class="text-5xl mb-4">📞</div>
-            <p class="text-xl font-semibold">Téléphone</p>
-            <p class="text-blue-100">78 480 03 61</p>
+        <p class="text-base md:text-lg mb-6 md:mb-8 px-2">Contactez-nous pour un devis gratuit ou plus d'informations</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6">
+          <div class="flex flex-col items-center py-4 md:py-0">
+            <div class="text-4xl md:text-5xl mb-3 md:mb-4">📞</div>
+            <p class="text-lg md:text-xl font-semibold">Téléphone</p>
+            <p class="text-sm md:text-base text-blue-100">78 480 03 61</p>
           </div>
 
-          <div class="flex flex-col items-center">
-            <a href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande." target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white shadow transition-transform transform hover:scale-105 mb-4" aria-label="Contacter sur WhatsApp">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.86 11.86 0 0 0 12 .03C5.37 .03 .02 5.39 .02 12.02c0 2.12 .56 4.17 1.62 6.01L0.02 24l6.25-1.63c1.78 1.1 3.98 1.66 6.1 1.66 6.63 0 12.02-5.4 12.02-12.03 0-1.94-.48-3.8-1.69-5.48zM12.02 21.75c-1.49 0-2.93-.41-4.19-1.17l-.3-.18-3.73.97 1-3.63-.2-.34c-.62-1.01-1.02-2.18-1.02-3.41 0-4.97 4.02-9 9-9 2.41 0 4.68.94 6.38 2.64 1.7 1.7 2.64 3.97 2.64 6.38 0 4.97-4.03 9-9 9zM17.07 14.9c-.22-.11-1.3-.64-1.5-.71-.2-.08-.34-.11-.49.12-.15.24-.6.78-.73.95-.13.18-.27.21-.5.08-.24-.13-1.03-.38-1.91-1.21-.67-.64-1.13-1.41-1.27-1.66-.14-.25-.02-.39.1-.51.11-.12.25-.28.36-.42.12-.14.18-.25.25-.4.07-.16.03-.3-.03-.43-.06-.12-.54-1.3-.74-1.79-.2-.47-.4-.41-.54-.41-.14 0-.31-.01-.47-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.7 2.6 4.12 3.64 2.36 1.04 2.36.69 2.8.64.44-.05 1.42-.58 1.62-1.14.2-.57.2-1.06.14-1.16-.06-.12-.22-.16-.46-.27z"/></svg>
+          <div class="flex flex-col items-center py-4 md:py-0">
+            <a href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande." target="_blank" rel="noopener noreferrer" class="w-11 md:w-12 h-11 md:h-12 rounded-full flex items-center justify-center bg-green-500 hover:bg-green-600 text-white shadow transition-transform transform hover:scale-105 mb-3 md:mb-4" aria-label="Contacter sur WhatsApp">
+              <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.86 11.86 0 0 0 12 .03C5.37 .03 .02 5.39 .02 12.02c0 2.12 .56 4.17 1.62 6.01L0.02 24l6.25-1.63c1.78 1.1 3.98 1.66 6.1 1.66 6.63 0 12.02-5.4 12.02-12.03 0-1.94-.48-3.8-1.69-5.48zM12.02 21.75c-1.49 0-2.93-.41-4.19-1.17l-.3-.18-3.73.97 1-3.63-.2-.34c-.62-1.01-1.02-2.18-1.02-3.41 0-4.97 4.02-9 9-9 2.41 0 4.68.94 6.38 2.64 1.7 1.7 2.64 3.97 2.64 6.38 0 4.97-4.03 9-9 9zM17.07 14.9c-.22-.11-1.3-.64-1.5-.71-.2-.08-.34-.11-.49.12-.15.24-.6.78-.73.95-.13.18-.27.21-.5.08-.24-.13-1.03-.38-1.91-1.21-.67-.64-1.13-1.41-1.27-1.66-.14-.25-.02-.39.1-.51.11-.12.25-.28.36-.42.12-.14.18-.25.25-.4.07-.16.03-.3-.03-.43-.06-.12-.54-1.3-.74-1.79-.2-.47-.4-.41-.54-.41-.14 0-.31-.01-.47-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.7 2.6 4.12 3.64 2.36 1.04 2.36.69 2.8.64.44-.05 1.42-.58 1.62-1.14.2-.57.2-1.06.14-1.16-.06-.12-.22-.16-.46-.27z"/></svg>
             </a>
-            <p class="text-xl font-semibold">WhatsApp</p>
-            <a href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande." target="_blank" rel="noopener noreferrer" class="text-blue-700 font-bold">Contacter via WhatsApp</a>
+            <p class="text-lg md:text-xl font-semibold">WhatsApp</p>
+            <a href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande." target="_blank" rel="noopener noreferrer" class="text-xs md:text-sm text-blue-200 hover:text-white transition font-bold">Contacter via WhatsApp</a>
           </div>
 
-          <div class="flex flex-col items-center">
-            <div class="text-5xl mb-4">📍</div>
-            <p class="text-xl font-semibold">Localisation</p>
-            <p class="text-blue-100">Keur Massar, Dakar</p>
+          <div class="flex flex-col items-center py-4 md:py-0">
+            <div class="text-4xl md:text-5xl mb-3 md:mb-4">📍</div>
+            <p class="text-lg md:text-xl font-semibold">Localisation</p>
+            <p class="text-sm md:text-base text-blue-100">Keur Massar, Dakar</p>
           </div>
         </div>
 
         <!-- Social Links with SVG logos -->
-        <div class="flex items-center justify-center gap-4 mb-8">
+        <div class="flex flex-wrap items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8 px-2">
           <a
             href="https://www.tiktok.com/@yolaab6?_r=1&_t=ZS-93fslJAVm5J"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition text-white"
+            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
             aria-label="Yoolab sur TikTok"
           >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
             </svg>
-            <span class="font-semibold">TikTok</span>
+            <span class="font-semibold hidden sm:inline">TikTok</span>
           </a>
 
           <a
             href="https://www.facebook.com/share/1AdEMxu7zs/?mibextid=wwXIfr"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition text-white"
+            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
             aria-label="Yoolab sur Facebook"
           >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M22 12a10 10 0 1 0-11 9.95V14.8h-2.2v-2.8H11V10.4c0-2.2 1.3-3.4 3.3-3.4.9 0 1.8.08 2.1.12v2.4h-1.3c-1 0-1.3.6-1.3 1.2v1.6h2.6l-.4 2.8h-2.2V22A10 10 0 0 0 22 12z" />
             </svg>
-            <span class="font-semibold">Facebook</span>
+            <span class="font-semibold hidden sm:inline">Facebook</span>
           </a>
 
           <a
             href="https://www.instagram.com/yolaab_nettoyage?igsh=aHI4eWNlbnU4M2Zz&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-3 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition text-white"
+            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
             aria-label="Yoolab sur Instagram"
           >
-            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M7 2C5.3 2 4 3.3 4 5v14c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3H7zm8 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM18 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
             </svg>
-            <span class="font-semibold">Instagram</span>
+            <span class="font-semibold hidden sm:inline">Instagram</span>
           </a>
         </div>
 
         <NuxtLink
           to="/reservation"
-          class="inline-block bg-white text-blue-600 px-12 py-4 rounded-full hover:bg-blue-50 transition-all font-bold text-lg"
+          class="inline-block bg-white text-blue-600 px-8 md:px-12 py-3 md:py-4 rounded-full hover:bg-blue-50 transition-all font-bold text-base md:text-lg"
         >
           Réserver une Intervention
         </NuxtLink>
@@ -290,11 +290,11 @@
     href="https://wa.me/221767957899?text=Bonjour%20Yoolab%20!%20J%20ai%20une%20demande."
     target="_blank"
     rel="noopener noreferrer"
-    class="fixed right-6 bottom-6 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full p-4 shadow-lg flex items-center justify-center transition-transform transform hover:scale-105"
+    class="fixed right-4 md:right-6 md:bottom-6 bottom-24 z-50 bg-green-500 hover:bg-green-600 text-white rounded-full p-3 md:p-4 shadow-lg flex items-center justify-center transition-transform transform hover:scale-105"
     aria-label="Contactez Yoolab sur WhatsApp"
     title="Contactez Yoolab sur WhatsApp"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="md:w-7 md:h-7">
       <path d="M20.52 3.48A11.86 11.86 0 0 0 12 .03C5.37 .03 .02 5.39 .02 12.02c0 2.12 .56 4.17 1.62 6.01L0.02 24l6.25-1.63c1.78 1.1 3.98 1.66 6.1 1.66 6.63 0 12.02-5.4 12.02-12.03 0-1.94-.48-3.8-1.69-5.48zM12.02 21.75c-1.49 0-2.93-.41-4.19-1.17l-.3-.18-3.73.97 1-3.63-.2-.34c-.62-1.01-1.02-2.18-1.02-3.41 0-4.97 4.02-9 9-9 2.41 0 4.68.94 6.38 2.64 1.7 1.7 2.64 3.97 2.64 6.38 0 4.97-4.03 9-9 9zM17.07 14.9c-.22-.11-1.3-.64-1.5-.71-.2-.08-.34-.11-.49.12-.15.24-.6.78-.73.95-.13.18-.27.21-.5.08-.24-.13-1.03-.38-1.91-1.21-.67-.64-1.13-1.41-1.27-1.66-.14-.25-.02-.39.1-.51.11-.12.25-.28.36-.42.12-.14.18-.25.25-.4.07-.16.03-.3-.03-.43-.06-.12-.54-1.3-.74-1.79-.2-.47-.4-.41-.54-.41-.14 0-.31-.01-.47-.01-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.7 2.6 4.12 3.64 2.36 1.04 2.36.69 2.8.64.44-.05 1.42-.58 1.62-1.14.2-.57.2-1.06.14-1.16-.06-.12-.22-.16-.46-.27z"/>
     </svg>
   </a>
