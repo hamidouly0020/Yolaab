@@ -73,11 +73,14 @@
           class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 cursor-pointer"
           @click="openLightbox(item)"
         >
-          <div class="relative h-64 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+          <div class="relative h-64 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden flex items-center justify-center">
             <img
               :src="resolveUrl(item.url)"
               :alt="item.titre"
-              class="w-full h-full object-cover"
+              loading="lazy"
+              class="w-full h-full object-cover transition-opacity duration-300"
+              @load="$event.target.style.opacity = '1'"
+              style="opacity: 0.7"
             />
           </div>
           <div class="p-6">
@@ -97,11 +100,15 @@
           :key="item.id"
           class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105"
         >
-          <div class="relative h-64 bg-black flex items-center justify-center overflow-hidden">
+          <div class="relative h-64 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
+              <span class="text-5xl animate-pulse">▶️</span>
+            </div>
             <iframe
               :src="resolveUrl(item.url)"
               title="Vidéo Yolaab"
-              class="w-full h-full"
+              loading="lazy"
+              class="w-full h-full relative z-10"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
@@ -121,20 +128,23 @@
       <!-- Lightbox for Images -->
       <div
         v-if="selectedItem"
-        class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+        class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4 animate-fadeIn"
         @click="closeLightbox"
       >
         <div class="relative max-w-4xl w-full" @click.stop>
           <button
             @click="closeLightbox"
-            class="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300 transition"
+            class="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300 transition z-20"
           >
             ✕
           </button>
           <img
             :src="resolveUrl(selectedItem.url)"
             :alt="selectedItem.titre"
-            class="w-full h-auto rounded-2xl"
+            loading="eager"
+            class="w-full h-auto rounded-2xl shadow-2xl transition-opacity duration-300"
+            @load="$event.target.style.opacity = '1'"
+            style="opacity: 0.8"
           />
           <div class="text-white mt-4 text-center">
             <h3 class="text-2xl font-bold mb-2">{{ selectedItem.titre }}</h3>
@@ -220,3 +230,25 @@ const closeLightbox = () => {
   selectedItem.value = null
 }
 </script>
+<style scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+img {
+  animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+iframe {
+  transition: opacity 0.4s ease-in-out;
+}
+</style>

@@ -35,9 +35,11 @@
               <img
                 :src="resolveProductImageUrl(product.image, apiBaseUrl)"
                 :alt="product.nom"
-                class="w-full h-full object-cover object-center"
+                class="w-full h-full object-cover object-center transition-opacity duration-300"
                 loading="lazy"
                 @error="handleImageError"
+                @load="$event.target.style.opacity = '1'"
+                style="opacity: 0.7"
               />
             </template>
             <span v-else class="text-6xl">{{ getEmoji(product.categorie) }}</span>
@@ -178,4 +180,19 @@ const addToCart = (product: Product) => {
   alert('✅ Produit ajouté au panier')
 }
 </script>
+
+<style scoped>
+img {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+</style>
 
