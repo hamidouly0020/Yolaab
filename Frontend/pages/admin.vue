@@ -156,6 +156,7 @@
                 <th class="text-left p-4">Téléphone</th>
                 <th class="text-left p-4">Service</th>
                 <th class="text-left p-4">Durée</th>
+                <th class="text-left p-4">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -171,6 +172,9 @@
                   </span>
                 </td>
                 <td class="p-4">{{ res.duree }}</td>
+                <td class="p-4">
+                  <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -545,7 +549,8 @@
               <h3 class="font-bold text-lg">Commande #{{ index + 1 }}</h3>
                 <div class="flex items-center gap-4">
                   <span class="text-xl font-bold text-blue-600">{{ order.total.toLocaleString() }} FCFA</span>
-                  <button @click="viewOrder(order)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir détails</button>
+                    <button @click="viewOrder(order)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir détails</button>
+                    <button @click="deleteOrder(order.id)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
                 </div>
             </div>
             <div class="space-y-2">
@@ -1246,6 +1251,38 @@ const deleteRealisation = async (id: string) => {
       alert('❌ Erreur lors de la suppression')
       console.error(error)
     }
+  }
+}
+
+const deleteReservation = async (id: string) => {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')) return
+  try {
+    const response = await fetch(`${apiUrl}/reservations/${id}`, { method: 'DELETE' })
+    if (response.ok) {
+      reservations.value = reservations.value.filter(r => r.id !== id)
+      alert('✅ Réservation supprimée')
+    } else {
+      alert('❌ Impossible de supprimer la réservation')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('❌ Erreur lors de la suppression')
+  }
+}
+
+const deleteOrder = async (id: string) => {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) return
+  try {
+    const response = await fetch(`${apiUrl}/orders/${id}`, { method: 'DELETE' })
+    if (response.ok) {
+      orders.value = orders.value.filter(o => o.id !== id)
+      alert('✅ Commande supprimée')
+    } else {
+      alert('❌ Impossible de supprimer la commande')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('❌ Erreur lors de la suppression')
   }
 }
 
