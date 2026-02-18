@@ -148,8 +148,28 @@
           <div class="text-6xl mb-4">📅</div>
           <p class="text-xl text-gray-600">Aucune réservation pour le moment</p>
         </div>
-        <div v-else class="overflow-x-auto">
-          <table class="w-full">
+        <div v-else>
+          <!-- Mobile: stacked cards -->
+          <div class="md:hidden space-y-4">
+            <div v-for="(res, idx) in reservations" :key="'mobile-'+idx" class="border-2 border-blue-50 rounded-xl p-4 bg-white">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
+                  <div class="text-sm text-gray-600">{{ res.email || '-' }}</div>
+                  <div class="text-sm mt-2"><span class="font-semibold">Téléphone:</span> {{ res.telephone }}</div>
+                  <div class="text-sm mt-1"><span class="font-semibold">Service:</span> {{ res.typeService }}</div>
+                  <div class="text-sm mt-1"><span class="font-semibold">Durée:</span> {{ res.duree }}</div>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                  <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop: table -->
+          <div class="hidden md:block overflow-x-auto">
+            <table class="w-full">
             <thead>
               <tr class="border-b-2">
                 <th class="text-left p-4">Client</th>
@@ -544,22 +564,22 @@
           <p class="text-xl text-gray-600">Aucune commande pour le moment</p>
         </div>
         <div v-else class="space-y-4">
-          <div v-for="(order, index) in orders" :key="index" class="border-2 border-blue-100 rounded-xl p-6">
-            <div class="flex items-center justify-between mb-4">
+          <div v-for="(order, index) in orders" :key="index" class="border-2 border-blue-100 rounded-xl p-6 bg-white">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-3">
               <h3 class="font-bold text-lg">Commande #{{ index + 1 }}</h3>
-                <div class="flex items-center gap-4">
-                  <span class="text-xl font-bold text-blue-600">{{ order.total.toLocaleString() }} FCFA</span>
-                    <button @click="viewOrder(order)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir détails</button>
-                    <button @click="deleteOrder(order.id)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
-                </div>
+              <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
+                <span class="text-xl font-bold text-blue-600">{{ order.total.toLocaleString() }} FCFA</span>
+                <button @click="viewOrder(order)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all w-full md:w-auto">Voir détails</button>
+                <button @click="deleteOrder(order.id)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all w-full md:w-auto">Supprimer</button>
+              </div>
             </div>
             <div class="space-y-2">
-              <div v-for="(item, idx) in order.items" :key="idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+              <div v-for="(item, idx) in order.items" :key="idx" class="flex flex-col md:flex-row items-start md:items-center justify-between bg-blue-50 p-3 rounded-lg">
                 <div class="flex items-center gap-3">
                   <span class="text-2xl">{{ item.emoji }}</span>
                   <span>{{ item.name }}</span>
                 </div>
-                <div class="text-right">
+                <div class="text-right mt-2 md:mt-0">
                   <span class="font-bold">x{{ item.quantity }}</span>
                   <span class="ml-4">{{ (item.price * item.quantity).toLocaleString() }} FCFA</span>
                 </div>
@@ -736,8 +756,8 @@
   </div>
 
   <!-- Order Details Modal (inline in same template) -->
-  <div v-if="showOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-xl w-11/12 md:w-2/3 lg:w-1/2 p-6">
+  <div v-if="showOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-4 md:p-6 max-h-[90vh] overflow-auto">
       <div class="flex items-start justify-between mb-4">
         <h3 class="text-2xl font-bold">Détails de la commande</h3>
         <button @click="closeOrderModal" class="text-gray-600 hover:text-gray-800">✖</button>
