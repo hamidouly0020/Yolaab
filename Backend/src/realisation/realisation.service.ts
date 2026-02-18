@@ -10,7 +10,13 @@ export class RealisationService {
   }
 
   async findAll() {
-    return this.prisma.realisation.findMany({ orderBy: { createdAt: 'desc' } });
+    try {
+      return await this.prisma.realisation.findMany({ orderBy: { createdAt: 'desc' } });
+    } catch (err: any) {
+      // If DB is unreachable (eg P1001), log and return empty array to keep frontend usable
+      console.error('Prisma error in RealisationService.findAll:', err?.code || err?.message || err);
+      return [];
+    }
   }
 
   async remove(id: string) {
