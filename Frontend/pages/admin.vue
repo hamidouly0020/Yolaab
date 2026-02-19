@@ -256,7 +256,7 @@
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="product in products" :key="product.id" class="border-2 border-blue-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
             <div class="h-48 bg-blue-50 overflow-hidden">
-              <img :src="product.image" :alt="product.nom" class="w-full h-full object-cover" loading="lazy" />
+              <img :src="resolveRealisationUrl(product.image)" :alt="product.nom" class="w-full h-full object-cover" loading="lazy" />
             </div>
             <div class="p-4">
               <h4 class="font-bold text-lg">{{ product.nom }}</h4>

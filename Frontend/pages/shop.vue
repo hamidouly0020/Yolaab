@@ -28,9 +28,9 @@
         <div
           v-for="product in products"
           :key="product.id"
-          class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all"
+          class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 cursor-pointer"
         >
-          <div class="relative h-96 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
+          <div class="relative h-64 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden flex items-center justify-center" @click="openLightbox(product)">
             <template v-if="product.image">
               <img
                 :src="resolveProductImageUrl(product.image, apiBaseUrl)"
@@ -39,7 +39,7 @@
                 loading="lazy"
                 @error="handleImageError"
                 @load="$event.target.style.opacity = '1'"
-                style="opacity: 0.7"
+                style="opacity: 0.8"
               />
             </template>
             <span v-else class="text-6xl">{{ getEmoji(product.categorie) }}</span>
@@ -51,12 +51,24 @@
             <h3 class="font-bold text-lg text-gray-800 mb-2">{{ product.nom }}</h3>
             <p class="text-gray-600 text-sm mb-4">Stock: {{ product.quantite }}</p>
             <button
-              @click="addToCart(product)"
+              @click.stop="addToCart(product)"
               :disabled="product.quantite === 0"
               class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all font-semibold disabled:opacity-50"
             >
               ➕ Ajouter au Panier
             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lightbox for product image -->
+      <div v-if="selectedProduct" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4" @click="closeLightbox">
+        <div class="relative max-w-4xl w-full" @click.stop>
+          <button @click="closeLightbox" class="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300 transition z-20">✕</button>
+          <img :src="resolveProductImageUrl(selectedProduct.image, apiBaseUrl)" :alt="selectedProduct.nom" loading="eager" class="w-full h-auto rounded-2xl shadow-2xl transition-opacity duration-300" @load="$event.target.style.opacity = '1'" style="opacity: 0.9" />
+          <div class="text-white mt-4 text-center">
+            <h3 class="text-2xl font-bold mb-2">{{ selectedProduct.nom }}</h3>
+            <p class="text-gray-300">Prix: {{ selectedProduct.prix.toLocaleString() }} FCFA</p>
           </div>
         </div>
       </div>
@@ -178,6 +190,18 @@ const addToCart = (product: Product) => {
     window.localStorage.setItem('cart', JSON.stringify(cart))
   }
   alert('✅ Produit ajouté au panier')
+}
+
+// Lightbox state for product images
+const selectedProduct = ref<Product | null>(null)
+
+const openLightbox = (product: Product) => {
+  if (!product || !product.image) return
+  selectedProduct.value = product
+}
+
+const closeLightbox = () => {
+  selectedProduct.value = null
 }
 </script>
 
