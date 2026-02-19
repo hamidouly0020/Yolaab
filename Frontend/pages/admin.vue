@@ -16,36 +16,15 @@
             type="password"
             class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg"
             placeholder="Entrez le mot de passe"
-            required
-          />
-        </div>
+            </div>
 
-        <button
-          type="submit"
-          class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg font-bold text-lg"
-        >
-          SE CONNECTER
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 md:py-12">
-      <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-bold mb-2">👨‍💼 Espace Administrateur</h1>
-          <p class="text-lg opacity-90">Gestion de YOLAAB</p>
-        </div>
-        <button
+            <!-- Add Realisation Form -->
           @click="logout"
           class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all font-bold"
         >
           🚪 DÉCONNEXION
         </button>
       </div>
-    </div>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Tabs -->
@@ -189,29 +168,9 @@
                 <td class="p-4">
                   <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
                     {{ res.typeService }}
-                  </span>
-                </td>
-                <td class="p-4">{{ res.duree }}</td>
-                <td class="p-4">
-                  <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+                  </div>
 
-      <!-- Unified Workers + Candidatures Tab -->
-      <div v-if="activeTab === 'workers'" class="bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">👥 Travailleurs & Candidatures ({{ workers.length + applications.length }})</h2>
-          <button
-            @click="showAddWorker = true"
-            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
-          >
-            <span>➕</span> Ajouter
-          </button>
-        </div>
+                  <!-- Add Realisation Form -->
 
         <!-- Add worker form: use the same structure as public recruitment form -->
         <form v-if="showAddWorker" @submit.prevent="addWorker" class="bg-blue-50 p-6 rounded-xl mb-6">
@@ -439,167 +398,75 @@
         </div>
       </div>
 
-      <!-- Products Tab -->
-      <div v-if="activeTab === 'products'" class="bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">🛍️ Produits ({{ products.length }})</h2>
-          <button
-            @click="showAddProduct = true"
-            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
-          >
-            <span>➕</span> Ajouter
-          </button>
-        </div>
-
-        <form v-if="showAddProduct" @submit.prevent="addProduct" class="bg-blue-50 p-6 rounded-xl mb-6">
-          <h3 class="font-bold text-xl mb-4">➕ Nouveau Produit</h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <input
-              v-model="newProduct.nom"
-              type="text"
-              placeholder="Nom du produit"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-              required
-            />
-            <input
-              v-model="newProduct.prix"
-              type="number"
-              step="0.01"
-              placeholder="Prix (FCFA)"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-              required
-            />
-            <input
-              v-model="newProduct.quantite"
-              type="number"
-              placeholder="Quantité"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-              required
-            />
-            <select
-              v-model="newProduct.categorie"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-            >
-              <option value="nettoyage">Nettoyage</option>
-              <option value="equipement">Équipement</option>
-              <option value="produit">Produit</option>
-              <option value="autre">Autre</option>
-            </select>
-            <input
-              @change="handleImageUpload"
-              type="file"
-              accept="image/*"
-              placeholder="Sélectionner une image"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none md:col-span-2"
-              required
-            />
-          </div>
-          <div class="flex gap-4">
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all"
-            >
-              Enregistrer
-            </button>
-            <button
-              type="button"
-              @click="showAddProduct = false"
-              class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all"
-            >
-              Annuler
-            </button>
-          </div>
-        </form>
-
-        <div v-if="products.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">🛍️</div>
-          <p class="text-xl text-gray-600">Aucun produit enregistré</p>
-        </div>
-        <div v-else class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b-2">
-                <th class="text-left p-4">Nom</th>
-                <th class="text-left p-4">Prix</th>
-                <th class="text-left p-4">Stock</th>
-                <th class="text-left p-4">Catégorie</th>
-                <th class="text-left p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="product in products" :key="product.id" class="border-b hover:bg-blue-50">
-                <td class="p-4 font-bold">{{ product.nom }}</td>
-                <td class="p-4">{{ product.prix.toLocaleString() }} FCFA</td>
-                <td class="p-4">{{ product.quantite }}</td>
-                <td class="p-4">
-                  <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-                    {{ product.categorie }}
-                  </span>
-                </td>
-                <td class="p-4 space-x-2">
-                  <button
-                    @click="editProduct(product)"
-                    class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600 transition-all"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    @click="deleteProduct(product.id)"
-                    class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all"
-                  >
-                    🗑️
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
       <!-- Orders Tab -->
-      <div v-if="activeTab === 'orders'" class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-blue-600 mb-6">🛒 Commandes ({{ orders.length }})</h2>
+      <div v-if="activeTab === 'orders'" class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4">🛒 Commandes ({{ orders.length }})</h2>
         <div v-if="orders.length === 0" class="text-center py-12">
           <div class="text-6xl mb-4">🛒</div>
           <p class="text-xl text-gray-600">Aucune commande pour le moment</p>
         </div>
         <div v-else class="space-y-4">
-          <div v-for="(order, index) in orders" :key="index" class="border-2 border-blue-100 rounded-xl p-6 bg-white">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-3">
-              <h3 class="font-bold text-lg">Commande #{{ index + 1 }}</h3>
-              <div class="flex flex-wrap gap-2 w-full md:w-auto items-center">
-                <span class="text-xl font-bold text-blue-600">{{ order.total.toLocaleString() }} FCFA</span>
-                <button @click="viewOrder(order)" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all w-full md:w-auto">Voir détails</button>
-                <button @click="deleteOrder(order.id)" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all w-full md:w-auto">Supprimer</button>
+          <div v-for="(order, index) in orders" :key="order.id || index" class="border-2 border-blue-100 rounded-xl p-4 md:p-6 bg-white">
+            <div class="flex items-start md:items-center justify-between gap-3">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between gap-4">
+                  <div class="truncate">
+                    <h3 class="font-bold text-lg truncate">Commande #{{ index + 1 }} <span class="text-sm text-gray-500">— {{ order.prenom || '-' }} {{ order.nom || '' }}</span></h3>
+                    <div class="text-xs text-gray-500">{{ order.createdAt ? new Date(order.createdAt).toLocaleString() : '' }}</div>
+                  </div>
+                  <div class="text-right md:text-left">
+                    <div class="text-lg font-bold text-blue-600">{{ order.total.toLocaleString() }} FCFA</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button @click="toggleOrderDetails(order.id)" class="p-2 bg-gray-100 rounded-md md:hidden" aria-label="toggle details">
+                  <span v-if="isOrderExpanded(order.id)">▲</span>
+                  <span v-else>▼</span>
+                </button>
+
+                <button @click="viewOrder(order)" class="hidden md:inline-flex bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir</button>
+                <button @click="deleteOrder(order.id)" class="hidden md:inline-flex bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
+
+                <button @click="viewOrder(order)" class="md:hidden p-2 bg-blue-500 text-white rounded-md" aria-label="voir détails">🔎</button>
+                <button @click="deleteOrder(order.id)" class="md:hidden p-2 bg-red-500 text-white rounded-md" aria-label="supprimer">🗑️</button>
               </div>
             </div>
-            <div class="space-y-2">
-              <div v-for="(item, idx) in order.items" :key="idx" class="flex flex-col md:flex-row items-start md:items-center justify-between bg-blue-50 p-3 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <span class="text-2xl">{{ item.emoji }}</span>
-                  <span>{{ item.name }}</span>
+
+            <!-- Details: visible on md+ or when expanded on mobile -->
+            <div class="mt-3 hidden md:block">
+              <div class="grid grid-cols-1 gap-3">
+                <div v-for="(item, idx) in order.items" :key="idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span class="text-2xl">{{ item.emoji }}</span>
+                    <div class="truncate">
+                      <div class="font-medium truncate">{{ item.name }}</div>
+                      <div class="text-sm text-gray-600 truncate">Prix: {{ item.price.toLocaleString() }} FCFA</div>
+                    </div>
+                  </div>
+                  <div class="text-right">x{{ item.quantity }}</div>
                 </div>
-                <div class="text-right mt-2 md:mt-0">
-                  <span class="font-bold">x{{ item.quantity }}</span>
-                  <span class="ml-4">{{ (item.price * item.quantity).toLocaleString() }} FCFA</span>
+              </div>
+            </div>
+
+            <div v-if="isOrderExpanded(order.id)" class="mt-3 md:hidden">
+              <div class="space-y-2">
+                <div v-for="(item, idx) in order.items" :key="'m-'+idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span class="text-2xl">{{ item.emoji }}</span>
+                    <div class="truncate">
+                      <div class="font-medium truncate">{{ item.name }}</div>
+                      <div class="text-sm text-gray-600 truncate">Prix: {{ item.price.toLocaleString() }} FCFA</div>
+                    </div>
+                  </div>
+                  <div class="text-right">x{{ item.quantity }}</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Realisations Tab -->
-      <div v-if="activeTab === 'realisations'" class="bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">🎬 Réalisations ({{ realisations.length }})</h2>
-          <button
-            @click="showAddRealisation = true"
-            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
-          >
-            <span>➕</span> Ajouter
-          </button>
-        </div>
 
         <!-- Add Realisation Form -->
         <form v-if="showAddRealisation" @submit.prevent="addRealisation" class="bg-blue-50 p-6 rounded-xl mb-6">
@@ -915,6 +782,19 @@ const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
+const expandedOrders = ref<string[]>([])
+
+const toggleOrderDetails = (id: string) => {
+  if (!id) return
+  const i = expandedOrders.value.indexOf(id)
+  if (i === -1) expandedOrders.value.push(id)
+  else expandedOrders.value.splice(i, 1)
+}
+
+const isOrderExpanded = (id: string) => {
+  if (!id) return false
+  return expandedOrders.value.includes(id)
+}
 
 const resolveRealisationUrl = (raw: string | undefined | null): string => {
   if (!raw) return ''
