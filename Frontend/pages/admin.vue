@@ -1,4 +1,5 @@
 <template>
+  <!-- Login Screen -->
   <div v-if="!isAuthenticated" class="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-md w-full">
       <div class="text-center mb-8">
@@ -16,15 +17,30 @@
             type="password"
             class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg"
             placeholder="Entrez le mot de passe"
-            </div>
-
-            <!-- Add Realisation Form -->
-          @click="logout"
-          class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all font-bold"
+          />
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white px-6 py-4 rounded-xl hover:bg-blue-700 transition-all font-bold text-lg"
         >
-          🚪 DÉCONNEXION
+          Se connecter
         </button>
-      </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <!-- Header -->
+    <div class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold text-blue-600">🛠️ Espace Admin</h1>
+      <button
+        @click="logout"
+        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all font-bold"
+      >
+        🚪 DÉCONNEXION
+      </button>
+    </div>
 
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Tabs -->
@@ -43,9 +59,7 @@
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'reservations'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
+                activeTab === 'reservations' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
               ]"
             >
               {{ reservations.length }}
@@ -65,9 +79,7 @@
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'products'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
+                activeTab === 'products' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
               ]"
             >
               {{ products.length }}
@@ -87,9 +99,7 @@
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'orders'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
+                activeTab === 'orders' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
               ]"
             >
               {{ orders.length }}
@@ -109,9 +119,7 @@
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
-                activeTab === 'realisations'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600'
+                activeTab === 'realisations' ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
               ]"
             >
               {{ realisations.length }}
@@ -149,251 +157,116 @@
           <!-- Desktop: table -->
           <div class="hidden md:block overflow-x-auto">
             <table class="w-full">
-            <thead>
-              <tr class="border-b-2">
-                <th class="text-left p-4">Client</th>
-                <th class="text-left p-4">Téléphone</th>
-                <th class="text-left p-4">Service</th>
-                <th class="text-left p-4">Durée</th>
-                <th class="text-left p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(res, index) in reservations" :key="index" class="border-b hover:bg-blue-50">
-                <td class="p-4">
-                  <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
-                  <div v-if="res.email" class="text-sm text-gray-600">{{ res.email }}</div>
-                </td>
-                <td class="p-4">{{ res.telephone }}</td>
-                <td class="p-4">
-                  <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-                    {{ res.typeService }}
-                  </div>
-
-                  <!-- Add Realisation Form -->
-
-        <!-- Add worker form: use the same structure as public recruitment form -->
-        <form v-if="showAddWorker" @submit.prevent="addWorker" class="bg-blue-50 p-6 rounded-xl mb-6">
-          <h3 class="font-bold text-xl mb-4">➕ Nouveau Travailleur</h3>
-          <div class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Nom *</label>
-                <input v-model="newWorkerForm.nom" type="text" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" placeholder="Nom" />
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Prénom *</label>
-                <input v-model="newWorkerForm.prenom" type="text" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" placeholder="Prénom" />
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Téléphone *</label>
-                <input v-model="newWorkerForm.telephone" type="tel" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" placeholder="Téléphone" />
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                <input v-model="newWorkerForm.email" type="email" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" placeholder="Email" />
-              </div>
-            </div>
+              <thead>
+                <tr class="border-b-2">
+                  <th class="text-left p-4">Client</th>
+                  <th class="text-left p-4">Téléphone</th>
+                  <th class="text-left p-4">Service</th>
+                  <th class="text-left p-4">Durée</th>
+                  <th class="text-left p-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(res, index) in reservations" :key="index" class="border-b hover:bg-blue-50">
+                  <td class="p-4">
+                    <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
+                    <div v-if="res.email" class="text-sm text-gray-600">{{ res.email }}</div>
+                  </td>
+                  <td class="p-4">{{ res.telephone }}</td>
+                  <td class="p-4">
+                    <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+                      {{ res.typeService }}
+                    </span>
+                  </td>
+                  <td class="p-4">{{ res.duree }}</td>
+                  <td class="p-4">
+                    <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">🗑️</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-
-          <div class="space-y-4 mt-4">
-            <h4 class="text-lg font-bold text-blue-600">Sélectionner Un Poste</h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <button v-for="poste in postes" :key="poste.id" type="button" @click="newWorkerForm.poste = poste.id" :class="['p-4 rounded-2xl border-2 transition-all text-center cursor-pointer', newWorkerForm.poste === poste.id ? 'border-blue-600 bg-blue-50 shadow-lg' : 'border-gray-300 hover:border-blue-400']">
-                <div class="text-3xl mb-2">{{ poste.emoji }}</div>
-                <p class="font-semibold text-gray-700">{{ poste.label }}</p>
-              </button>
-            </div>
-          </div>
-
-          <div class="space-y-4 mt-4">
-            <h4 class="text-lg font-bold text-blue-600">Votre Expérience</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <button v-for="exp in experiences" :key="exp.id" type="button" @click="newWorkerForm.experience = exp.id" :class="['p-4 rounded-2xl border-2 transition-all text-center cursor-pointer', newWorkerForm.experience === exp.id ? 'border-blue-600 bg-blue-50 shadow-lg' : 'border-gray-300 hover:border-blue-400']">
-                <div class="text-3xl mb-2">{{ exp.emoji }}</div>
-                <p class="font-semibold text-gray-700">{{ exp.label }}</p>
-              </button>
-            </div>
-          </div>
-
-          <div class="space-y-4 mt-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Message</label>
-            <textarea v-model="newWorkerForm.message" placeholder="Parlez-nous du candidat..." rows="4" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"></textarea>
-          </div>
-
-          <div class="flex gap-4 mt-4">
-            <button type="submit" class="flex-1 bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all">Enregistrer</button>
-            <button type="button" @click="showAddWorker = false" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all">Annuler</button>
-          </div>
-        </form>
-
-        <!-- Unified list (Travailleurs + Candidatures) -->
-        <div v-if="workers.length === 0 && applications.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">👥</div>
-          <p class="text-xl text-gray-600">Aucun travailleur ou candidature</p>
-        </div>
-        <div v-else class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b-2">
-                <th class="text-left p-4">Nom</th>
-                <th class="text-left p-4">Téléphone</th>
-                <th class="text-left p-4">Poste</th>
-                <th class="text-left p-4">Statut</th>
-                <th class="text-left p-4">Détails</th>
-                <th class="text-left p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Travailleurs (embauched) -->
-              <tr v-for="worker in workers" :key="'w-' + worker.id" class="border-b hover:bg-green-50">
-                <td class="p-4 font-bold">{{ worker.prenom }} {{ worker.nom }}</td>
-                <td class="p-4">{{ worker.telephone }}</td>
-                <td class="p-4"><span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs">{{ worker.poste }}</span></td>
-                <td class="p-4"><span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs">✅ Travailleur</span></td>
-                <td class="p-4 text-gray-600">Embauché le {{ worker.dateEmbauche }}</td>
-                <td class="p-4">
-                  <button @click="deleteWorker(worker.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all text-xs">🗑️</button>
-                </td>
-              </tr>
-              <!-- Candidatures -->
-              <tr v-for="(app, index) in applications" :key="'a-' + index" class="border-b hover:bg-yellow-50">
-                <td class="p-4 font-bold">
-                  <div>{{ app.prenom }} {{ app.nom }}</div>
-                  <div class="text-xs text-gray-500">{{ app.email }}</div>
-                </td>
-                <td class="p-4">{{ app.telephone }}</td>
-                <td class="p-4"><span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs">{{ app.poste }}</span></td>
-                <td class="p-4"><span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs">📝 Candidat</span></td>
-                <td class="p-4 text-gray-600">{{ app.experience }}</td>
-                <td class="p-4 space-x-2">
-                  <button @click="acceptCandidate(index)" class="bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition-all text-xs font-bold" title="Accepter">✅ Accepter</button>
-                  <button @click="rejectCandidate(index)" class="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-all text-xs font-bold" title="Rejeter">❌ Rejeter</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
-      <!-- Invoices Tab -->
-      <div v-if="activeTab === 'invoices'" class="bg-white rounded-2xl shadow-lg p-6">
+      <!-- Products Tab -->
+      <div v-if="activeTab === 'products'" class="bg-white rounded-2xl shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">💰 Factures ({{ invoices.length }})</h2>
+          <h2 class="text-2xl font-bold text-blue-600">🛍️ Produits ({{ products.length }})</h2>
           <button
-            @click="showAddInvoice = true"
+            @click="showAddProduct = true"
             class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
           >
-            <span>➕</span> Créer
+            <span>➕</span> Ajouter
           </button>
         </div>
 
-        <form v-if="showAddInvoice" @submit.prevent="addInvoice" class="bg-blue-50 p-6 rounded-xl mb-6">
-          <h3 class="font-bold text-xl mb-4">➕ Nouvelle Facture</h3>
+        <form v-if="showAddProduct" @submit.prevent="addProduct" class="bg-blue-50 p-6 rounded-xl mb-6">
+          <h3 class="font-bold text-xl mb-4">➕ Nouveau Produit</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <input
-              v-model="newInvoice.client"
+              v-model="newProduct.nom"
               type="text"
-              placeholder="Nom du client"
+              placeholder="Nom du produit"
               class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
               required
             />
             <input
-              v-model="newInvoice.service"
-              type="text"
-              placeholder="Service"
-              class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
-              required
-            />
-            <input
-              v-model="newInvoice.montant"
+              v-model="newProduct.prix"
               type="number"
-              placeholder="Montant (FCFA)"
+              placeholder="Prix (FCFA)"
               class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
               required
             />
             <input
-              v-model="newInvoice.date"
-              type="date"
+              v-model="newProduct.quantite"
+              type="number"
+              placeholder="Quantité"
               class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
               required
             />
             <select
-              v-model="newInvoice.statut"
+              v-model="newProduct.categorie"
               class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
             >
-              <option value="en attente">En attente</option>
-              <option value="payé">Payé</option>
+              <option value="nettoyage">Nettoyage</option>
+              <option value="autre">Autre</option>
             </select>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
+              <input
+                @change="handleImageUpload"
+                type="file"
+                accept="image/*"
+                class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
+                required
+              />
+            </div>
           </div>
           <div class="flex gap-4">
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all"
-            >
-              Créer
-            </button>
-            <button
-              type="button"
-              @click="showAddInvoice = false"
-              class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all"
-            >
-              Annuler
-            </button>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all">Ajouter</button>
+            <button type="button" @click="showAddProduct = false" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all">Annuler</button>
           </div>
         </form>
 
-        <div v-if="invoices.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">💰</div>
-          <p class="text-xl text-gray-600">Aucune facture créée</p>
+        <div v-if="products.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">🛍️</div>
+          <p class="text-xl text-gray-600">Aucun produit enregistré</p>
         </div>
-        <div v-else class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b-2">
-                <th class="text-left p-4">Client</th>
-                <th class="text-left p-4">Service</th>
-                <th class="text-left p-4">Montant</th>
-                <th class="text-left p-4">Date</th>
-                <th class="text-left p-4">Statut</th>
-                <th class="text-left p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="invoice in invoices" :key="invoice.id" class="border-b hover:bg-blue-50">
-                <td class="p-4 font-bold">{{ invoice.client }}</td>
-                <td class="p-4">{{ invoice.service }}</td>
-                <td class="p-4 font-bold text-blue-600">{{ invoice.montant.toLocaleString() }} FCFA</td>
-                <td class="p-4">{{ invoice.date }}</td>
-                <td class="p-4">
-                  <span
-                    :class="[
-                      'px-3 py-1 rounded-full',
-                      invoice.statut === 'payé'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-orange-100 text-orange-600'
-                    ]"
-                  >
-                    {{ invoice.statut === 'payé' ? '✅ Payé' : '⏳ En attente' }}
-                  </span>
-                </td>
-                <td class="p-4">
-                  <button
-                    @click="toggleInvoiceStatus(invoice.id)"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
-                  >
-                    Changer
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div v-if="invoices.length > 0" class="mt-6 bg-blue-50 p-6 rounded-xl">
-          <div class="flex items-center justify-between text-xl font-bold text-blue-600">
-            <span>TOTAL:</span>
-            <span>{{ invoices.reduce((sum, inv) => sum + inv.montant, 0).toLocaleString() }} FCFA</span>
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div v-for="product in products" :key="product.id" class="border-2 border-blue-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
+            <div class="h-48 bg-blue-50 overflow-hidden">
+              <img :src="product.image" :alt="product.nom" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="p-4">
+              <h4 class="font-bold text-lg">{{ product.nom }}</h4>
+              <p class="text-blue-600 font-bold">{{ product.prix.toLocaleString() }} FCFA</p>
+              <p class="text-sm text-gray-500">Qté: {{ product.quantite }}</p>
+              <div class="flex gap-2 mt-3">
+                <button @click="editProduct(product)" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all text-sm">✏️ Éditer</button>
+                <button @click="deleteProduct(product.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">🗑️</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -411,7 +284,10 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-4">
                   <div class="truncate">
-                    <h3 class="font-bold text-lg truncate">Commande #{{ index + 1 }} <span class="text-sm text-gray-500">— {{ order.prenom || '-' }} {{ order.nom || '' }}</span></h3>
+                    <h3 class="font-bold text-lg truncate">
+                      Commande #{{ index + 1 }}
+                      <span class="text-sm text-gray-500">— {{ order.prenom || '-' }} {{ order.nom || '' }}</span>
+                    </h3>
                     <div class="text-xs text-gray-500">{{ order.createdAt ? new Date(order.createdAt).toLocaleString() : '' }}</div>
                   </div>
                   <div class="text-right md:text-left">
@@ -425,16 +301,14 @@
                   <span v-if="isOrderExpanded(order.id)">▲</span>
                   <span v-else>▼</span>
                 </button>
-
                 <button @click="viewOrder(order)" class="hidden md:inline-flex bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir</button>
                 <button @click="deleteOrder(order.id)" class="hidden md:inline-flex bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
-
                 <button @click="viewOrder(order)" class="md:hidden p-2 bg-blue-500 text-white rounded-md" aria-label="voir détails">🔎</button>
                 <button @click="deleteOrder(order.id)" class="md:hidden p-2 bg-red-500 text-white rounded-md" aria-label="supprimer">🗑️</button>
               </div>
             </div>
 
-            <!-- Details: visible on md+ or when expanded on mobile -->
+            <!-- Details desktop -->
             <div class="mt-3 hidden md:block">
               <div class="grid grid-cols-1 gap-3">
                 <div v-for="(item, idx) in order.items" :key="idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
@@ -450,6 +324,7 @@
               </div>
             </div>
 
+            <!-- Details mobile (expanded) -->
             <div v-if="isOrderExpanded(order.id)" class="mt-3 md:hidden">
               <div class="space-y-2">
                 <div v-for="(item, idx) in order.items" :key="'m-'+idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
@@ -467,6 +342,18 @@
           </div>
         </div>
       </div>
+
+      <!-- Realisations Tab -->
+      <div v-if="activeTab === 'realisations'" class="bg-white rounded-2xl shadow-lg p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-blue-600">🎬 Réalisations ({{ realisations.length }})</h2>
+          <button
+            @click="showAddRealisation = true"
+            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
+          >
+            <span>➕</span> Ajouter
+          </button>
+        </div>
 
         <!-- Add Realisation Form -->
         <form v-if="showAddRealisation" @submit.prevent="addRealisation" class="bg-blue-50 p-6 rounded-xl mb-6">
@@ -498,7 +385,6 @@
             ></textarea>
           </div>
 
-          <!-- Image Upload or Video URL -->
           <div v-if="newRealisation.type === 'image'" class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
             <input
@@ -546,19 +432,8 @@
           </div>
 
           <div class="flex gap-4">
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all"
-            >
-              Ajouter
-            </button>
-            <button
-              type="button"
-              @click="showAddRealisation = false"
-              class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all"
-            >
-              Annuler
-            </button>
+            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all">Ajouter</button>
+            <button type="button" @click="showAddRealisation = false" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all">Annuler</button>
           </div>
         </form>
 
@@ -569,7 +444,6 @@
         </div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div v-for="realisation in realisations" :key="realisation.id" class="bg-white border-2 border-blue-100 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
-            <!-- Thumbnail -->
             <div class="h-60 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
               <img
                 v-if="realisation.type === 'image'"
@@ -596,8 +470,6 @@
                 🎥
               </div>
             </div>
-
-            <!-- Info -->
             <div class="p-4">
               <h4 class="font-bold text-lg text-gray-800 mb-1">{{ realisation.titre }}</h4>
               <p v-if="realisation.description" class="text-sm text-gray-600 line-clamp-2 mb-3">
@@ -622,7 +494,7 @@
     </div>
   </div>
 
-  <!-- Order Details Modal (inline in same template) -->
+  <!-- Order Details Modal -->
   <div v-if="showOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-4 md:p-6 max-h-[90vh] overflow-auto">
       <div class="flex items-start justify-between mb-4">
@@ -693,11 +565,13 @@ interface Invoice {
 }
 
 interface ReservationData {
+  id?: string
   nom: string
   prenom: string
   telephone: string
   email?: string
   typeService: string
+  duree?: string
   date: string
   heure: string
 }
@@ -775,10 +649,8 @@ const newProduct = ref({
 
 const imageFile = ref<File | null>(null)
 
-// API URL configuration
 const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 
-// Mock data - À remplacer par des appels API
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
@@ -808,9 +680,7 @@ const resolveRealisationUrl = (raw: string | undefined | null): string => {
 const isLocalVideo = (url: string | undefined): boolean => {
   if (!url) return false
   const trimmed = url.trim()
-  // Si c'est une URL externe (YouTube, Vimeo, etc.), retourne false
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return false
-  // Sinon c'est une vidéo locale
   return true
 }
 
@@ -828,37 +698,22 @@ const loadData = async () => {
   isLoadingData.value = true
   const config = useRuntimeConfig()
   apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
-  
+
   try {
-    // Charger réservations
     const resRes = await fetch(`${apiBaseUrl.value}/reservations`)
-    if (resRes.ok) {
-      reservations.value = await resRes.json()
-    }
+    if (resRes.ok) reservations.value = await resRes.json()
 
-    // Charger candidatures
     const appRes = await fetch(`${apiBaseUrl.value}/applications`)
-    if (appRes.ok) {
-      applications.value = await appRes.json()
-    }
+    if (appRes.ok) applications.value = await appRes.json()
 
-    // Charger workers
     const workerRes = await fetch(`${apiBaseUrl.value}/workers`)
-    if (workerRes.ok) {
-      workers.value = await workerRes.json()
-    }
+    if (workerRes.ok) workers.value = await workerRes.json()
 
-    // Charger produits
     const prodRes = await fetch(`${apiBaseUrl.value}/products`)
-    if (prodRes.ok) {
-      products.value = await prodRes.json()
-    }
+    if (prodRes.ok) products.value = await prodRes.json()
 
-    // Charger commandes
     const ordRes = await fetch(`${apiBaseUrl.value}/orders`)
-    if (ordRes.ok) {
-      orders.value = await ordRes.json()
-    }
+    if (ordRes.ok) orders.value = await ordRes.json()
   } catch (err) {
     console.error('Erreur de chargement:', err)
   } finally {
@@ -872,7 +727,6 @@ const logout = () => {
 }
 
 const addWorker = async () => {
-  // Create worker locally (and optionally you can POST to backend)
   const worker: Worker = {
     id: Date.now().toString(),
     nom: newWorkerForm.value.nom,
@@ -882,7 +736,6 @@ const addWorker = async () => {
     dateEmbauche: new Date().toISOString().slice(0, 10),
   }
 
-  // Try to persist to backend if available
   try {
     const resp = await fetch(`${apiUrl}/workers`, {
       method: 'POST',
@@ -895,19 +748,16 @@ const addWorker = async () => {
         dateEmbauche: worker.dateEmbauche,
       }),
     })
-
     if (resp.ok) {
       const created = await resp.json()
       workers.value.push(created)
     } else {
-      // fallback to local push
       workers.value.push(worker)
     }
-  } catch (err) {
+  } catch {
     workers.value.push(worker)
   }
 
-  // Reset form
   newWorkerForm.value = { nom: '', prenom: '', telephone: '', email: '', poste: '', experience: '', message: '' }
   showAddWorker.value = false
   alert('✅ Travailleur ajouté avec succès')
@@ -921,8 +771,6 @@ const deleteWorker = (id: string) => {
 const acceptCandidate = (index: number) => {
   const app = applications.value[index]
   if (!app) return
-
-  // Create worker from candidate
   const worker: Worker = {
     id: Date.now().toString(),
     nom: app.nom,
@@ -931,7 +779,6 @@ const acceptCandidate = (index: number) => {
     telephone: app.telephone,
     dateEmbauche: new Date().toISOString().slice(0, 10),
   }
-
   workers.value.push(worker)
   applications.value.splice(index, 1)
   alert('✅ Candidat accepté et ajouté comme travailleur')
@@ -947,8 +794,8 @@ const addInvoice = () => {
     id: Date.now().toString(),
     client: newInvoice.value.client,
     service: newInvoice.value.service,
-    montant: typeof newInvoice.value.montant === 'string' 
-      ? parseFloat(newInvoice.value.montant) 
+    montant: typeof newInvoice.value.montant === 'string'
+      ? parseFloat(newInvoice.value.montant)
       : newInvoice.value.montant,
     date: newInvoice.value.date,
     statut: newInvoice.value.statut,
@@ -970,9 +817,7 @@ const toggleInvoiceStatus = (id: string) => {
 const handleImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  if (file) {
-    imageFile.value = file
-  }
+  if (file) imageFile.value = file
 }
 
 const addProduct = async () => {
@@ -980,7 +825,6 @@ const addProduct = async () => {
     alert('❌ Veuillez sélectionner une image')
     return
   }
-
   try {
     const formData = new FormData()
     formData.append('nom', newProduct.value.nom)
@@ -989,10 +833,7 @@ const addProduct = async () => {
     formData.append('categorie', newProduct.value.categorie)
     formData.append('image', imageFile.value)
 
-    const response = await fetch(`${apiUrl}/products`, {
-      method: 'POST',
-      body: formData,
-    })
+    const response = await fetch(`${apiUrl}/products`, { method: 'POST', body: formData })
 
     if (response.ok) {
       const data = await response.json()
@@ -1012,17 +853,13 @@ const addProduct = async () => {
 
 const editProduct = (product: Product) => {
   newProduct.value = { ...product }
-  // À implémentation: Modal ou formulaire d'édition
   alert('✏️ Édition à implémenter')
 }
 
 const deleteProduct = async (id: string) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
     try {
-      const response = await fetch(`${apiUrl}/products/${id}`, {
-        method: 'DELETE',
-      })
-
+      const response = await fetch(`${apiUrl}/products/${id}`, { method: 'DELETE' })
       if (response.ok) {
         products.value = products.value.filter(p => p.id !== id)
         alert('✅ Produit supprimé')
@@ -1047,10 +884,11 @@ const closeOrderModal = () => {
   showOrderModal.value = false
 }
 
-// Realisations Management
+// Realisations
 const realisations = ref<any[]>([])
 const showAddRealisation = ref(false)
 const realisationImageFile = ref<File | null>(null)
+const realisationVideoFile = ref<File | null>(null)
 
 const newRealisation = ref({
   titre: '',
@@ -1062,18 +900,12 @@ const newRealisation = ref({
 
 const handleRealisationImageUpload = (event: Event) => {
   const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    realisationImageFile.value = input.files[0]
-  }
+  if (input.files && input.files[0]) realisationImageFile.value = input.files[0]
 }
-
-const realisationVideoFile = ref<File | null>(null)
 
 const handleRealisationVideoUpload = (event: Event) => {
   const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    realisationVideoFile.value = input.files[0]
-  }
+  if (input.files && input.files[0]) realisationVideoFile.value = input.files[0]
 }
 
 const addRealisation = async () => {
@@ -1082,7 +914,6 @@ const addRealisation = async () => {
       alert('❌ Veuillez sélectionner une image')
       return
     }
-
     if (newRealisation.value.type === 'video') {
       if (newRealisation.value.videoSource === 'url' && !newRealisation.value.url) {
         alert('❌ Veuillez entrer une URL vidéo')
@@ -1109,23 +940,13 @@ const addRealisation = async () => {
       }
     }
 
-    const response = await fetch(`${apiUrl}/realisations`, {
-      method: 'POST',
-      body: formData,
-    })
-
+    const response = await fetch(`${apiUrl}/realisations`, { method: 'POST', body: formData })
     if (!response.ok) throw new Error('Erreur lors de l\'ajout')
 
     const newItem = await response.json()
     realisations.value.push(newItem)
 
-    newRealisation.value = {
-      titre: '',
-      description: '',
-      type: 'image',
-      url: '',
-      videoSource: 'url',
-    }
+    newRealisation.value = { titre: '', description: '', type: 'image', url: '', videoSource: 'url' }
     realisationImageFile.value = null
     realisationVideoFile.value = null
     showAddRealisation.value = false
@@ -1139,10 +960,7 @@ const addRealisation = async () => {
 const deleteRealisation = async (id: string) => {
   if (confirm('Êtes-vous sûr de vouloir supprimer cette réalisation ?')) {
     try {
-      const response = await fetch(`${apiUrl}/realisations/${id}`, {
-        method: 'DELETE',
-      })
-
+      const response = await fetch(`${apiUrl}/realisations/${id}`, { method: 'DELETE' })
       if (response.ok) {
         realisations.value = realisations.value.filter(r => r.id !== id)
         alert('✅ Réalisation supprimée')
@@ -1189,9 +1007,7 @@ const deleteOrder = async (id: string) => {
 const loadRealisations = async () => {
   try {
     const response = await fetch(`${apiUrl}/realisations`)
-    if (response.ok) {
-      realisations.value = await response.json()
-    }
+    if (response.ok) realisations.value = await response.json()
   } catch (error) {
     console.error('Erreur lors du chargement des réalisations', error)
   }
