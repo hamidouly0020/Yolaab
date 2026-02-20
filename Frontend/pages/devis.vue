@@ -190,46 +190,11 @@ const handleSubmit = async () => {
 
   const file = formData.value.videoFile as File | null
 
-  // Tenter le partage natif (Web Share API) si le navigateur supporte le partage de fichiers
-  try {
-    if (file && navigator && 'canShare' in navigator && (navigator as any).canShare({ files: [file] })) {
-      await (navigator as any).share({ files: [file], text: baseLines.join('\n'), title: 'Demande de devis Yolaab' })
-      return
-    }
-  } catch (err) {
-    console.warn('Web Share failed', err)
-  }
-
-  // Si on arrive ici, le partage natif n'est pas disponible -> uploader la vidéo sur le serveur
-  let videoPublicUrl = ''
-  try {
-    if (!file) throw new Error('No file')
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/uploads`, {
-      method: 'POST',
-      body: fd,
-    })
-    if (!res.ok) {
-      throw new Error('Upload failed')
-    }
-    const json = await res.json()
-    // json.url is returned like '/uploads/xxxxx.mp4'
-    videoPublicUrl = `${apiBaseUrl.replace(/\/$/, '')}${json.url}`
-  } catch (err) {
-    console.error('Upload error', err)
-    errorMessage.value = "Échec de l'upload. Le message WhatsApp va s'ouvrir — veuillez joindre le fichier manuellement." 
-  }
-
-  // Construire le message final (incluant le lien vidéo si disponible)
+  // Construire le message final et ouvrir directement la discussion WhatsApp (comportement antérieur)
   const lines: string[] = [...baseLines]
-  if (videoPublicUrl) {
+  if (file) {
     lines.push('')
-    lines.push('🎬 Vidéo (lien public) :')
-    lines.push(videoPublicUrl)
-  } else {
-    lines.push('')
-    lines.push('🎬 Vidéo fournie — merci de l\'ajouter en pièce jointe si nécessaire.')
+    lines.push('🎬 Vidéo fournie — veuillez joindre le fichier en pièce jointe si nécessaire.')
   }
 
   const message = lines.join('\n')
@@ -243,8 +208,8 @@ const handleSubmit = async () => {
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
 
   if (isMobile) {
+    // ouvrir l'app WhatsApp si possible
     try {
-      // tenter d'ouvrir l'app WhatsApp
       window.location.href = appLink
       setTimeout(() => { window.open(apiLink, '_blank') }, 1200)
       return
@@ -253,10 +218,7 @@ const handleSubmit = async () => {
     }
   }
 
-  // Desktop/tablette : ouvrir WhatsApp Web
-  if (!videoPublicUrl) {
-    alert("Le partage direct n'est pas disponible sur ce navigateur. Le message WhatsApp va s'ouvrir — veuillez joindre le fichier vidéo manuellement avant d'envoyer.")
-  }
+  // Desktop/tablette : ouvrir WhatsApp Web avec le message prérempli
   window.open(apiLink, '_blank')
 }
 </script>
