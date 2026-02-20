@@ -82,16 +82,15 @@
           </div>
         </div>
 
-        <!-- Description du Projet (vidéo) -->
+        <!-- Description du Projet (texte) -->
         <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Description du Projet (Vidéo)</h2>
-          <p class="text-sm text-gray-600">Veuillez fournir une vidéo illustrant le projet . Vous pouvez  télécharger un fichier vidéo.</p>
+          <h2 class="text-2xl font-bold text-blue-600">Description du Projet</h2>
+          <p class="text-sm text-gray-600">Décrivez votre projet en quelques lignes (texte).</p>
 
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Télécharger la vidéo du projet *</label>
-            <input @change="handleVideoFile" type="file" accept="video/*" class="w-full" required />
-            <p v-if="formData.videoFileName" class="text-sm text-gray-600 mt-2">Fichier sélectionné: {{ formData.videoFileName }}</p>
-            <p class="text-sm text-gray-500 mt-2">Le fichier sera uploadé et un lien sera inclus dans le message WhatsApp.</p>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description du projet *</label>
+            <textarea v-model="formData.description" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" rows="5" placeholder="Décrivez votre projet..."></textarea>
+            <p class="text-sm text-gray-500 mt-2">Le contenu sera inclus dans le message WhatsApp.</p>
           </div>
         </div>
 
@@ -132,9 +131,7 @@ const formData = ref({
   telephone: '',
   email: '',
   typeService: 'nettoyage-automobile',
-  // video input (file only)
-  videoFile: null as File | null,
-  videoFileName: '',
+  description: '',
 })
 
 const errorMessage = ref('')
@@ -152,13 +149,7 @@ const getServiceLabel = (serviceId: string): string => {
   return service ? service.label : serviceId
 }
 
-const handleVideoFile = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  if (input.files && input.files[0]) {
-    formData.value.videoFile = input.files[0]
-    formData.value.videoFileName = input.files[0].name
-  }
-}
+
 
 // Nous n'utilisons plus l'upload serveur ici :
 // On privilégie le partage local via Web Share API (partage direct du fichier vers WhatsApp sur mobile).
@@ -173,31 +164,27 @@ const handleSubmit = async () => {
     return
   }
 
-  // Validation vidéo (fichier requis)
-  if (!formData.value.videoFile) {
-    errorMessage.value = '❌ Veuillez sélectionner un fichier vidéo'
+  // Validation description (texte requis)
+  if (!formData.value.description || !formData.value.description.trim()) {
+    errorMessage.value = '❌ Veuillez fournir une description du projet'
     return
   }
 
   // Construire les informations de base du message
   const baseLines: string[] = []
-  baseLines.push('*DEMANDE DE DEVIS*')
+  baseLines.push('*DEMANDE DE DEVIS YOLAAB*')
   baseLines.push('')
-  baseLines.push(`👤 *Client:* ${formData.value.prenom} ${formData.value.nom}`)
-  baseLines.push(`📞 *Téléphone:* ${formData.value.telephone}`)
-  baseLines.push(`📧 *Email:* ${formData.value.email || 'Non fourni'}`)
-  baseLines.push(`🔧 *Service:* ${getServiceLabel(formData.value.typeService)}`)
+  baseLines.push(`Nom: ${formData.value.nom}`)
+  baseLines.push(`Prénom: ${formData.value.prenom}`)
+  baseLines.push(`Téléphone: ${formData.value.telephone}`)
+  baseLines.push(`Email: ${formData.value.email || 'Non fourni'}`)
+  baseLines.push(`Service: ${getServiceLabel(formData.value.typeService)}`)
+  baseLines.push('')
+  baseLines.push('Description:')
+  baseLines.push(formData.value.description || '')
 
-  const file = formData.value.videoFile as File | null
-
-  // Construire le message final et ouvrir directement la discussion WhatsApp (comportement antérieur)
-  const lines: string[] = [...baseLines]
-  if (file) {
-    lines.push('')
-    lines.push('🎬 Vidéo fournie — veuillez joindre le fichier en pièce jointe si nécessaire.')
-  }
-
-  const message = lines.join('\n')
+  // Construire le message final 
+  const message = baseLines.join('\n')
   const encodedMessage = encodeURIComponent(message)
   const whatsappNumber = '221767957899'
   const apiLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
