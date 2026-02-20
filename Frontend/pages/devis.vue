@@ -82,14 +82,17 @@
           </div>
         </div>
 
-        <!-- Description du Projet -->
+        <!-- Description du Projet (vidéo) -->
         <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Description du Projet</h2>
-          <textarea
-            v-model="formData.description"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none h-32 resize-none"
-            placeholder="Décrivez votre projet, surface, détails importants, etc."
-          ></textarea>
+          <h2 class="text-2xl font-bold text-blue-600">Description du Projet (Vidéo)</h2>
+          <p class="text-sm text-gray-600">Veuillez fournir une vidéo illustrant le projet . Vous pouvez  télécharger un fichier vidéo.</p>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Télécharger la vidéo du projet *</label>
+            <input @change="handleVideoFile" type="file" accept="video/*" class="w-full" required />
+            <p v-if="formData.videoFileName" class="text-sm text-gray-600 mt-2">Fichier sélectionné: {{ formData.videoFileName }}</p>
+            <p class="text-sm text-gray-500 mt-2">Le fichier sera uploadé et un lien sera inclus dans le message WhatsApp.</p>
+          </div>
         </div>
 
         <!-- Submit Button -->
@@ -120,13 +123,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+const config = useRuntimeConfig()
+const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+
 const formData = ref({
   nom: '',
   prenom: '',
   telephone: '',
   email: '',
   typeService: 'nettoyage-automobile',
-  description: '',
+  // video input (file only)
+  videoFile: null as File | null,
+  videoFileName: '',
 })
 
 const errorMessage = ref('')
@@ -144,36 +152,111 @@ const getServiceLabel = (serviceId: string): string => {
   return service ? service.label : serviceId
 }
 
-const handleSubmit = () => {
+const handleVideoFile = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files[0]) {
+    formData.value.videoFile = input.files[0]
+    formData.value.videoFileName = input.files[0].name
+  }
+}
+
+// Nous n'utilisons plus l'upload serveur ici :
+// On privilégie le partage local via Web Share API (partage direct du fichier vers WhatsApp sur mobile).
+// Si non disponible, on ouvre le lien WhatsApp et invite l'utilisateur à attacher le fichier manuellement.
+
+const handleSubmit = async () => {
   errorMessage.value = ''
 
-  // Validation
+  // Validation champs obligatoires
   if (!formData.value.nom || !formData.value.prenom || !formData.value.telephone) {
     errorMessage.value = '❌ Veuillez remplir tous les champs obligatoires'
     return
   }
 
-  // Construire le message WhatsApp
-  const message = `
-*DEMANDE DE DEVIS*
+  // Validation vidéo (fichier requis)
+  if (!formData.value.videoFile) {
+    errorMessage.value = '❌ Veuillez sélectionner un fichier vidéo'
+    return
+  }
 
-👤 *Client:* ${formData.value.prenom} ${formData.value.nom}
-📞 *Téléphone:* ${formData.value.telephone}
-📧 *Email:* ${formData.value.email || 'Non fourni'}
-🔧 *Service:* ${getServiceLabel(formData.value.typeService)}
-📝 *Détails:* ${formData.value.description || 'Aucun détail fourni'}
-  `.trim()
+  // Construire les informations de base du message
+  const baseLines: string[] = []
+  baseLines.push('*DEMANDE DE DEVIS*')
+  baseLines.push('')
+  baseLines.push(`👤 *Client:* ${formData.value.prenom} ${formData.value.nom}`)
+  baseLines.push(`📞 *Téléphone:* ${formData.value.telephone}`)
+  baseLines.push(`📧 *Email:* ${formData.value.email || 'Non fourni'}`)
+  baseLines.push(`🔧 *Service:* ${getServiceLabel(formData.value.typeService)}`)
 
-  // Encoder le message pour l'URL
+  const file = formData.value.videoFile as File | null
+
+  // Tenter le partage natif (Web Share API) si le navigateur supporte le partage de fichiers
+  try {
+    if (file && navigator && 'canShare' in navigator && (navigator as any).canShare({ files: [file] })) {
+      await (navigator as any).share({ files: [file], text: baseLines.join('\n'), title: 'Demande de devis Yolaab' })
+      return
+    }
+  } catch (err) {
+    console.warn('Web Share failed', err)
+  }
+
+  // Si on arrive ici, le partage natif n'est pas disponible -> uploader la vidéo sur le serveur
+  let videoPublicUrl = ''
+  try {
+    if (!file) throw new Error('No file')
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await fetch(`${apiBaseUrl.replace(/\/$/, '')}/uploads`, {
+      method: 'POST',
+      body: fd,
+    })
+    if (!res.ok) {
+      throw new Error('Upload failed')
+    }
+    const json = await res.json()
+    // json.url is returned like '/uploads/xxxxx.mp4'
+    videoPublicUrl = `${apiBaseUrl.replace(/\/$/, '')}${json.url}`
+  } catch (err) {
+    console.error('Upload error', err)
+    errorMessage.value = "Échec de l'upload. Le message WhatsApp va s'ouvrir — veuillez joindre le fichier manuellement." 
+  }
+
+  // Construire le message final (incluant le lien vidéo si disponible)
+  const lines: string[] = [...baseLines]
+  if (videoPublicUrl) {
+    lines.push('')
+    lines.push('🎬 Vidéo (lien public) :')
+    lines.push(videoPublicUrl)
+  } else {
+    lines.push('')
+    lines.push('🎬 Vidéo fournie — merci de l\'ajouter en pièce jointe si nécessaire.')
+  }
+
+  const message = lines.join('\n')
   const encodedMessage = encodeURIComponent(message)
-  
-  // Numéro WhatsApp de Yolaab (sans les + pour le lien)
   const whatsappNumber = '221767957899'
-  
-  // Générer le lien WhatsApp
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
-  
-  // Rediriger vers WhatsApp
-  window.open(whatsappLink, '_blank')
+  const apiLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
+  const appLink = `whatsapp://send?phone=${whatsappNumber}&text=${encodedMessage}`
+
+  // Détecter mobile/tablette via userAgent simple
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : ''
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+
+  if (isMobile) {
+    try {
+      // tenter d'ouvrir l'app WhatsApp
+      window.location.href = appLink
+      setTimeout(() => { window.open(apiLink, '_blank') }, 1200)
+      return
+    } catch (err) {
+      console.warn('whatsapp:// failed, fallback to api link', err)
+    }
+  }
+
+  // Desktop/tablette : ouvrir WhatsApp Web
+  if (!videoPublicUrl) {
+    alert("Le partage direct n'est pas disponible sur ce navigateur. Le message WhatsApp va s'ouvrir — veuillez joindre le fichier vidéo manuellement avant d'envoyer.")
+  }
+  window.open(apiLink, '_blank')
 }
 </script>
