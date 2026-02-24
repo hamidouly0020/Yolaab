@@ -1,4 +1,4 @@
-import { Car, Home as HomeIcon, Building2, Sofa, Check, MapPin, Phone } from 'lucide-react';
+import { Car, Home as HomeIcon, Building2, Sofa, Check, MapPin, Phone, Calendar, Users, Clipboard, Star, Target, XCircle } from 'lucide-react';
 import { ImageWithFallback } from '@/app/components/figma/ImageWithFallback';
 
 interface HomePageProps {
@@ -50,17 +50,141 @@ export function HomePage({ onNavigate }: HomePageProps) {
               Bienvenue chez YOLAAB
             </h1>
             <p className="text-xl md:text-2xl mb-8 opacity-90">
-              Votre Expert en Nettoyage à Keur Massar
+              «Simplifier votre quotidien en professionnalisant les services domestiques, afin de libérer votre temps pour l'essentiel.»
             </p>
             <button
               onClick={() => onNavigate('reservation')}
               className="bg-white text-blue-600 px-12 py-5 rounded-full hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg"
             >
               <span className="flex items-center gap-3">
-                <span className="text-2xl">📅</span>
+                <Calendar size={24} className="text-blue-600" />
                 <span className="text-xl font-bold">RÉSERVER MAINTENANT</span>
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Presentation Section */}
+      <div className="bg-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* Qui est YOLAAB */}
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Qui est YOLAAB ?</h2>
+            <div className="bg-blue-50 rounded-2xl p-8 md:p-12">
+              <p className="text-lg text-gray-800 leading-relaxed mb-6">
+                YOLAAB est une entreprise qui structure et professionnalise le secteur des services domestiques, un secteur essentiel mais encore largement dominé par l'informel.
+              </p>
+              <p className="text-lg text-gray-800 leading-relaxed mb-6">
+                Nous construisons un écosystème intégré capable d'offrir aux ménages et aux entreprises une solution fiable, centralisée et professionnelle pour leurs besoins quotidiens.
+              </p>
+              <p className="text-lg text-gray-800 leading-relaxed font-semibold text-blue-700">
+                YOLAAB n'est pas un simple prestataire. C'est une organisation structurée qui transforme un marché fragmenté en une expérience cohérente et rassurante.
+              </p>
+            </div>
+          </div>
+
+          {/* Le problème que nous résolvons */}
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Le problème que nous résolvons</h2>
+            <p className="text-lg text-gray-800 text-center mb-8">Le secteur domestique souffre d'un manque de structuration.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {[
+                'Prestataires peu encadrés',
+                'Qualité irrégulière',
+                'Manque de garanties',
+                'Absence de standards clairs',
+                'Multiplication des interlocuteurs',
+                'Déficit de confiance'
+              ].map((problem, idx) => (
+                <div key={idx} className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+                  <div className="text-red-500 mb-3"><XCircle size={28} /></div>
+                  <p className="font-semibold text-gray-800">{problem}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Notre solution */}
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Notre solution : un écosystème intégré</h2>
+            <p className="text-lg text-gray-800 text-center mb-12">
+              YOLAAB développe un écosystème intégré de services domestiques avec un principe simple : <span className="font-bold">un seul interlocuteur, plusieurs solutions, un standard unique de qualité.</span>
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { title: 'Équipes formées et encadrées', Icon: Users },
+                { title: 'Processus clairs', Icon: Clipboard },
+                { title: 'Suivi client rigoureux', Icon: Check },
+                { title: 'Homogénéité de standards', Icon: Star },
+                { title: 'Logique de qualité continue', Icon: Target },
+                { title: 'Organisation avant improvisation', Icon: Building2 }
+              ].map((solution, idx) => (
+                <div key={idx} className="bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
+                  <div className="mb-3 text-blue-600"><solution.Icon size={28} /></div>
+                  <p className="font-semibold text-gray-800">{solution.title}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Notre impact social */}
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Notre impact social</h2>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 md:p-12">
+              <p className="text-lg text-gray-800 text-center mb-8">YOLAAB contribue activement à la transformation sociale du secteur domestique.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[
+                  'Formalisation des métiers',
+                  'Professionnalisation des travailleurs',
+                  'Création d\'emplois structurés',
+                  'Amélioration des conditions de travail',
+                  'Valorisation de compétences souvent invisibles'
+                ].map((impact, idx) => (
+                  <div key={idx} className="flex items-start gap-4">
+                    <div className="text-yellow-400"><Star size={20} /></div>
+                    <p className="text-gray-800 font-medium">{impact}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Nos valeurs */}
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Nos valeurs</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {['Fiabilité', 'Excellence', 'Responsabilité', 'Respect', 'Rigueur', 'Engagement'].map((value, idx) => (
+                <div key={idx} className="bg-blue-100 rounded-xl p-6 text-center">
+                  <p className="font-bold text-blue-800">{value}</p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-gray-600 mt-8 italic">
+              Ces principes guident chacune de nos décisions et structurent notre développement.
+            </p>
+          </div>
+
+          {/* Vision et Ambitions */}
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-8 text-center">Notre vision et nos ambitions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-blue-600 text-white rounded-2xl p-8">
+                <h3 className="text-2xl font-bold mb-4"><Target size={20} className="inline-block mr-2" />Notre Vision</h3>
+                <p className="text-lg leading-relaxed">
+                  Devenir la référence régionale des services domestiques professionnels. Nous bâtissons un modèle scalable, organisé et durable, capable de transformer en profondeur un secteur essentiel.
+                </p>
+              </div>
+              <div className="bg-purple-600 text-white rounded-2xl p-8">
+                <h3 className="text-2xl font-bold mb-4"><Star size={20} className="inline-block mr-2" />Nos Ambitions</h3>
+                <ul className="text-lg space-y-3">
+                  <li className="flex items-center gap-3"><Check size={16} />Construire une marque forte et rassurante</li>
+                  <li className="flex items-center gap-3"><Check size={16} />Structurer durablement le marché</li>
+                  <li className="flex items-center gap-3"><Check size={16} />Déployer notre modèle à grande échelle</li>
+                  <li className="flex items-center gap-3"><Check size={16} />Générer un impact économique et social</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>

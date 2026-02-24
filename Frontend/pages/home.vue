@@ -5,7 +5,7 @@
       <div class="max-w-7xl mx-auto px-4 py-16 md:py-24">
         <div class="text-center">
           <h1 class="text-4xl md:text-6xl font-bold mb-4">
-            🧹 Yolaab
+            <HomeIcon size="36" class="inline-block mr-3 align-middle" /> Yolaab
           </h1>
           <p class="text-2xl md:text-3xl font-semibold mb-4 text-blue-100">
             L'art du nettoyage professionnel sur mesure
@@ -18,7 +18,7 @@
             class="inline-block bg-white text-blue-600 px-12 py-5 rounded-full hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg font-bold"
           >
             <span class="flex items-center gap-3">
-              <span class="text-2xl">📅</span>
+              <Calendar size="20" />
               <span class="text-xl">RÉSERVER MAINTENANT</span>
             </span>
           </NuxtLink>
@@ -113,19 +113,19 @@
         <h3 class="text-2xl font-bold text-blue-600 mb-4">Nos Domaines d'Expertise</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <div class="text-4xl mb-2">🚗</div>
+            <div class="text-4xl mb-2"><Car size="36" /></div>
             <p class="font-semibold text-gray-700">Nettoyage Automobile</p>
           </div>
           <div>
-            <div class="text-4xl mb-2">🛋️</div>
+            <div class="text-4xl mb-2"><Sofa size="36" /></div>
             <p class="font-semibold text-gray-700">Moquettes & Canapés</p>
           </div>
           <div>
-            <div class="text-4xl mb-2">🏗️</div>
+            <div class="text-4xl mb-2"><Building2 size="36" /></div>
             <p class="font-semibold text-gray-700">Fin de Chantier</p>
           </div>
           <div>
-            <div class="text-4xl mb-2">🏢</div>
+            <div class="text-4xl mb-2"><Building2 size="36" /></div>
             <p class="font-semibold text-gray-700">Entretien Bureaux</p>
           </div>
         </div>
@@ -140,25 +140,25 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4">😊</div>
+            <div class="text-5xl mb-4"><Smile size="40" class="mx-auto" /></div>
             <h3 class="text-xl font-bold text-blue-600 mb-3">Satisfaction Client</h3>
             <p class="text-gray-700">Vous êtes notre priorité. Notre équipe s'engage à offrir un service qui dépasse vos attentes.</p>
           </div>
 
           <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4">⭐</div>
+            <div class="text-5xl mb-4"><Star size="40" class="mx-auto" /></div>
             <h3 class="text-xl font-bold text-blue-600 mb-3">Professionnalisme</h3>
             <p class="text-gray-700">Nos experts mettent tout en œuvre pour assurer des résultats impeccables avec soin et efficacité.</p>
           </div>
 
           <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4">💡</div>
+            <div class="text-5xl mb-4"><Lightbulb size="40" class="mx-auto" /></div>
             <h3 class="text-xl font-bold text-blue-600 mb-3">Innovation</h3>
             <p class="text-gray-700">Nous utilisons des méthodes modernes et du matériel performant pour garantir des résultats durables.</p>
           </div>
 
           <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4">🎯</div>
+            <div class="text-5xl mb-4"><Target size="40" class="mx-auto" /></div>
             <h3 class="text-xl font-bold text-blue-600 mb-3">Adaptabilité</h3>
             <p class="text-gray-700">Chaque espace est unique. Nous adaptons nos services à vos besoins spécifiques.</p>
           </div>
@@ -213,13 +213,13 @@
         <p class="text-base md:text-lg mb-6 md:mb-8 px-2">Contactez-nous pour un devis gratuit ou plus d'informations</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6">
           <div class="flex flex-col items-center py-4 md:py-0">
-            <div class="text-4xl md:text-5xl mb-3 md:mb-4">📞</div>
+            <div class="text-4xl md:text-5xl mb-3 md:mb-4"><Phone size="36" /></div>
             <p class="text-lg md:text-xl font-semibold">Téléphone</p>
             <p class="text-sm md:text-base text-blue-100">78 480 03 61</p>
           </div>
 
           <div class="flex flex-col items-center py-4 md:py-0">
-            <div class="text-4xl md:text-5xl mb-3 md:mb-4">📍</div>
+            <div class="text-4xl md:text-5xl mb-3 md:mb-4"><MapPin size="36" /></div>
             <p class="text-lg md:text-xl font-semibold">Localisation</p>
             <p class="text-sm md:text-base text-blue-100">Keur Massar, Dakar</p>
           </div>
@@ -279,5 +279,6 @@
 </template>
 
 <script setup lang="ts">
+import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image } from 'lucide-vue-next'
 // Page data is now hardcoded with Yoolab branding - no need for services/features arrays
 </script>

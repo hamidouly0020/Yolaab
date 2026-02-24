@@ -76,8 +76,8 @@
                   : 'border-gray-300 hover:border-blue-400'
               ]"
             >
-              <div class="text-3xl mb-2">{{ service.emoji }}</div>
-              <p class="font-semibold text-gray-700">{{ service.label }}</p>
+                <div class="mb-2"><component :is="service.icon" size="28" /></div>
+                <p class="font-semibold text-gray-700">{{ service.label }}</p>
             </button>
           </div>
         </div>
@@ -103,6 +103,106 @@
           </div>
         </div>
 
+        <!-- Service-specific details -->
+        <div v-if="getServiceDetails()" class="space-y-4 bg-blue-50 rounded-2xl p-6">
+          <h2 class="text-2xl font-bold text-blue-600">Détails du service</h2>
+          
+          <!-- Canapes - Nombre de places -->
+          <div v-if="formData.typeService === 'canapes'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Nombre de places du canapé *
+            </label>
+            <input
+              v-model.number="formData.serviceDetails.places"
+              type="number"
+              min="1"
+              max="10"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+              placeholder="Ex: 3"
+            />
+            <p class="text-sm text-gray-500 mt-2">Précisez le nombre de places pour un calcul tarifaire exact</p>
+          </div>
+
+          <!-- Moquettes - Longueur et largeur -->
+          <div v-if="formData.typeService === 'moquettes'">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Longueur (m) *
+                </label>
+                <input
+                  v-model.number="formData.serviceDetails.longueur"
+                  type="number"
+                  min="0.5"
+                  step="0.5"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                  placeholder="Ex: 5"
+                />
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                  Largeur (m) *
+                </label>
+                <input
+                  v-model.number="formData.serviceDetails.largeur"
+                  type="number"
+                  min="0.5"
+                  step="0.5"
+                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                  placeholder="Ex: 4"
+                />
+              </div>
+            </div>
+            <p class="text-sm text-gray-500">La surface ({{ formData.serviceDetails.longueur * formData.serviceDetails.largeur }}m²) aide à estimer le délai</p>
+          </div>
+
+          <!-- Nettoyage automobile - Type de véhicule -->
+          <div v-if="formData.typeService === 'nettoyage-automobile'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Type de véhicule *
+            </label>
+            <select
+              v-model="formData.serviceDetails.typeVehicule"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+            >
+              <option value="">Sélectionnez un type</option>
+              <option value="citadine">Citadine</option>
+              <option value="berline">Berline</option>
+              <option value="suv">SUV</option>
+              <option value="monospace">Monospace</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <!-- Fin de chantier - Surface -->
+          <div v-if="formData.typeService === 'fin-de-chantier'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Surface à nettoyer (m²) *
+            </label>
+            <input
+              v-model.number="formData.serviceDetails.surface"
+              type="number"
+              min="10"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+              placeholder="Ex: 100"
+            />
+          </div>
+
+          <!-- Entretien bureaux - Nombre de pièces -->
+          <div v-if="formData.typeService === 'entretien-bureaux'">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Nombre de pièces/bureaux *
+            </label>
+            <input
+              v-model.number="formData.serviceDetails.nombrePieces"
+              type="number"
+              min="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+              placeholder="Ex: 5"
+            />
+          </div>
+        </div>
+
         <!-- Submit Button -->
         <div class="flex gap-4">
           <button
@@ -110,7 +210,8 @@
             :disabled="isLoading"
             class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-lg disabled:opacity-50"
           >
-            {{ isLoading ? '⏳ En cours...' : '✅ RÉSERVER' }}
+            <template v-if="isLoading"><Calendar size="18" class="inline-block mr-2"/>En cours...</template>
+            <template v-else><Check size="18" class="inline-block mr-2"/>RÉSERVER</template>
           </button>
           <NuxtLink
             to="/home"
@@ -120,11 +221,13 @@
           </NuxtLink>
         </div>
 
-        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-4 rounded-xl">
-          {{ successMessage }}
+        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-4 rounded-xl flex items-start gap-3">
+          <Check size="20" class="flex-shrink-0 text-green-700" />
+          <div>{{ successMessage }}</div>
         </div>
-        <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-4 rounded-xl">
-          {{ errorMessage }}
+        <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-4 rounded-xl flex items-start gap-3">
+          <XCircle size="20" class="flex-shrink-0 text-red-700" />
+          <div>{{ errorMessage }}</div>
         </div>
       </form>
     </div>
@@ -133,6 +236,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Car, Image, Sofa, Building2, Calendar, Check, XCircle } from 'lucide-vue-next'
 
 const formData = ref({
   nom: '',
@@ -140,19 +244,25 @@ const formData = ref({
   telephone: '',
   email: '',
   typeService: 'nettoyage-automobile',
-  duree: '1 semaine',
-})
+  duree: '1 semaine',  serviceDetails: {
+    places: 3,
+    longueur: 5,
+    largeur: 4,
+    typeVehicule: '',
+    surface: 100,
+    nombrePieces: 1,
+  },})
 
 const isLoading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
 
 const services = [
-  { id: 'nettoyage-automobile', label: 'Nettoyage Automobile', emoji: '🚗' },
-  { id: 'moquettes', label: 'Moquettes', emoji: '📜' },
-  { id: 'canapes', label: 'Canapés', emoji: '🛋️' },
-  { id: 'fin-de-chantier', label: 'Fin de Chantier', emoji: '🏗️' },
-  { id: 'entretien-bureaux', label: 'Entretien Bureaux', emoji: '🏢' },
+  { id: 'nettoyage-automobile', label: 'Nettoyage Automobile', icon: Car },
+  { id: 'moquettes', label: 'Moquettes', icon: Image },
+  { id: 'canapes', label: 'Canapés', icon: Sofa },
+  { id: 'fin-de-chantier', label: 'Fin de Chantier', icon: Building2 },
+  { id: 'entretien-bureaux', label: 'Entretien Bureaux', icon: Building2 },
 ]
 
 const durees = [
@@ -162,13 +272,17 @@ const durees = [
   { id: '1_mois', label: '1 mois' },
 ]
 
+const getServiceDetails = () => {
+  return ['canapes', 'moquettes', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
+}
+
 const handleSubmit = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
   
   const config = useRuntimeConfig()
-  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
 
   try {
     const response = await fetch(`${apiBaseUrl}/reservations`, {
@@ -183,6 +297,7 @@ const handleSubmit = async () => {
         email: formData.value.email || null,
         typeService: formData.value.typeService,
         duree: formData.value.duree,
+        serviceDetails: formData.value.serviceDetails,
       }),
     })
 
@@ -190,7 +305,7 @@ const handleSubmit = async () => {
       throw new Error('Erreur lors de la réservation')
     }
 
-    successMessage.value = '✅ Réservation confirmée ! Merci de votre confiance.'
+    successMessage.value = 'Réservation confirmée ! Merci de votre confiance.'
     formData.value = {
       nom: '',
       prenom: '',
@@ -198,13 +313,21 @@ const handleSubmit = async () => {
       email: '',
       typeService: 'nettoyage-automobile',
       duree: '1_semaine',
+      serviceDetails: {
+        places: 3,
+        longueur: 5,
+        largeur: 4,
+        typeVehicule: '',
+        surface: 100,
+        nombrePieces: 1,
+      },
     }
 
     setTimeout(() => {
       navigateTo('/home')
     }, 2000)
   } catch (error) {
-    errorMessage.value = '❌ Erreur lors de la réservation. Veuillez réessayer.'
+    errorMessage.value = 'Erreur lors de la réservation. Veuillez réessayer.'
     console.error(error)
   } finally {
     isLoading.value = false

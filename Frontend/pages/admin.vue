@@ -4,14 +4,14 @@
     <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-md w-full">
       <div class="text-center mb-8">
         <div class="bg-blue-100 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-          <span class="text-4xl">🔐</span>
+          <Lock size="28" />
         </div>
         <h1 class="text-3xl font-bold text-blue-600 mb-2">Espace Admin</h1>
         <p class="text-gray-600">Connexion requise</p>
       </div>
       <form @submit.prevent="handleLogin">
         <div class="mb-6">
-          <label class="block mb-2 font-bold">🔐 Mot de passe</label>
+          <label class="block mb-2 font-bold"><Lock size="16" class="inline-block mr-2"/>Mot de passe</label>
           <input
             v-model="password"
             type="password"
@@ -146,6 +146,13 @@
                   <div class="text-sm mt-2"><span class="font-semibold">Téléphone:</span> {{ res.telephone }}</div>
                   <div class="text-sm mt-1"><span class="font-semibold">Service:</span> {{ res.typeService }}</div>
                   <div class="text-sm mt-1"><span class="font-semibold">Durée:</span> {{ res.duree }}</div>
+                  <div v-if="res.serviceDetails" class="text-sm mt-2 text-gray-700">
+                    <div v-if="res.serviceDetails.places">Places: {{ res.serviceDetails.places }}</div>
+                    <div v-if="res.serviceDetails.longueur || res.serviceDetails.largeur">Dimensions: {{ res.serviceDetails.longueur || 0 }}m × {{ res.serviceDetails.largeur || 0 }}m</div>
+                    <div v-if="res.serviceDetails.surface">Surface: {{ res.serviceDetails.surface }} m²</div>
+                    <div v-if="res.serviceDetails.nombrePieces">Pièces: {{ res.serviceDetails.nombrePieces }}</div>
+                    <div v-if="res.serviceDetails.typeVehicule">Véhicule: {{ res.serviceDetails.typeVehicule || 'Non spécifié' }}</div>
+                  </div>
                 </div>
                 <div class="ml-4 flex-shrink-0">
                   <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
@@ -177,6 +184,11 @@
                     <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
                       {{ res.typeService }}
                     </span>
+                    <div v-if="res.serviceDetails" class="text-sm text-gray-600 mt-2">
+                      <div v-if="res.serviceDetails.places">Places: {{ res.serviceDetails.places }}</div>
+                      <div v-if="res.serviceDetails.longueur || res.serviceDetails.largeur">Dims: {{ res.serviceDetails.longueur || 0 }}m × {{ res.serviceDetails.largeur || 0 }}m</div>
+                      <div v-if="res.serviceDetails.surface">Surface: {{ res.serviceDetails.surface }} m²</div>
+                    </div>
                   </td>
                   <td class="p-4">{{ res.duree }}</td>
                   <td class="p-4">
@@ -545,6 +557,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { Lock } from 'lucide-vue-next'
 
 interface Worker {
   id: string
@@ -649,7 +662,7 @@ const newProduct = ref({
 
 const imageFile = ref<File | null>(null)
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3002'
 
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
@@ -673,7 +686,7 @@ const resolveRealisationUrl = (raw: string | undefined | null): string => {
   const trimmed = raw.trim()
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
-  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3002'
   return `${base.replace(/\/$/, '')}${path}`
 }
 
@@ -697,7 +710,7 @@ const handleLogin = () => {
 const loadData = async () => {
   isLoadingData.value = true
   const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3002'
 
   try {
     const resRes = await fetch(`${apiBaseUrl.value}/reservations`)

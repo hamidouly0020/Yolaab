@@ -2,8 +2,9 @@
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-8">
     <div class="max-w-6xl mx-auto px-4 py-12">
       <div class="flex items-center justify-between mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-blue-600">
-          🛒 Notre Boutique
+        <h1 class="text-4xl md:text-5xl font-bold text-blue-600 flex items-center">
+          <ShoppingCart class="w-10 h-10 mr-4" />
+          Notre Boutique
         </h1>
         <NuxtLink
           to="/checkout"
@@ -17,11 +18,11 @@
       </div>
 
       <div v-if="loading" class="text-center py-12">
-        <p class="text-lg text-gray-600">⏳ Chargement des produits...</p>
+        <p class="text-lg text-gray-600">Chargement des produits...</p>
       </div>
 
       <div v-if="error" class="text-center py-12">
-        <p class="text-lg text-red-600">❌ Erreur: {{ error }}</p>
+        <p class="text-lg text-red-600">Erreur: {{ error }}</p>
       </div>
 
       <div v-if="!loading && products.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -53,9 +54,10 @@
             <button
               @click.stop="addToCart(product)"
               :disabled="product.quantite === 0"
-              class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all font-semibold disabled:opacity-50"
+              class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-all font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              ➕ Ajouter au Panier
+              <Plus class="w-5 h-5" />
+              Ajouter au Panier
             </button>
           </div>
         </div>
@@ -88,6 +90,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { ShoppingCart, Plus } from 'lucide-vue-next'
 
 interface Product {
   id: string
@@ -124,7 +127,7 @@ const cartCount = computed(() => {
 
 onMounted(async () => {
   const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3002'
   
   try {
     const response = await fetch(`${apiBaseUrl.value}/products`)
@@ -169,11 +172,11 @@ const addToCart = (product: Product) => {
   const cart: CartItem[] = JSON.parse((typeof window !== 'undefined' && window.localStorage.getItem('cart')) || '[]')
   const existing = cart.find(item => item.id === product.id)
 
-  if (existing) {
+    if (existing) {
     if (existing.quantity < product.quantite) {
       existing.quantity++
     } else {
-      alert('⚠️ Quantité insuffisante en stock')
+      alert('Quantité insuffisante en stock')
       return
     }
   } else {
@@ -189,7 +192,7 @@ const addToCart = (product: Product) => {
   if (typeof window !== 'undefined' && window.localStorage) {
     window.localStorage.setItem('cart', JSON.stringify(cart))
   }
-  alert('✅ Produit ajouté au panier')
+  alert('Produit ajouté au panier')
 }
 
 // Lightbox state for product images

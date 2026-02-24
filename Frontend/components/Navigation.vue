@@ -27,17 +27,18 @@
                 : 'hover:bg-blue-500'
             ]"
           >
-            <span class="text-2xl">{{ item.emoji }}</span>
+            <component :is="item.icon" class="w-6 h-6" />
             <span class="mt-1 text-sm">{{ item.label }}</span>
           </NuxtLink>
           <!-- Admin button appears after 3 clicks -->
           <NuxtLink
             v-if="showAdminButton"
             to="/admin"
-            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold text-sm transition-all"
+            class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-bold text-sm transition-all flex items-center gap-2"
             title="Admin Panel"
           >
-            🔐 Admin
+            <Lock class="w-4 h-4" />
+            Admin
           </NuxtLink>
         </div>
       </div>
@@ -58,9 +59,9 @@
         <NuxtLink
           v-if="showAdminButton"
           to="/admin"
-          class="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-bold text-xs transition-all"
+          class="px-2 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded font-bold text-xs transition-all flex items-center justify-center"
         >
-          🔐
+          <Lock class="w-4 h-4" />
         </NuxtLink>
       </div>
       <p class="text-center text-sm pb-4">Keur Massar, Dakar</p>
@@ -72,7 +73,7 @@
             :to="`/${item.id}`"
             class="flex flex-col items-center justify-center flex-1 h-full hover:bg-blue-500 transition"
           >
-            <span class="text-2xl">{{ item.emoji }}</span>
+            <component :is="item.icon" class="w-6 h-6 text-white" />
             <span class="text-xs mt-1">{{ item.label }}</span>
           </NuxtLink>
           <!-- Admin mobile link hidden intentionally for discreet access -->
@@ -84,13 +85,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { Home, Calendar, Clipboard, Film, ShoppingCart, Lock } from 'lucide-vue-next'
 
 const navItems = [
-  { id: 'home', emoji: '🏠', label: 'Accueil' },
-  { id: 'reservation', emoji: '📅', label: 'Réserver' },
-  { id: 'devis', emoji: '📋', label: 'Devis' },
-  { id: 'realisation', emoji: '🎬', label: 'Réalisations' },
-  { id: 'shop', emoji: '🛒', label: 'Boutique' },
+  { id: 'home', icon: Home, label: 'Accueil' },
+  { id: 'reservation', icon: Calendar, label: 'Réserver' },
+  { id: 'devis', icon: Clipboard, label: 'Devis' },
+  { id: 'realisation', icon: Film, label: 'Réalisations' },
+  { id: 'shop', icon: ShoppingCart, label: 'Boutique' },
 ]
 
 const route = useRoute()
