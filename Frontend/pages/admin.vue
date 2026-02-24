@@ -142,7 +142,7 @@
               <div class="flex items-start justify-between">
                 <div>
                   <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
-                  <div class="text-sm text-gray-600">{{ res.email || '-' }}</div>
+                  <div class="text-sm text-gray-600">{{ res.localisation || '-' }}</div>
                   <div class="text-sm mt-2"><span class="font-semibold">Téléphone:</span> {{ res.telephone }}</div>
                   <div class="text-sm mt-1"><span class="font-semibold">Service:</span> {{ res.typeService }}</div>
                   <div class="text-sm mt-1"><span class="font-semibold">Durée:</span> {{ res.duree }}</div>
@@ -177,7 +177,7 @@
                 <tr v-for="(res, index) in reservations" :key="index" class="border-b hover:bg-blue-50">
                   <td class="p-4">
                     <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
-                    <div v-if="res.email" class="text-sm text-gray-600">{{ res.email }}</div>
+                    <div v-if="res.localisation" class="text-sm text-gray-600">{{ res.localisation }}</div>
                   </td>
                   <td class="p-4">{{ res.telephone }}</td>
                   <td class="p-4">
@@ -515,11 +515,11 @@
       </div>
 
       <div v-if="selectedOrder" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h4 class="font-semibold">Client</h4>
             <p class="text-lg">{{ selectedOrder.prenom }} {{ selectedOrder.nom }}</p>
-            <p class="text-sm text-gray-600">{{ selectedOrder.email || '-' }}</p>
+            	    <p class="text-sm text-gray-600">{{ selectedOrder.localisation || '-' }}</p>
             <p class="text-sm">📞 {{ selectedOrder.telephone || '-' }}</p>
           </div>
           <div>

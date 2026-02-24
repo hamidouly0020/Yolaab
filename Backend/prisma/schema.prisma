@@ -12,7 +12,7 @@ model Reservation {
   nom          String
   prenom       String
   telephone    String
-  email        String?
+  localisation String?
   typeService  String
   duree        String
   serviceDetails String? @db.LongText

@@ -48,13 +48,13 @@
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
-                Email
+                Localisation
               </label>
               <input
-                v-model="formData.email"
-                type="email"
+                v-model="formData.localisation"
+                type="text"
                 class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
-                placeholder="Votre email"
+                placeholder="Votre localisation (ville, adresse)"
               />
             </div>
           </div>
@@ -231,7 +231,7 @@ const formData = ref({
   nom: '',
   prenom: '',
   telephone: '',
-  email: '',
+  localisation: '',
   typeService: 'nettoyage-automobile',
   description: '',
   serviceDetails: {
@@ -291,7 +291,7 @@ const handleSubmit = async () => {
   baseLines.push(`Nom: ${formData.value.nom}`)
   baseLines.push(`Prénom: ${formData.value.prenom}`)
   baseLines.push(`Téléphone: ${formData.value.telephone}`)
-  baseLines.push(`Email: ${formData.value.email || 'Non fourni'}`)
+  baseLines.push(`Localisation: ${formData.value.localisation || 'Non fournie'}`)
   baseLines.push(`Service: ${getServiceLabel(formData.value.typeService)}`)
   baseLines.push('')
   baseLines.push('Description:')

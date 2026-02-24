@@ -353,7 +353,7 @@ export function AdminPage({ reservations, applications, orders }: AdminPageProps
                       <tr key={index} className="border-b hover:bg-blue-50">
                         <td className="p-4">
                           <div className="font-bold">{res.prenom} {res.nom}</div>
-                          {res.email && <div className="text-sm text-gray-600">{res.email}</div>}
+                          {res.localisation && <div className="text-sm text-gray-600">{res.localisation}</div>}
                         </td>
                         <td className="p-4">{res.telephone}</td>
                         <td className="p-4">

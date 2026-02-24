@@ -97,15 +97,7 @@
               />
             </div>
 
-            <div>
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-              <input
-                v-model="orderData.email"
-                type="email"
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
-                placeholder="Votre email"
-              />
-            </div>
+            <!-- Email supprimé — localisation utilisée à la place -->
 
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">Localisation *</label>
@@ -175,7 +167,6 @@ interface OrderData {
   nom: string
   prenom: string
   telephone: string
-  email: string
   localisation: string
 }
 
@@ -184,7 +175,6 @@ const orderData = ref<OrderData>({
   nom: '',
   prenom: '',
   telephone: '',
-  email: '',
   localisation: '',
 })
 
@@ -257,7 +247,6 @@ const handleCheckout = async () => {
         nom: orderData.value.nom,
         prenom: orderData.value.prenom,
         telephone: orderData.value.telephone,
-        email: orderData.value.email || null,
         localisation: orderData.value.localisation,
         items: items,
         total: total.value,
@@ -275,7 +264,6 @@ const handleCheckout = async () => {
       nom: '',
       prenom: '',
       telephone: '',
-      email: '',
       localisation: '',
     }
 
