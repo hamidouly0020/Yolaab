@@ -32,13 +32,16 @@
   <!-- Admin Dashboard -->
   <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
     <!-- Header -->
-    <div class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-blue-600">🛠️ Espace Admin</h1>
+    <div class="bg-white shadow-sm px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <Lock class="w-6 h-6 text-blue-600" />
+        <h1 class="text-lg sm:text-2xl font-bold text-blue-600">Espace Admin</h1>
+      </div>
       <button
         @click="logout"
-        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all font-bold"
+        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all font-bold text-sm md:text-base flex items-center gap-2"
       >
-        🚪 DÉCONNEXION
+        <XCircle class="w-4 h-4" /> <span class="uppercase">Déconnexion</span>
       </button>
     </div>
 
@@ -53,9 +56,9 @@
               activeTab === 'reservations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
-            <span>📅</span>
-            <span class="hidden md:inline">Réservations</span>
-            <span class="md:hidden">Rés.</span>
+            <Calendar class="w-5 h-5" />
+            <span class="hidden sm:inline">Réservations</span>
+            <span class="sm:hidden text-sm">Rés.</span>
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
@@ -73,9 +76,9 @@
               activeTab === 'products' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
-            <span>🛍️</span>
-            <span class="hidden md:inline">Produits</span>
-            <span class="md:hidden">Prod.</span>
+            <ShoppingCart class="w-5 h-5" />
+            <span class="hidden sm:inline">Produits</span>
+            <span class="sm:hidden text-sm">Prod.</span>
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
@@ -93,9 +96,9 @@
               activeTab === 'orders' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
-            <span>🛒</span>
-            <span class="hidden md:inline">Commandes</span>
-            <span class="md:hidden">Cmd.</span>
+            <ShoppingCart class="w-5 h-5" />
+            <span class="hidden sm:inline">Commandes</span>
+            <span class="sm:hidden text-sm">Cmd.</span>
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
@@ -113,9 +116,9 @@
               activeTab === 'realisations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
-            <span>🎬</span>
-            <span class="hidden md:inline">Réalisations</span>
-            <span class="md:hidden">Réal.</span>
+            <Play class="w-5 h-5" />
+            <span class="hidden sm:inline">Réalisations</span>
+            <span class="sm:hidden text-sm">Réal.</span>
             <span
               :class="[
                 'px-2 py-1 rounded-full text-sm font-bold',
@@ -130,9 +133,9 @@
 
       <!-- Reservations Tab -->
       <div v-if="activeTab === 'reservations'" class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-blue-600 mb-6">📅 Réservations ({{ reservations.length }})</h2>
+        <h2 class="text-2xl font-bold text-blue-600 mb-6 flex items-center gap-2"><Calendar class="w-5 h-5" /> Réservations ({{ reservations.length }})</h2>
         <div v-if="reservations.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">📅</div>
+          <div class="text-6xl mb-4"><Calendar class="w-16 h-16 text-blue-400" /></div>
           <p class="text-xl text-gray-600">Aucune réservation pour le moment</p>
         </div>
         <div v-else>
@@ -192,7 +195,7 @@
                   </td>
                   <td class="p-4">{{ res.duree }}</td>
                   <td class="p-4">
-                    <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">🗑️</button>
+                    <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all"><XCircle class="w-5 h-5" /></button>
                   </td>
                 </tr>
               </tbody>
@@ -204,17 +207,17 @@
       <!-- Products Tab -->
       <div v-if="activeTab === 'products'" class="bg-white rounded-2xl shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">🛍️ Produits ({{ products.length }})</h2>
+          <h2 class="text-2xl font-bold text-blue-600 flex items-center gap-2"><ShoppingCart class="w-5 h-5"/> Produits ({{ products.length }})</h2>
           <button
             @click="showAddProduct = true"
-            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
+            class="bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2 text-sm sm:text-base"
           >
-            <span>➕</span> Ajouter
+            <Plus class="w-4 h-4"/> <span>Ajouter</span>
           </button>
         </div>
 
-        <form v-if="showAddProduct" @submit.prevent="addProduct" class="bg-blue-50 p-6 rounded-xl mb-6">
-          <h3 class="font-bold text-xl mb-4">➕ Nouveau Produit</h3>
+        <form v-if="showAddProduct" @submit.prevent="addProduct" class="bg-blue-50 p-4 sm:p-6 rounded-xl mb-6">
+          <h3 class="font-bold text-lg sm:text-xl mb-4"><Plus class="w-4 h-4 inline-block mr-2"/> Nouveau Produit</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <input
               v-model="newProduct.nom"
@@ -262,7 +265,7 @@
         </form>
 
         <div v-if="products.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">🛍️</div>
+          <div class="text-6xl mb-4"><ShoppingCart class="w-16 h-16 mx-auto text-blue-400"/></div>
           <p class="text-xl text-gray-600">Aucun produit enregistré</p>
         </div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -275,8 +278,8 @@
               <p class="text-blue-600 font-bold">{{ product.prix.toLocaleString() }} FCFA</p>
               <p class="text-sm text-gray-500">Qté: {{ product.quantite }}</p>
               <div class="flex gap-2 mt-3">
-                <button @click="editProduct(product)" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all text-sm">✏️ Éditer</button>
-                <button @click="deleteProduct(product.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">🗑️</button>
+                <button @click="editProduct(product)" class="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-all text-sm flex items-center justify-center gap-2"><Plus class="w-4 h-4"/> Éditer</button>
+                <button @click="deleteProduct(product.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all"><XCircle class="w-5 h-5"/></button>
               </div>
             </div>
           </div>
@@ -285,9 +288,9 @@
 
       <!-- Orders Tab -->
       <div v-if="activeTab === 'orders'" class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4">🛒 Commandes ({{ orders.length }})</h2>
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center gap-2"><ShoppingCart class="w-5 h-5"/> Commandes ({{ orders.length }})</h2>
         <div v-if="orders.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">🛒</div>
+          <div class="text-6xl mb-4"><ShoppingCart class="w-16 h-16 mx-auto text-blue-400"/></div>
           <p class="text-xl text-gray-600">Aucune commande pour le moment</p>
         </div>
         <div v-else class="space-y-4">
@@ -315,8 +318,8 @@
                 </button>
                 <button @click="viewOrder(order)" class="hidden md:inline-flex bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all">Voir</button>
                 <button @click="deleteOrder(order.id)" class="hidden md:inline-flex bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
-                <button @click="viewOrder(order)" class="md:hidden p-2 bg-blue-500 text-white rounded-md" aria-label="voir détails">🔎</button>
-                <button @click="deleteOrder(order.id)" class="md:hidden p-2 bg-red-500 text-white rounded-md" aria-label="supprimer">🗑️</button>
+                <button @click="viewOrder(order)" class="md:hidden p-2 bg-blue-500 text-white rounded-md" aria-label="voir détails"><Plus class="w-4 h-4"/></button>
+                <button @click="deleteOrder(order.id)" class="md:hidden p-2 bg-red-500 text-white rounded-md" aria-label="supprimer"><XCircle class="w-4 h-4"/></button>
               </div>
             </div>
 
@@ -324,8 +327,8 @@
             <div class="mt-3 hidden md:block">
               <div class="grid grid-cols-1 gap-3">
                 <div v-for="(item, idx) in order.items" :key="idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <span class="text-2xl">{{ item.emoji }}</span>
+                      <div class="flex items-center gap-3 min-w-0">
+                        <Image class="w-6 h-6 text-gray-600" />
                     <div class="truncate">
                       <div class="font-medium truncate">{{ item.name }}</div>
                       <div class="text-sm text-gray-600 truncate">Prix: {{ item.price.toLocaleString() }} FCFA</div>
@@ -340,8 +343,8 @@
             <div v-if="isOrderExpanded(order.id)" class="mt-3 md:hidden">
               <div class="space-y-2">
                 <div v-for="(item, idx) in order.items" :key="'m-'+idx" class="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <span class="text-2xl">{{ item.emoji }}</span>
+                    <div class="flex items-center gap-3 min-w-0">
+                      <Image class="w-6 h-6 text-gray-600" />
                     <div class="truncate">
                       <div class="font-medium truncate">{{ item.name }}</div>
                       <div class="text-sm text-gray-600 truncate">Prix: {{ item.price.toLocaleString() }} FCFA</div>
@@ -358,18 +361,18 @@
       <!-- Realisations Tab -->
       <div v-if="activeTab === 'realisations'" class="bg-white rounded-2xl shadow-lg p-6">
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600">🎬 Réalisations ({{ realisations.length }})</h2>
+          <h2 class="text-2xl font-bold text-blue-600 flex items-center gap-2"><Play class="w-5 h-5"/> Réalisations ({{ realisations.length }})</h2>
           <button
             @click="showAddRealisation = true"
-            class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2"
+            class="bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2 text-sm sm:text-base"
           >
-            <span>➕</span> Ajouter
+            <Plus class="w-4 h-4"/> <span>Ajouter</span>
           </button>
         </div>
 
         <!-- Add Realisation Form -->
         <form v-if="showAddRealisation" @submit.prevent="addRealisation" class="bg-blue-50 p-6 rounded-xl mb-6">
-          <h3 class="font-bold text-xl mb-4">➕ Nouvelle Réalisation</h3>
+          <h3 class="font-bold text-lg sm:text-xl mb-4"><Plus class="w-4 h-4 inline-block mr-2"/> Nouvelle Réalisation</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <input
               v-model="newRealisation.titre"
@@ -451,7 +454,7 @@
 
         <!-- Realisations List -->
         <div v-if="realisations.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4">🎬</div>
+          <div class="text-6xl mb-4"><Play class="w-16 h-16 mx-auto text-blue-400"/></div>
           <p class="text-xl text-gray-600">Aucune réalisation enregistrée</p>
         </div>
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -495,7 +498,7 @@
                   @click="deleteRealisation(realisation.id)"
                   class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all"
                 >
-                  🗑️
+                  <XCircle class="w-5 h-5 inline-block" />
                 </button>
               </div>
             </div>
@@ -507,11 +510,11 @@
   </div>
 
   <!-- Order Details Modal -->
-  <div v-if="showOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div v-if="showOrderModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-4 md:p-6 max-h-[90vh] overflow-auto">
       <div class="flex items-start justify-between mb-4">
         <h3 class="text-2xl font-bold">Détails de la commande</h3>
-        <button @click="closeOrderModal" class="text-gray-600 hover:text-gray-800">✖</button>
+        <button @click="closeOrderModal" class="text-gray-600 hover:text-gray-800"><XCircle /></button>
       </div>
 
       <div v-if="selectedOrder" class="space-y-4">
@@ -520,7 +523,7 @@
             <h4 class="font-semibold">Client</h4>
             <p class="text-lg">{{ selectedOrder.prenom }} {{ selectedOrder.nom }}</p>
             	    <p class="text-sm text-gray-600">{{ selectedOrder.localisation || '-' }}</p>
-            <p class="text-sm">📞 {{ selectedOrder.telephone || '-' }}</p>
+            <p class="text-sm"><span class="inline-block mr-2"><Lock class="w-4 h-4 text-gray-500"/></span> {{ selectedOrder.telephone || '-' }}</p>
           </div>
           <div>
             <h4 class="font-semibold">Localisation</h4>
@@ -557,7 +560,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Lock } from 'lucide-vue-next'
+import { Lock, Calendar, ShoppingCart, Plus, XCircle, Image, Play } from 'lucide-vue-next'
 
 interface Worker {
   id: string
@@ -632,17 +635,17 @@ const newWorkerForm = ref({
 })
 
 const postes = [
-  { id: 'laveur', emoji: '🧹', label: 'Laveur' },
-  { id: 'chauffeur', emoji: '🚗', label: 'Chauffeur' },
-  { id: 'manager', emoji: '👔', label: 'Manager' },
-  { id: 'technicien', emoji: '🔧', label: 'Technicien' },
+  { id: 'laveur', label: 'Laveur' },
+  { id: 'chauffeur', label: 'Chauffeur' },
+  { id: 'manager', label: 'Manager' },
+  { id: 'technicien', label: 'Technicien' },
 ]
 
 const experiences = [
-  { id: 'debutant', emoji: '🌱', label: 'Débutant (0-1 an)' },
-  { id: 'intermediaire', emoji: '📈', label: 'Intermédiaire (1-3 ans)' },
-  { id: 'confirme', emoji: '⭐', label: 'Confirmé (3-5 ans)' },
-  { id: 'expert', emoji: '🏆', label: 'Expert (5+ ans)' },
+  { id: 'debutant', label: 'Débutant (0-1 an)' },
+  { id: 'intermediaire', label: 'Intermédiaire (1-3 ans)' },
+  { id: 'confirme', label: 'Confirmé (3-5 ans)' },
+  { id: 'expert', label: 'Expert (5+ ans)' },
 ]
 
 const newInvoice = ref({
@@ -866,7 +869,7 @@ const addProduct = async () => {
 
 const editProduct = (product: Product) => {
   newProduct.value = { ...product }
-  alert('✏️ Édition à implémenter')
+  alert('Édition à implémenter')
 }
 
 const deleteProduct = async (id: string) => {
