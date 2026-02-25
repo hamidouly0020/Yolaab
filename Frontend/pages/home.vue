@@ -1,7 +1,28 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+    <div class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white overflow-hidden">
+      <!-- Decorative blobs -->
+      <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+        <svg class="decor-blob absolute left-[-8%] top-[-10%] opacity-30" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1">
+              <stop offset="0%" stop-color="#7DD3FC" />
+              <stop offset="100%" stop-color="#60A5FA" />
+            </linearGradient>
+          </defs>
+          <circle cx="210" cy="210" r="180" fill="url(#g1)" />
+        </svg>
+        <svg class="decor-blob absolute right-[-6%] bottom-[-8%] opacity-20" width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g2" x1="0" x2="1">
+              <stop offset="0%" stop-color="#34D399" />
+              <stop offset="100%" stop-color="#06B6D4" />
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="320" height="320" rx="80" fill="url(#g2)" />
+        </svg>
+      </div>
       <div class="max-w-7xl mx-auto px-4 py-16 md:py-24">
         <div class="text-center">
           <h1 class="text-4xl md:text-6xl font-bold mb-4">
@@ -15,7 +36,7 @@
           </p>
           <NuxtLink
             to="/reservation"
-            class="inline-block bg-white text-blue-600 px-12 py-5 rounded-full hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg font-bold"
+            class="inline-block bg-white text-blue-600 px-12 py-5 rounded-full hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg font-bold pulse-cta"
           >
             <span class="flex items-center gap-3">
               <Calendar size="20" />
@@ -204,74 +225,54 @@
       </div>
     </div>
 
-    <!-- Contact Section -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12 md:py-16">
-      <div class="max-w-7xl mx-auto px-4 text-center">
-        <h2 class="text-2xl md:text-4xl font-bold mb-6 md:mb-12">
-          Contactez Yolaab
-        </h2>
-        <p class="text-base md:text-lg mb-6 md:mb-8 px-2">Contactez-nous pour un devis gratuit ou plus d'informations</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6">
-          <div class="flex flex-col items-center py-4 md:py-0">
-            <div class="text-4xl md:text-5xl mb-3 md:mb-4"><Phone size="36" /></div>
-            <p class="text-lg md:text-xl font-semibold">Téléphone</p>
-            <p class="text-sm md:text-base text-blue-100">78 480 03 61</p>
+    <!-- Contact Section (design mockup) -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 md:py-12 fade-up">
+      <div class="max-w-6xl mx-auto px-4 text-center">
+        <!-- Header -->
+        <h2 class="text-4xl md:text-5xl font-bold mb-2">Contactez Yolaab</h2>
+        <p class="text-lg md:text-xl mb-8 text-blue-100">Contactez-nous pour un devis gratuit ou plus d'informations</p>
+
+        <!-- Two large contact cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <!-- Phone Card -->
+          <div class="card-contact rounded-3xl p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <div class="flex justify-center mb-4">
+              <div class="icon-circle"><Phone size="48" /></div>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-semibold mb-2">Téléphone</h3>
+            <p class="text-lg md:text-xl"><a href="tel:+221784800361" class="hover:underline">78 480 03 61</a></p>
           </div>
 
-          <div class="flex flex-col items-center py-4 md:py-0">
-            <div class="text-4xl md:text-5xl mb-3 md:mb-4"><MapPin size="36" /></div>
-            <p class="text-lg md:text-xl font-semibold">Localisation</p>
-            <p class="text-sm md:text-base text-blue-100">Keur Massar, Dakar</p>
+          <!-- Location Card -->
+          <div class="card-contact rounded-3xl p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
+            <div class="flex justify-center mb-4">
+              <div class="icon-circle"><MapPin size="48" /></div>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-semibold mb-2">Localisation</h3>
+            <p class="text-lg md:text-xl">Keur Massar, Dakar</p>
           </div>
         </div>
 
-        <!-- Social Links with SVG logos -->
-        <div class="flex flex-wrap items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8 px-2">
-          <a
-            href="https://www.tiktok.com/@yolaab6?_r=1&_t=ZS-93fslJAVm5J"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
-            aria-label="Yoolab sur TikTok"
-          >
-            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
-            </svg>
-            <span class="font-semibold hidden sm:inline">TikTok</span>
+        <!-- Social Links -->
+        <div class="flex flex-wrap items-center justify-center gap-4 md:gap-6 mb-8">
+          <a href="https://www.tiktok.com/@yolaab6?_r=1&_t=ZS-93fslJAVm5J" target="_blank" rel="noopener noreferrer" class="social-btn">
+            <svg class="w-6 h-6 inline mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" /></svg>
+            TikTok
           </a>
-
-          <a
-            href="https://www.facebook.com/share/1AdEMxu7zs/?mibextid=wwXIfr"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
-            aria-label="Yoolab sur Facebook"
-          >
-            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M22 12a10 10 0 1 0-11 9.95V14.8h-2.2v-2.8H11V10.4c0-2.2 1.3-3.4 3.3-3.4.9 0 1.8.08 2.1.12v2.4h-1.3c-1 0-1.3.6-1.3 1.2v1.6h2.6l-.4 2.8h-2.2V22A10 10 0 0 0 22 12z" />
-            </svg>
-            <span class="font-semibold hidden sm:inline">Facebook</span>
+          <a href="https://www.facebook.com/share/1AdEMxu7zs/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" class="social-btn">
+            <svg class="w-6 h-6 inline mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11 9.95V14.8h-2.2v-2.8H11V10.4c0-2.2 1.3-3.4 3.3-3.4.9 0 1.8.08 2.1.12v2.4h-1.3c-1 0-1.3.6-1.3 1.2v1.6h2.6l-.4 2.8h-2.2V22A10 10 0 0 0 22 12z" /></svg>
+            Facebook
           </a>
-
-          <a
-            href="https://www.instagram.com/yolaab_nettoyage?igsh=aHI4eWNlbnU4M2Zz&utm_source=qr"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 md:gap-3 bg-white/10 hover:bg-white/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full transition text-white text-sm md:text-base"
-            aria-label="Yoolab sur Instagram"
-          >
-            <svg class="w-5 md:w-6 h-5 md:h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M7 2C5.3 2 4 3.3 4 5v14c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3H7zm8 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM18 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-            </svg>
-            <span class="font-semibold hidden sm:inline">Instagram</span>
+          <a href="https://www.instagram.com/yolaab_nettoyage?igsh=aHI4eWNlbnU4M2Zz&utm_source=qr" target="_blank" rel="noopener noreferrer" class="social-btn">
+            <svg class="w-6 h-6 inline mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2C5.3 2 4 3.3 4 5v14c0 1.7 1.3 3 3 3h10c1.7 0 3-1.3 3-3V5c0-1.7-1.3-3-3-3H7zm8 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM18 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" /></svg>
+            Instagram
           </a>
         </div>
 
-        <NuxtLink
-          to="/reservation"
-          class="inline-block bg-white text-blue-600 px-8 md:px-12 py-3 md:py-4 rounded-full hover:bg-blue-50 transition-all font-bold text-base md:text-lg"
-        >
+        <!-- CTA Button -->
+        <NuxtLink to="/reservation" class="inline-flex items-center gap-3 bg-white text-blue-600 px-12 py-4 rounded-full hover:bg-blue-50 transition-all font-bold text-lg shadow-lg hover:shadow-xl">
           Réserver une Intervention
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
         </NuxtLink>
       </div>
     </div>
@@ -282,3 +283,77 @@
 import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image } from 'lucide-vue-next'
 // Page data is now hardcoded with Yoolab branding - no need for services/features arrays
 </script>
+
+<style scoped>
+/* Decorative and subtle animations to enrich the design without changing layout */
+.decor-blob{ transform-origin: center; animation: float 8s ease-in-out infinite; }
+.decor-blob:nth-child(2){ animation-duration: 10s; }
+
+.pulse-cta{ animation: pulse 3.5s ease-in-out infinite; }
+
+.fade-up{ animation: fadeUp .9s ease both; }
+
+@keyframes float{
+  0%{ transform: translateY(0) scale(1); }
+ 50%{ transform: translateY(-12px) scale(1.02); }
+ 100%{ transform: translateY(0) scale(1); }
+}
+
+@keyframes pulse{
+  0%{ box-shadow: 0 6px 18px rgba(2,6,23,0.08); transform: translateY(0); }
+  50%{ box-shadow: 0 14px 36px rgba(2,6,23,0.12); transform: translateY(-4px); }
+ 100%{ box-shadow: 0 6px 18px rgba(2,6,23,0.08); transform: translateY(0); }
+}
+
+@keyframes fadeUp{
+  from{ opacity: 0; transform: translateY(12px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+/* Contact section refinements */
+.card-contact{ background: rgba(255,255,255,0.06); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.1); }
+
+.icon-circle{ 
+  width: 100px; 
+  height: 100px; 
+  background: rgba(255,255,255,0.12); 
+  border-radius: 50%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.social-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid rgba(255,255,255,0.5);
+  padding: 0.75rem 1rem;
+  border-radius: 2rem;
+  color: white;
+  font-weight: 600;
+  transition: all 300ms;
+  position: relative;
+}
+
+.social-btn:after{
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transition: transform 300ms;
+}
+
+.social-btn:hover{
+  border-color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.08);
+}
+
+.social-btn:hover:after{
+  transform: scaleX(1);
+}
+</style>

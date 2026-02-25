@@ -69,32 +69,48 @@
 
 ---
 
-## ÉTAPE 3 : Initialiser la base de données (migrations Prisma)
+## ÉTAPE 3 : Initialiser la base de données localement (AVANT le déploiement)
 
-Une fois le backend déployé sur Render :
+⚠️ **IMPORTANT : Si vous utilisez le plan gratuit de Render, vous n'avez PAS accès au Shell. Faites cette étape AVANT de déployer sur Render.**
 
-1. Allez sur https://render.com
-2. Cliquez sur votre service `yolaab-api`
-3. Allez dans l'onglet **"Shell"** (dans le menu en haut)
-4. Exécutez cette commande :
-   ```bash
-   npx prisma migrate deploy
+1. Sur votre ordinateur, ouvrez Terminal/PowerShell
+2. Allez dans le dossier Backend :
+   ```powershell
+   cd "C:\Users\User\OneDrive\Documents\Yolaab\Backend"
    ```
-5. Attendez que ça se termine (vous verrez "migrations completed")
 
-**Si vous voyez une erreur "relation does not exist"** :
-- Exécutez : `npx prisma generate` puis `npx prisma migrate deploy` à nouveau
+3. Créez un fichier `.env` avec votre connection string Clever Cloud :
+   ```
+   DATABASE_URL="mysql://uxxxxx:xxxxxx@xxx-mysql.services.clever-cloud.com:3306/yolaab"
+   ```
+
+4. Synchronisez la base de données :
+   ```bash
+   npx prisma db push
+   npx prisma generate
+   ```
+   Attendez que ça affiche "Your database is now in sync with your Prisma schema"
+
+5. Commitez et poussez ces changements :
+   ```powershell
+   git add Backend/.env Backend/prisma/
+   git commit -m "feat: sync database schema to production"
+   git push origin main
+   ```
+
+**Si vous avez un plan Premium Render** :
+- Après le déploiement, vous pouvez aller dans Shell et exécuter `npx prisma generate` pour régénérer le client Prisma sur le serveur
 
 ---
 
 ## ÉTAPE 4 : Configurer le Frontend Nuxt
 
-1. Ouvrez le fichier `Frontend/.env` sur votre ordinateur
-2. Remplacez l'URL du backend par celle que vous avez copiée de Render :
+1. Ouvrez le fichier `Frontend/.env` sur votre ordinateur (ou créez-le s'il n'existe pas)
+2. Ajoutez l'URL de votre backend Render (vous la verrez après l'ÉTAPE 2) :
    ```
    NUXT_PUBLIC_API_URL=https://yolaab-api.onrender.com
    ```
-   (changez `yolaab-api` par votre vrai nom de service Render)
+   (remplacez `yolaab-api` par votre vrai nom de service Render)
 
 3. Sauvegardez le fichier
 
@@ -199,10 +215,10 @@ Une fois le backend déployé sur Render :
 - ✅ Cliquez "Save Changes"
 
 ### Les produits ne s'affichent pas
-**Cause** : La base de données est vide
-- ✅ Allez sur Render → yolaab-api → Shell
-- ✅ Exécutez : `npx prisma migrate deploy`
-- ✅ Puis : `npx prisma db seed` (si vous avez un seed file)
+**Cause** : La base de données est vide ou le schema n'est pas synchronisé
+- ✅ Vérifiez que vous avez bien exécuté `npx prisma db push` localement (ÉTAPE 3)
+- ✅ Vérifiez que `DATABASE_URL` dans `.env` pointe vers la bonne base Clever Cloud
+- ✅ Si vous avez un seed file (`prisma/seed.ts`), exécutez : `npx prisma db seed`
 
 ---
 
