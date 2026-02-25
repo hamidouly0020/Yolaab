@@ -20,6 +20,7 @@
             v-for="item in navItems"
             :key="item.id"
             :to="`/${item.id}`"
+            @click="navigateToLink(item.id)"
             :class="[
               'flex flex-col items-center px-6 py-3 rounded-lg transition-all',
               isActive(item.id)
@@ -71,6 +72,7 @@
             v-for="item in navItems"
             :key="item.id"
             :to="`/${item.id}`"
+            @click="navigateToLink(item.id)"
             class="flex flex-col items-center justify-center flex-1 h-full hover:bg-blue-500 transition"
           >
             <component :is="item.icon" class="w-6 h-6 text-white" />
@@ -127,5 +129,12 @@ const handleLogoClick = () => {
 
 const isActive = (path: string) => {
   return route.path === `/${path}` || (path === 'home' && route.path === '/')
+}
+
+const navigateToLink = (id: string) => {
+  const target = `/${id}`
+  if (route.path !== target) {
+    router.push(target)
+  }
 }
 </script>

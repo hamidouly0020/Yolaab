@@ -123,8 +123,8 @@
             <p class="text-sm text-gray-500 mt-2">Précisez le nombre de places pour un calcul tarifaire exact</p>
           </div>
 
-          <!-- Moquettes - Longueur et largeur -->
-          <div v-if="formData.typeService === 'moquettes'">
+          <!-- Tapis - Longueur et largeur -->
+          <div v-if="formData.typeService === 'tapis'">
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -236,7 +236,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Car, Image, Sofa, Building2, Calendar, Check, XCircle } from 'lucide-vue-next'
+import { Car, Layers, Sofa, Building2, Calendar, Check, XCircle } from 'lucide-vue-next'
 
 const formData = ref({
   nom: '',
@@ -259,7 +259,7 @@ const errorMessage = ref('')
 
 const services = [
   { id: 'nettoyage-automobile', label: 'Nettoyage Automobile', icon: Car },
-  { id: 'moquettes', label: 'Moquettes', icon: Image },
+  { id: 'tapis', label: 'Tapis', icon: Layers },
   { id: 'canapes', label: 'Canapés', icon: Sofa },
   { id: 'fin-de-chantier', label: 'Fin de Chantier', icon: Building2 },
   { id: 'entretien-bureaux', label: 'Entretien Bureaux', icon: Building2 },
@@ -273,7 +273,7 @@ const durees = [
 ]
 
 const getServiceDetails = () => {
-  return ['canapes', 'moquettes', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
+  return ['canapes', 'tapis', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
 }
 
 const handleSubmit = async () => {

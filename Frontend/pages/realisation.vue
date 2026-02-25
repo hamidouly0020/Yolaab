@@ -3,8 +3,9 @@
     <div class="max-w-7xl mx-auto px-4 py-12">
       <!-- Header -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-4">
-          🎬 Nos Réalisations
+        <h1 class="text-4xl md:text-5xl font-bold text-blue-600 mb-4 flex items-center justify-center">
+          <Video class="w-10 h-10 mr-3 text-blue-600" />
+          Nos Réalisations
         </h1>
         <p class="text-xl text-gray-600">
           Décourez les projets de nettoyage et les interventions réussies de Yolaab
@@ -33,7 +34,7 @@
               : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
           ]"
         >
-          📷 Images
+          <Image class="inline-block w-5 h-5 mr-2" /> Images
         </button>
         <button
           @click="filterType = 'video'"
@@ -44,13 +45,13 @@
               : 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50'
           ]"
         >
-          🎥 Vidéos
+          <Video class="inline-block w-5 h-5 mr-2" /> Vidéos
         </button>
       </div>
 
       <!-- Loading State -->
       <div v-if="loading" class="text-center py-12">
-        <p class="text-lg text-gray-600">⏳ Chargement des réalisations...</p>
+        <p class="text-lg text-gray-600"><span class="inline-block w-5 h-5 mr-2 animate-spin border-2 border-blue-300 rounded-full border-t-transparent align-middle"></span> Chargement des réalisations...</p>
       </div>
 
       <!-- Error State -->
@@ -60,7 +61,7 @@
 
       <!-- Empty State -->
       <div v-if="!loading && filteredRealisations.length === 0" class="text-center py-12">
-        <div class="text-6xl mb-4">🎨</div>
+        <div class="text-6xl mb-4"><Image class="w-16 h-16 mx-auto text-blue-400" /></div>
         <p class="text-xl text-gray-600">Aucune réalisation pour le moment</p>
       </div>
 
@@ -89,7 +90,7 @@
               {{ item.description }}
             </p>
             <div class="mt-4 text-sm text-gray-500">
-              📅 {{ new Date(item.createdAt).toLocaleDateString('fr-FR') }}
+              <Calendar class="inline-block w-4 h-4 mr-1 text-gray-500" /> {{ new Date(item.createdAt).toLocaleDateString('fr-FR') }}
             </div>
           </div>
         </div>
@@ -102,7 +103,7 @@
         >
           <div class="relative h-64 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
-              <span class="text-5xl animate-pulse">▶️</span>
+              <Play class="text-5xl animate-pulse text-white" />
             </div>
             <iframe
               :src="resolveUrl(item.url)"
@@ -136,7 +137,7 @@
             @click="closeLightbox"
             class="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300 transition z-20"
           >
-            ✕
+            <XCircle />
           </button>
           <img
             :src="resolveUrl(selectedItem.url)"
@@ -170,6 +171,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { Image, Video, Play, Calendar, XCircle } from 'lucide-vue-next'
 
 interface Realisation {
   id: string

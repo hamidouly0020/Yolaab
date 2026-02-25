@@ -114,8 +114,8 @@
             <p class="text-sm text-gray-500 mt-2">Précisez le nombre de places pour un calcul tarifaire exact</p>
           </div>
 
-          <!-- Moquettes - Longueur et largeur -->
-          <div v-if="formData.typeService === 'moquettes'">
+          <!-- Tapis - Longueur et largeur -->
+          <div v-if="formData.typeService === 'tapis'">
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -222,7 +222,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Car, Image, Sofa, Building2, MessageCircle, XCircle } from 'lucide-vue-next'
+import { Car, Layers, Sofa, Building2, MessageCircle, XCircle } from 'lucide-vue-next'
 
 const config = useRuntimeConfig()
 const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
@@ -248,7 +248,7 @@ const errorMessage = ref('')
 
 const services = [
   { id: 'nettoyage-automobile', label: 'Nettoyage Automobile', icon: Car },
-  { id: 'moquettes', label: 'Moquettes', icon: Image },
+  { id: 'tapis', label: 'Tapis', icon: Layers },
   { id: 'canapes', label: 'Canapés', icon: Sofa },
   { id: 'fin-de-chantier', label: 'Fin de Chantier', icon: Building2 },
   { id: 'entretien-bureaux', label: 'Entretien Bureaux', icon: Building2 },
@@ -260,7 +260,7 @@ const getServiceLabel = (serviceId: string): string => {
 }
 
 const getServiceDetails = () => {
-  return ['canapes', 'moquettes', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
+  return ['canapes', 'tapis', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
 }
 
 
@@ -301,8 +301,8 @@ const handleSubmit = async () => {
   // Ajouter les détails du service
   if (formData.value.typeService === 'canapes') {
     baseLines.push(`Canapé: ${formData.value.serviceDetails.places} places`)
-  } else if (formData.value.typeService === 'moquettes') {
-    baseLines.push(`Moquette: ${formData.value.serviceDetails.longueur}m × ${formData.value.serviceDetails.largeur}m (${formData.value.serviceDetails.longueur * formData.value.serviceDetails.largeur}m²)`)
+  } else if (formData.value.typeService === 'tapis') {
+    baseLines.push(`Tapis: ${formData.value.serviceDetails.longueur}m × ${formData.value.serviceDetails.largeur}m (${formData.value.serviceDetails.longueur * formData.value.serviceDetails.largeur}m²)`)
   } else if (formData.value.typeService === 'nettoyage-automobile') {
     baseLines.push(`Véhicule: ${formData.value.serviceDetails.typeVehicule || 'Non spécifié'}`)
   } else if (formData.value.typeService === 'fin-de-chantier') {

@@ -43,7 +43,9 @@
                 style="opacity: 0.8"
               />
             </template>
-            <span v-else class="text-6xl">{{ getEmoji(product.categorie) }}</span>
+            <span v-else class="text-6xl">
+              <component :is="getIconComponent(product.categorie)" class="w-12 h-12" />
+            </span>
             <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold">
               {{ product.prix.toLocaleString() }} FCFA
             </div>
@@ -90,7 +92,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { ShoppingCart, Plus } from 'lucide-vue-next'
+import { ShoppingCart, Plus, Image } from 'lucide-vue-next'
 
 interface Product {
   id: string
@@ -150,6 +152,14 @@ const getEmoji = (categorie: string): string => {
     autre: '📦',
   }
   return emojis[categorie] || '📦'
+}
+
+const getIconComponent = (categorie: string) => {
+  // Map product categories to lucide icon components (use available icons)
+  if (categorie === 'nettoyage') return Image
+  if (categorie === 'equipement') return ShoppingCart
+  if (categorie === 'produit') return Image
+  return Image
 }
 
 const handleImageError = (event: Event) => {
