@@ -8,6 +8,7 @@ import { WorkerModule } from './worker/worker.module';
 import { InvoiceModule } from './invoice/invoice.module';
 import { RealisationModule } from './realisation/realisation.module';
 import { UploadsModule } from './uploads/uploads.module';
+import { DevisModule } from './devis/devis.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UploadsModule } from './uploads/uploads.module';
     InvoiceModule,
     RealisationModule,
     UploadsModule,
+    DevisModule,
   ],
   controllers: [],
   providers: [],

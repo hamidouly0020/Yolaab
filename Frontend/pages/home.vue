@@ -1,9 +1,16 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <!-- Hero Section -->
-    <div class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white overflow-hidden">
+    <div class="relative text-white overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center">
+      <!-- runtime background image (uses provided asset from Frontend/assets) -->
+      <div
+        class="absolute inset-0 z-0 bg-cover bg-center"
+        :style="{ backgroundImage: `url(${heroImg})` }"
+      ></div>
+      <!-- darker overlay above image for better text contrast -->
+      <div class="absolute inset-0 z-10 bg-black/45 pointer-events-none"></div>
       <!-- Decorative blobs -->
-      <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+      <div aria-hidden="true" class="absolute inset-0 pointer-events-none z-5">
         <svg class="decor-blob absolute left-[-8%] top-[-10%] opacity-30" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="g1" x1="0" x2="1">
@@ -23,15 +30,15 @@
           <rect x="0" y="0" width="320" height="320" rx="80" fill="url(#g2)" />
         </svg>
       </div>
-      <div class="max-w-7xl mx-auto px-4 py-16 md:py-24">
-        <div class="text-center">
-          <h1 class="text-4xl md:text-6xl font-bold mb-4">
+      <div class="max-w-7xl mx-auto px-4 relative z-20 w-full transform translate-y-6 md:translate-y-12">
+        <div class="text-center mx-auto">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-xl">
             <HomeIcon size="36" class="inline-block mr-3 align-middle" /> Yolaab
           </h1>
-          <p class="text-2xl md:text-3xl font-semibold mb-4 text-blue-100">
+          <p class="text-2xl md:text-3xl font-semibold mb-4 text-white/95">
             L'art du nettoyage professionnel sur mesure
           </p>
-          <p class="text-lg md:text-xl mb-8 opacity-90">
+          <p class="text-lg md:text-xl mb-8 text-white/90">
             Votre partenaire de confiance pour des espaces, équipements, et véhicules éclatants
           </p>
           <NuxtLink
@@ -133,21 +140,29 @@
       <div class="bg-blue-50 rounded-2xl p-8 md:p-12 text-center">
         <h3 class="text-2xl font-bold text-blue-600 mb-4">Nos Domaines d'Expertise</h3>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div>
-            <div class="text-4xl mb-2"><Car size="36" /></div>
-            <p class="font-semibold text-gray-700">Nettoyage Automobile</p>
+          <div class="text-center">
+            <div class="flex items-center justify-center text-blue-600 mb-2">
+              <Car size="44" />
+            </div>
+            <p class="font-semibold text-gray-700 mt-2">Nettoyage Automobile</p>
           </div>
-          <div>
-            <div class="text-4xl mb-2"><Sofa size="36" /></div>
-            <p class="font-semibold text-gray-700">Moquettes & Canapés</p>
+          <div class="text-center">
+            <div class="flex items-center justify-center text-blue-600 mb-2">
+              <Sofa size="44" />
+            </div>
+            <p class="font-semibold text-gray-700 mt-2">Moquettes & Canapés</p>
           </div>
-          <div>
-            <div class="text-4xl mb-2"><Building2 size="36" /></div>
-            <p class="font-semibold text-gray-700">Fin de Chantier</p>
+          <div class="text-center">
+            <div class="flex items-center justify-center text-blue-600 mb-2">
+              <Building2 size="44" />
+            </div>
+            <p class="font-semibold text-gray-700 mt-2">Fin de Chantier</p>
           </div>
-          <div>
-            <div class="text-4xl mb-2"><Building2 size="36" /></div>
-            <p class="font-semibold text-gray-700">Entretien Bureaux</p>
+          <div class="text-center">
+            <div class="flex items-center justify-center text-blue-600 mb-2">
+              <Building2 size="44" />
+            </div>
+            <p class="font-semibold text-gray-700 mt-2">Entretien Bureaux</p>
           </div>
         </div>
       </div>
@@ -187,40 +202,90 @@
       </div>
     </div>
 
-    <!-- Approach Section -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-12">
+    <!-- Approach Section - Timeline -->
+    <div class="max-w-7xl mx-auto px-4 py-20">
+      <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-4">
         Notre Approche en Trois Étapes
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="relative">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">1</div>
-            <h3 class="text-2xl font-bold text-blue-600">Analyse des Besoins</h3>
+      <p class="text-center text-gray-600 text-lg mb-16 max-w-2xl mx-auto">
+        Découvrez comment nous transformons vos espaces en trois étapes simples et efficaces
+      </p>
+      
+      <!-- Timeline Container -->
+      <div class="relative">
+        <!-- Timeline line (hidden on mobile) -->
+        <div class="hidden md:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300"></div>
+        
+        <!-- Timeline Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
+          <!-- Step 1 -->
+          <div class="relative group">
+            <!-- Step Circle -->
+            <div class="flex justify-center mb-8">
+              <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
+                <!-- Number -->
+                <span class="absolute text-5xl md:text-6xl font-bold opacity-30">1</span>
+                <!-- Icon - Clipboard/Form -->
+                <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 2h-4.18C14.4.84 13.3 0 12 0c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16zm-8-7h6v2h-6v-2zm0 4h6v2h-6v-2zm0-8h6v2h-6v-2z"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="text-center">
+              <h3 class="text-2xl md:text-xl font-bold text-blue-600 mb-3">Réception</h3>
+              <p class="text-gray-700 text-sm md:text-base leading-relaxed px-2">
+                Sélectionnez le type de service (nettoyage intérieur, extérieur...). Le prix se calcule automatiquement. Imprimez ou envoyez le ticket.
+              </p>
+            </div>
           </div>
-          <p class="text-gray-700 ml-16">
-            Nous commençons par une consultation pour comprendre vos attentes et les spécificités de chaque espace, équipement ou véhicule.
-          </p>
-        </div>
 
-        <div class="relative">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">2</div>
-            <h3 class="text-2xl font-bold text-blue-600">Plan Personnalisé</h3>
+          <!-- Step 2 -->
+          <div class="relative group">
+            <!-- Step Circle -->
+            <div class="flex justify-center mb-8">
+              <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
+                <!-- Number -->
+                <span class="absolute text-5xl md:text-6xl font-bold opacity-30">2</span>
+                <!-- Icon - SMS/Message -->
+                <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12h-8v-2h8v2zm0-3h-8V9h8v2zm0-3H4V6h14v2z"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="text-center">
+              <h3 class="text-2xl md:text-xl font-bold text-blue-600 mb-3">Notification Auto</h3>
+              <p class="text-gray-700 text-sm md:text-base leading-relaxed px-2">
+                Quand le service est complété et approuvé, cliquez sur "Prêt". Le client reçoit un SMS pour venir chercher ou nous livrer.
+              </p>
+            </div>
           </div>
-          <p class="text-gray-700 ml-16">
-            Nous élaborons une solution sur mesure, incluant les méthodes et produits adaptés à chaque surface et matériau.
-          </p>
-        </div>
 
-        <div class="relative">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-lg">3</div>
-            <h3 class="text-2xl font-bold text-blue-600">Suivi Satisfaction</h3>
+          <!-- Step 3 -->
+          <div class="relative group">
+            <!-- Step Circle -->
+            <div class="flex justify-center mb-8">
+              <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
+                <!-- Number -->
+                <span class="absolute text-5xl md:text-6xl font-bold opacity-30">3</span>
+                <!-- Icon - Payment/Credit Card -->
+                <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20 8H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H4V10h16v10zm-4-5h4v2h-4v-2z"/>
+                </svg>
+              </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="text-center">
+              <h3 class="text-2xl md:text-xl font-bold text-blue-600 mb-3">Encaissement</h3>
+              <p class="text-gray-700 text-sm md:text-base leading-relaxed px-2">
+                Validez le paiement (Cash, Wave ou OM). L'application met à jour votre chiffre d'affaires du jour automatiquement.
+              </p>
+            </div>
           </div>
-          <p class="text-gray-700 ml-16">
-            Nous restons à votre écoute pour ajuster nos services et garantir une satisfaction continue.
-          </p>
         </div>
       </div>
     </div>
@@ -280,6 +345,7 @@
 </template>
 
 <script setup lang="ts">
+import heroImg from '../assets/service1.jpeg'
 import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image } from 'lucide-vue-next'
 // Page data is now hardcoded with Yoolab branding - no need for services/features arrays
 </script>
@@ -356,4 +422,9 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
 .social-btn:hover:after{
   transform: scaleX(1);
 }
+
+/* Hero social-proof / testimonial */
+.testimonial{ border-left: 4px solid rgba(255,255,255,0.06); }
+.hero-trust img{ opacity: 0.9; filter: grayscale(20%); transition: transform .2s, opacity .2s; }
+.hero-trust img:hover{ transform: translateY(-3px); opacity: 1; filter: none; }
 </style>

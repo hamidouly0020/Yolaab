@@ -14,7 +14,8 @@ model Reservation {
   telephone    String
   localisation String?
   typeService  String
-  duree        String
+  duree        String?
+  description  String?
   serviceDetails String? @db.LongText
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -88,4 +89,27 @@ model Realisation {
   url         String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Devis {
+  id            String   @id @default(cuid())
+  nom           String
+  prenom        String
+  telephone     String
+  localisation  String?
+  typeService   String
+  description   String?
+  serviceDetails String? @db.LongText
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  body      String   @db.LongText
+  status    String
+  response  String?  @db.LongText
+  createdAt DateTime @default(now())
 }

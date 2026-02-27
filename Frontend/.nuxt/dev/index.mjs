@@ -2030,7 +2030,7 @@ const _G0thy6d3cFixwslMUm0tV2NnXsZCTLLrybcHVl2p2g = (function(nitro) {
 
 const rootDir = "C:/Users/User/OneDrive/Documents/Yolaab/Frontend";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"}],"style":[],"script":[],"noscript":[]};
 
 const appRootTag = "div";
 

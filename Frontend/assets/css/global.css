@@ -1,0 +1,28 @@
+/* Global Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
+
+/* Apply Bricolage Grotesque to entire site */
+* {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+html,
+body {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+/* Optimize font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optional: Different font weights for different elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+}
+
+p, span, a, button {
+  font-family: 'Bricolage Grotesque', sans-serif;
+}

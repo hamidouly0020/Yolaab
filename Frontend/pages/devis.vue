@@ -70,13 +70,13 @@
               type="button"
               @click="formData.typeService = service.id"
               :class="[
-                'p-4 rounded-2xl border-2 transition-all text-center cursor-pointer',
+                'p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-center gap-2',
                 formData.typeService === service.id
                   ? 'border-blue-600 bg-blue-50 shadow-lg'
                   : 'border-gray-300 hover:border-blue-400'
               ]"
             >
-              <div class="mb-2"><component :is="service.icon" size="28" /></div>
+              <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="28" />
               <p class="font-semibold text-gray-700">{{ service.label }}</p>
             </button>
           </div>
@@ -269,71 +269,100 @@ const getServiceDetails = () => {
 // On privilégie le partage local via Web Share API (partage direct du fichier vers WhatsApp sur mobile).
 // Si non disponible, on ouvre le lien WhatsApp et invite l'utilisateur à attacher le fichier manuellement.
 
-const handleSubmit = async () => {
+  const handleSubmit = async () => {
   errorMessage.value = ''
 
-  // Validation champs obligatoires
+  // Validation champs obligatoires (front)
   if (!formData.value.nom || !formData.value.prenom || !formData.value.telephone) {
     errorMessage.value = 'Veuillez remplir tous les champs obligatoires'
     return
   }
 
-  // Validation description (texte requis)
   if (!formData.value.description || !formData.value.description.trim()) {
     errorMessage.value = 'Veuillez fournir une description du projet'
     return
   }
 
-  // Construire les informations de base du message
-  const baseLines: string[] = []
-  baseLines.push('*DEMANDE DE DEVIS YOLAAB*')
-  baseLines.push('')
-  baseLines.push(`Nom: ${formData.value.nom}`)
-  baseLines.push(`Prénom: ${formData.value.prenom}`)
-  baseLines.push(`Téléphone: ${formData.value.telephone}`)
-  baseLines.push(`Localisation: ${formData.value.localisation || 'Non fournie'}`)
-  baseLines.push(`Service: ${getServiceLabel(formData.value.typeService)}`)
-  baseLines.push('')
-  baseLines.push('Description:')
-  baseLines.push(formData.value.description || '')
-  baseLines.push('')
-  
-  // Ajouter les détails du service
-  if (formData.value.typeService === 'canapes') {
-    baseLines.push(`Canapé: ${formData.value.serviceDetails.places} places`)
-  } else if (formData.value.typeService === 'tapis') {
-    baseLines.push(`Tapis: ${formData.value.serviceDetails.longueur}m × ${formData.value.serviceDetails.largeur}m (${formData.value.serviceDetails.longueur * formData.value.serviceDetails.largeur}m²)`)
-  } else if (formData.value.typeService === 'nettoyage-automobile') {
-    baseLines.push(`Véhicule: ${formData.value.serviceDetails.typeVehicule || 'Non spécifié'}`)
-  } else if (formData.value.typeService === 'fin-de-chantier') {
-    baseLines.push(`Surface: ${formData.value.serviceDetails.surface}m²`)
-  } else if (formData.value.typeService === 'entretien-bureaux') {
-    baseLines.push(`Nombre de pièces: ${formData.value.serviceDetails.nombrePieces}`)
-  }
+  // Envoyer au backend pour persistance + notification email
+  try {
+    const config = useRuntimeConfig()
+    const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
 
-  // Construire le message final 
-  const message = baseLines.join('\n')
-  const encodedMessage = encodeURIComponent(message)
-  const whatsappNumber = '221767957899'
-  const apiLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
-  const appLink = `whatsapp://send?phone=${whatsappNumber}&text=${encodedMessage}`
-
-  // Détecter mobile/tablette via userAgent simple
-  const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : ''
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
-
-  if (isMobile) {
-    // ouvrir l'app WhatsApp si possible
-    try {
-      window.location.href = appLink
-      setTimeout(() => { window.open(apiLink, '_blank') }, 1200)
-      return
-    } catch (err) {
-      console.warn('whatsapp:// failed, fallback to api link', err)
+    const payload = {
+      nom: formData.value.nom,
+      prenom: formData.value.prenom,
+      telephone: formData.value.telephone,
+      localisation: formData.value.localisation,
+      typeService: formData.value.typeService,
+      description: formData.value.description,
+      serviceDetails: formData.value.serviceDetails,
     }
-  }
 
-  // Desktop/tablette : ouvrir WhatsApp Web avec le message prérempli
-  window.open(apiLink, '_blank')
+    const res = await fetch(`${apiBaseUrl}/devis`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    const json = await res.json()
+    if (!res.ok || json.ok === false) {
+      errorMessage.value = json.error || 'Erreur lors de l\'envoi de la demande'
+      return
+    }
+
+    // succès: reset form and notify user
+    formData.value = {
+      nom: '',
+      prenom: '',
+      telephone: '',
+      localisation: '',
+      typeService: 'nettoyage-automobile',
+      description: '',
+      serviceDetails: { places: 3, longueur: 5, largeur: 4, typeVehicule: '', surface: 100, nombrePieces: 1 },
+    }
+
+    // Open WhatsApp for client to send the same message to admin
+    try {
+      const messageLines: string[] = []
+      messageLines.push('DEMANDE DE DEVIS YOLAAB')
+      messageLines.push(`Nom: ${payload.nom}`)
+      messageLines.push(`Prénom: ${payload.prenom}`)
+      messageLines.push(`Téléphone: ${payload.telephone}`)
+      messageLines.push(`Localisation: ${payload.localisation || 'Non fournie'}`)
+      messageLines.push(`Service: ${payload.typeService}`)
+      messageLines.push('')
+      messageLines.push('Description:')
+      messageLines.push(payload.description || '')
+
+      const encodedMessage = encodeURIComponent(messageLines.join('\n'))
+      const whatsappNumber = '221767957899'
+      const apiLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
+      const appLink = `whatsapp://send?phone=${whatsappNumber}&text=${encodedMessage}`
+
+      const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : ''
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
+
+      if (isMobile) {
+        // try native app first
+        try {
+          window.location.href = appLink
+          setTimeout(() => { window.open(apiLink, '_blank') }, 1200)
+        } catch (err) {
+          window.open(apiLink, '_blank')
+        }
+      } else {
+        // desktop: open WhatsApp Web
+        window.open(apiLink, '_blank')
+      }
+    } catch (err) {
+      console.warn('Unable to open WhatsApp link', err)
+    }
+
+    alert('Demande de devis envoyée — nous vous contacterons bientôt.')
+    navigateTo('/home')
+  } catch (err) {
+    console.error(err)
+    errorMessage.value = 'Erreur lors de l\'envoi. Veuillez réessayer plus tard.'
+  }
 }
 </script>

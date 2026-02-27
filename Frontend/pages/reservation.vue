@@ -70,13 +70,13 @@
               type="button"
               @click="formData.typeService = service.id"
               :class="[
-                'p-4 rounded-2xl border-2 transition-all text-center cursor-pointer',
+                'p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col items-center justify-center gap-2',
                 formData.typeService === service.id
                   ? 'border-blue-600 bg-blue-50 shadow-lg'
                   : 'border-gray-300 hover:border-blue-400'
               ]"
             >
-                <div class="mb-2"><component :is="service.icon" size="28" /></div>
+                <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="28" />
                 <p class="font-semibold text-gray-700">{{ service.label }}</p>
             </button>
           </div>
