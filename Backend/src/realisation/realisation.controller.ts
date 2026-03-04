@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, resolve } from 'path';
@@ -86,9 +86,11 @@ export class RealisationController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     try {
-      return await this.service.findAll();
+      const p = page ? parseInt(page, 10) : 1;
+      const l = limit ? parseInt(limit, 10) : 20;
+      return await this.service.findAll(p, l);
     } catch (err) {
       console.error('Error fetching realisations', err);
       throw new InternalServerErrorException('Erreur serveur lors du chargement des réalisations');

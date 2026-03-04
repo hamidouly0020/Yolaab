@@ -9,8 +9,13 @@ export class ProductService {
     return this.prisma.product.create({ data });
   }
 
-  async findAll() {
-    return this.prisma.product.findMany({ orderBy: { createdAt: 'desc' } });
+  async findAll(page: number = 1, limit: number = 20) {
+    const skip = Math.max(0, (page - 1) * limit);
+    return this.prisma.product.findMany({
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    });
   }
 
   async findOne(id: string) {

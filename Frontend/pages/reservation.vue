@@ -282,7 +282,7 @@ const handleSubmit = async () => {
   successMessage.value = ''
   
   const config = useRuntimeConfig()
-  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
   try {
     const response = await fetch(`${apiBaseUrl}/reservations`, {

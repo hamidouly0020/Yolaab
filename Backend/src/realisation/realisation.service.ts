@@ -41,9 +41,14 @@ export class RealisationService {
     }
   }
 
-  async findAll() {
+  async findAll(page: number = 1, limit: number = 20) {
+    const skip = Math.max(0, (page - 1) * limit);
     try {
-      return await this.prisma.realisation.findMany({ orderBy: { createdAt: 'desc' } });
+      return await this.prisma.realisation.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      });
     } catch (err: any) {
       // If DB is unreachable (eg P1001), log and try to return cached entries from filesystem
       console.error('Prisma error in RealisationService.findAll:', err?.code || err?.message || err);
@@ -51,7 +56,7 @@ export class RealisationService {
         const cacheFile = resolve(process.cwd(), 'data', 'realisations_cache.json');
         if (existsSync(cacheFile)) {
           const cached = JSON.parse(readFileSync(cacheFile, 'utf-8'));
-          return cached;
+          return cached.slice(skip, skip + limit);
         }
       } catch (e) {
         // ignore

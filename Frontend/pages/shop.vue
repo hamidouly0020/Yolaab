@@ -129,7 +129,7 @@ const cartCount = computed(() => {
 
 onMounted(async () => {
   const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3002'
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
   
   try {
     const response = await fetch(`${apiBaseUrl.value}/products`)

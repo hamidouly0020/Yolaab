@@ -665,7 +665,7 @@ const newProduct = ref({
 
 const imageFile = ref<File | null>(null)
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3002'
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
@@ -689,7 +689,7 @@ const resolveRealisationUrl = (raw: string | undefined | null): string => {
   const trimmed = raw.trim()
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
-  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3002'
+  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
   return `${base.replace(/\/$/, '')}${path}`
 }
 
@@ -713,7 +713,7 @@ const handleLogin = () => {
 const loadData = async () => {
   isLoadingData.value = true
   const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3002'
+  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
 
   try {
     const resRes = await fetch(`${apiBaseUrl.value}/reservations`)

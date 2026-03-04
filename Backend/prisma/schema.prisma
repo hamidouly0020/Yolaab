@@ -8,17 +8,17 @@ datasource db {
 }
 
 model Reservation {
-  id           String   @id @default(cuid())
-  nom          String
-  prenom       String
-  telephone    String
-  localisation String?
-  typeService  String
-  duree        String?
-  description  String?
-  serviceDetails String? @db.LongText
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String   @id @default(cuid())
+  nom            String
+  prenom         String
+  telephone      String
+  localisation   String?
+  typeService    String
+  duree          String?
+  serviceDetails String?  @db.LongText
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  description    String?
 }
 
 model Product {
@@ -34,40 +34,40 @@ model Product {
 }
 
 model Application {
-  id          String   @id @default(cuid())
-  nom         String
-  prenom      String
-  telephone   String
-  email       String?
-  poste       String
-  experience  String
-  message     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(cuid())
+  nom        String
+  prenom     String
+  telephone  String
+  email      String?
+  poste      String
+  experience String
+  message    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Order {
-  id        String   @id @default(cuid())
-  items     String   @db.LongText
-  total     Float
-  nom       String?
-  prenom    String?
-  telephone String?
-  email     String?
+  id           String   @id @default(cuid())
+  items        String   @db.LongText
+  total        Float
+  nom          String?
+  prenom       String?
+  telephone    String?
+  email        String?
   localisation String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Worker {
-  id             String   @id @default(cuid())
-  nom            String
-  prenom         String
-  poste          String
-  telephone      String
-  dateEmbauche   String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id           String   @id @default(cuid())
+  nom          String
+  prenom       String
+  poste        String
+  telephone    String
+  dateEmbauche String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Invoice {
@@ -92,16 +92,16 @@ model Realisation {
 }
 
 model Devis {
-  id            String   @id @default(cuid())
-  nom           String
-  prenom        String
-  telephone     String
-  localisation  String?
-  typeService   String
-  description   String?
-  serviceDetails String? @db.LongText
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id             String   @id @default(cuid())
+  nom            String
+  prenom         String
+  telephone      String
+  localisation   String?
+  typeService    String
+  description    String?
+  serviceDetails String?  @db.LongText
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model EmailLog {

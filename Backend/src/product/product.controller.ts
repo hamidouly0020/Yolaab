@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -52,8 +52,10 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
+    const p = page ? parseInt(page, 10) : 1;
+    const l = limit ? parseInt(limit, 10) : 20;
+    return this.service.findAll(p, l);
   }
 
   @Get(':id')

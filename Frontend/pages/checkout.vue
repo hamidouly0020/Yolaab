@@ -178,7 +178,7 @@ const orderData = ref<OrderData>({
   localisation: '',
 })
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3002'
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 
 const isLoading = ref(false)
 const successMessage = ref('')
@@ -228,7 +228,7 @@ const handleCheckout = async () => {
   successMessage.value = ''
   
   const config = useRuntimeConfig()
-  const apiUrl = config.public.apiUrl || 'http://localhost:3002'
+  const apiUrl = config.public.apiUrl || 'http://localhost:3000'
 
   try {
     const items = cartItems.value.map(item => ({

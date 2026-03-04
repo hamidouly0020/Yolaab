@@ -225,7 +225,7 @@ import { ref } from 'vue'
 import { Car, Layers, Sofa, Building2, MessageCircle, XCircle } from 'lucide-vue-next'
 
 const config = useRuntimeConfig()
-const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
+const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
 const formData = ref({
   nom: '',
@@ -286,7 +286,7 @@ const getServiceDetails = () => {
   // Envoyer au backend pour persistance + notification email
   try {
     const config = useRuntimeConfig()
-    const apiBaseUrl = config.public.apiUrl || 'http://localhost:3002'
+    const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
     const payload = {
       nom: formData.value.nom,
