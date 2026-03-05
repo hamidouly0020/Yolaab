@@ -2,8 +2,7 @@
 /// <reference path="nitro-layouts.d.ts" />
 /// <reference path="app.config.d.ts" />
 /// <reference path="runtime-config.d.ts" />
-/// <reference types="C:/Users/User/OneDrive/Documents/Yolaab/Frontend/node_modules/@nuxt/nitro-server/dist/index.mjs" />
-/// <reference path="../image/providers.d.ts" />
+/// <reference path="../../node_modules/@nuxt/nitro-server/dist/index.d.mts" />
 /// <reference path="nitro-middleware.d.ts" />
 /// <reference path="./schema.d.ts" />
 

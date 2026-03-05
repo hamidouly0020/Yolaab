@@ -1,5 +1,9 @@
 export default defineNuxtConfig({
-  ssr: true,
+  compatibilityDate: '2026-03-05',
+  ssr: false,
+  nitro: {
+  preset: 'static'
+        },
   css: ['~/assets/css/global.css'],
   app: {
     baseURL: '/',

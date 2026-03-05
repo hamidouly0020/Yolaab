@@ -1,0 +1,1 @@
+import{e as o,B as r,h as t,c as n,o as s}from"./5TE2O6LI.js";const _=o({__name:"reservations",setup(a){const e=r();return t(()=>{e.replace("/reservation")}),(c,p)=>(s(),n("div"))}});export{_ as default};
