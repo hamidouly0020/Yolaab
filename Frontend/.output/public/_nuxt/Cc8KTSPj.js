@@ -1,1 +1,0 @@
-import{e as o,B as t,h as a,c as n,o as r}from"./5TE2O6LI.js";const u=o({__name:"realisations",setup(s){const e=t();return a(()=>{e.replace("/realisation")}),(c,i)=>(r(),n("div"))}});export{u as default};
