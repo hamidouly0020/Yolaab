@@ -156,6 +156,17 @@
         </div>
       </div>
 
+      <!-- Charger Plus Button -->
+      <div v-if="hasMore && !loading" class="flex justify-center mt-12 mb-8">
+        <button
+          @click="loadMore"
+          :disabled="loadingMore"
+          class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition-all disabled:opacity-50"
+        >
+          {{ loadingMore ? 'Chargement...' : 'Charger Plus' }}
+        </button>
+      </div>
+
       <!-- Back Button -->
       <div class="text-center">
         <NuxtLink
@@ -184,10 +195,14 @@ interface Realisation {
 
 const realisations = ref<Realisation[]>([])
 const loading = ref(true)
+const loadingMore = ref(false)
 const error = ref('')
 const filterType = ref<'all' | 'image' | 'video'>('all')
 const selectedItem = ref<Realisation | null>(null)
 const apiBaseUrl = ref('')
+const currentPage = ref(1)
+const hasMore = ref(true)
+const itemsPerPage = 12
 
 const filteredRealisations = computed(() => {
   if (filterType.value === 'all') {
@@ -205,21 +220,46 @@ const resolveUrl = (raw: string | undefined | null) => {
   return `${apiBaseUrl.value.replace(/\/$/, '')}${path}`
 }
 
+const loadRealisations = async (page: number = 1) => {
+  try {
+    const isFirstPage = page === 1
+    if (isFirstPage) loading.value = true
+    else loadingMore.value = true
+
+    const response = await fetch(
+      `${apiBaseUrl.value}/realisations?page=${page}&limit=${itemsPerPage}`
+    )
+    if (!response.ok) throw new Error('Erreur de chargement')
+
+    const data = await response.json()
+
+    if (isFirstPage) {
+      realisations.value = data
+    } else {
+      realisations.value.push(...data)
+    }
+
+    hasMore.value = data.length === itemsPerPage
+    currentPage.value = page
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Erreur inconnue'
+  } finally {
+    if (page === 1) loading.value = false
+    else loadingMore.value = false
+  }
+}
+
+const loadMore = () => {
+  if (!loadingMore.value && hasMore.value) {
+    loadRealisations(currentPage.value + 1)
+  }
+}
+
 onMounted(async () => {
   const config = useRuntimeConfig()
   apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
   
-  try {
-    const response = await fetch(`${apiBaseUrl.value}/realisations`)
-    if (!response.ok) throw new Error('Erreur de chargement')
-
-    const data = await response.json()
-    realisations.value = data
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Erreur inconnue'
-  } finally {
-    loading.value = false
-  }
+  await loadRealisations(1)
 })
 
 const openLightbox = (item: Realisation) => {

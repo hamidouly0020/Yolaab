@@ -31,10 +31,40 @@ export default defineNuxtConfig({
       }
     }
   },
-  modules: ['@nuxtjs/tailwindcss'],
+  modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
+  image: {
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    presets: {
+      thumbnail: {
+        modifiers: {
+          width: 300,
+          height: 200,
+          fit: 'cover',
+        },
+      },
+      productCard: {
+        modifiers: {
+          width: 400,
+          height: 300,
+          fit: 'cover',
+        },
+      },
+    },
+  },
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000'
     }
-  }
+  },
+  routeRules: {
+    '/products/**': { cache: { maxAge: 60 * 10 } },
+    '/realisations/**': { cache: { maxAge: 60 * 10 } },
+  },
 })
