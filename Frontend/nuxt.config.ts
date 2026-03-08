@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     prerender: {
-      crawlLinks: false  // Disable crawl to improve build speed
+      crawlLinks: true  // Need this to generate payload files for dynamic routes
     },
     compress: true,  // Enable compression
     minify: true,    // Enable minification
