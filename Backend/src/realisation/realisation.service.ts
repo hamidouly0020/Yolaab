@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { resolve } from 'path';
@@ -66,6 +66,11 @@ export class RealisationService {
   }
 
   async remove(id: string) {
-    return this.prisma.realisation.delete({ where: { id } });
+    try {
+      return await this.prisma.realisation.delete({ where: { id } });
+    } catch (err) {
+      console.error('Failed to delete realisation', err);
+      throw new InternalServerErrorException('Erreur serveur lors de la suppression de la réalisation');
+    }
   }
 }
