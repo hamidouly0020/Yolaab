@@ -53,13 +53,11 @@ function getTransporter() {
     return null
   }
 
-  return nodemailer.createTransport({ 
-    host, 
-    port, 
-    secure: port === 465, 
+  return nodemailer.createTransport({
+    host,
+    port,
+    secure: port === 465,
     auth: { user, pass },
-    debug: true,
-    logger: true
   })
 }
 
@@ -73,7 +71,15 @@ export class ReservationService {
     }
     const created = await this.prisma.reservation.create({ data })
 
-    // try to send notification email to admin (best-effort)
+    // Send notification email in background (fire and forget)
+    this.sendReservationEmail(created).catch(e => {
+      console.warn('Background email sending failed after creating reservation', e)
+    })
+
+    return created
+  }
+
+  private async sendReservationEmail(created: any) {
     try {
       const transporter = getTransporter()
       if (transporter) {
@@ -106,8 +112,6 @@ export class ReservationService {
     } catch (err) {
       console.error('Failed to send reservation email', err)
     }
-
-    return created
   }
 
   async findAll() {
@@ -121,22 +125,37 @@ export class ReservationService {
   }
 
   async findOne(id: string) {
-    const r = await this.prisma.reservation.findUnique({ where: { id } });
-    if (!r) return null;
-    return {
-      ...r,
-      serviceDetails: (r as any).serviceDetails ? JSON.parse((r as any).serviceDetails) : null,
-    };
+    try {
+      const r = await this.prisma.reservation.findUnique({ where: { id } });
+      if (!r) return null;
+      return {
+        ...r,
+        serviceDetails: (r as any).serviceDetails ? JSON.parse((r as any).serviceDetails) : null,
+      };
+    } catch (err) {
+      console.error('Failed to fetch reservation', err);
+      throw new InternalServerErrorException('Erreur serveur lors de la récupération de la réservation');
+    }
   }
 
   async update(id: string, data: any) {
-    if (data.serviceDetails && typeof data.serviceDetails === 'object') {
-      data.serviceDetails = JSON.stringify(data.serviceDetails);
+    try {
+      if (data.serviceDetails && typeof data.serviceDetails === 'object') {
+        data.serviceDetails = JSON.stringify(data.serviceDetails);
+      }
+      return await this.prisma.reservation.update({ where: { id }, data });
+    } catch (err) {
+      console.error('Failed to update reservation', err);
+      throw new InternalServerErrorException('Erreur serveur lors de la mise à jour de la réservation');
     }
-    return this.prisma.reservation.update({ where: { id }, data });
   }
 
   async remove(id: string) {
-    return this.prisma.reservation.delete({ where: { id } });
+    try {
+      return await this.prisma.reservation.delete({ where: { id } });
+    } catch (err) {
+      console.error('Failed to delete reservation', err);
+      throw new InternalServerErrorException('Erreur serveur lors de la suppression de la réservation');
+    }
   }
 }
