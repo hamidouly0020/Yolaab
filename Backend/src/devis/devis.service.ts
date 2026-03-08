@@ -15,7 +15,7 @@ export class DevisService {
   private transporter: nodemailer.Transporter | null = null
   constructor(private prisma: PrismaService) {}
 
-  private getTransporter() {
+  private async getTransporter() {
     if (this.transporter) return this.transporter
     const host = process.env.SMTP_HOST
     const port = parseInt(process.env.SMTP_PORT || '587', 10)
@@ -48,7 +48,7 @@ export class DevisService {
   }
 
   async sendDevisEmail(payload: any) {
-    const transporter = this.getTransporter()
+    const transporter = await this.getTransporter()
 
     const adminEmail = process.env.DEVIS_RECIPIENT || 'yolaab.app@gmail.com'
 
