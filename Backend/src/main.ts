@@ -81,6 +81,14 @@ async function bootstrap() {
   app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
 
   const port = process.env.PORT || 3000;
+
+  // debug SMTP env variables (do not print secrets in production!)
+  console.log('SMTP configuration (host, port, user present?):', {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    user: process.env.SMTP_USER ? 'yes' : 'no',
+  });
+
   await app.listen(port, '0.0.0.0');
   console.log(`Backend running on http://localhost:${port}`);
 }
