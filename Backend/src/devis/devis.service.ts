@@ -31,7 +31,18 @@ export class DevisService {
       port,
       secure: port === 465,
       auth: { user, pass },
+      debug: true, // Enable debug logging
+      logger: true, // Enable logger
     })
+
+    // Verify connection
+    try {
+      await this.transporter.verify()
+      console.log('SMTP connection verified successfully')
+    } catch (error) {
+      console.error('SMTP connection failed:', error)
+      throw new InternalServerErrorException(`SMTP connection failed: ${error.message}`)
+    }
 
     return this.transporter
   }

@@ -5,14 +5,20 @@ import { DevisService } from './devis.service'
 export class DevisController {
   constructor(private readonly service: DevisService) {}
 
-  @Post()
-  async create(@Body() data: any) {
-    // minimal server-side validation
-    if (!data.nom || !data.prenom || !data.telephone || !data.description) {
-      return { ok: false, error: 'Champs requis manquants' }
+  @Post('test-email')
+  async testEmail() {
+    try {
+      const result = await this.service.sendDevisEmail({
+        nom: 'Test',
+        prenom: 'Email',
+        telephone: '0123456789',
+        localisation: 'Test Location',
+        service: 'Test Service',
+        description: 'Ceci est un email de test depuis Railway'
+      })
+      return { success: true, result }
+    } catch (error) {
+      return { success: false, error: error.message }
     }
-
-    const created = await this.service.create(data)
-    return { ok: true, devis: created }
   }
 }

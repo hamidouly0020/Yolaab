@@ -53,7 +53,14 @@ function getTransporter() {
     return null
   }
 
-  return nodemailer.createTransport({ host, port, secure: port === 465, auth: { user, pass } })
+  return nodemailer.createTransport({ 
+    host, 
+    port, 
+    secure: port === 465, 
+    auth: { user, pass },
+    debug: true,
+    logger: true
+  })
 }
 
 @Injectable()
