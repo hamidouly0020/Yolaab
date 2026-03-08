@@ -31,8 +31,6 @@ export class DevisService {
       port,
       secure: port === 465,
       auth: { user, pass },
-      debug: true, // Enable debug logging
-      logger: true, // Enable logger
     })
 
     // Verify connection
@@ -121,13 +119,10 @@ export class DevisService {
         serviceDetails: payload.serviceDetails ? (typeof payload.serviceDetails === 'string' ? payload.serviceDetails : JSON.stringify(payload.serviceDetails)) : null,
       } })
 
-      // attempt to send email (best-effort)
-      try {
-        await this.sendDevisEmail(payload)
-      } catch (e) {
-        // sendDevisEmail already logs emailLog and throws; we swallow to not fail creation
-        console.warn('Email sending failed after creating devis', e)
-      }
+      // Send email in background (fire and forget) - don't wait for it
+      this.sendDevisEmail(payload).catch(e => {
+        console.warn('Background email sending failed after creating devis', e)
+      })
 
       return created
     } catch (err) {

@@ -1,78 +1,31 @@
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-// import { NestExpressApplication } from '@nestjs/platform-express';
-// import { join, resolve } from 'path';
-// import { existsSync, mkdirSync } from 'fs';
-
-// async function bootstrap() {
-//   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-//   // Enable CORS explicitly for local development (frontend on :3001)
-//   app.enableCors({
-//     origin: [process.env.FRONTEND_URL || 'http://localhost:3001', 'http://localhost:3000'],
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-//     allowedHeaders: 'Content-Type, Accept, Authorization',
-//     credentials: true,
-//   });
-
-//   // Handle preflight OPTIONS requests reliably via middleware (add CORS headers)
-//   const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:3001', 'http://localhost:3000'];
-//   app.use((req, res, next) => {
-//     if (req.method === 'OPTIONS') {
-//       const origin = (req.headers.origin as string) || allowedOrigins[0];
-//       const allowed = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
-//       res.header('Access-Control-Allow-Origin', allowed);
-//       res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-//       res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
-//       res.header('Access-Control-Allow-Credentials', 'true');
-//       return res.sendStatus(200);
-//     }
-//     next();
-//   });
-
-//   // Increase payload size limits for file uploads
-//   app.use((req, res, next) => {
-//     const express = require('express');
-//     next();
-//   });
-  
-//   // Configure express to accept larger payloads
-//   app.use(require('express').json({ limit: '100mb' }));
-//   app.use(require('express').urlencoded({ limit: '100mb', extended: true }));
-  
-//   // Serve uploads folder - use absolute path and create if missing
-//   const uploadsPath = resolve(process.cwd(), 'uploads');
-//   if (!existsSync(uploadsPath)) {
-//     mkdirSync(uploadsPath, { recursive: true });
-//     console.log('Created uploads directory at', uploadsPath);
-//   }
-//   app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
-  
-//   const port = process.env.PORT || 3000;
-//   await app.listen(port, '0.0.0.0');
-//   console.log(`Backend running on http://localhost:${port}`);
-// }
-
-// bootstrap();
-
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { resolve } from 'path';
 import { existsSync, mkdirSync } from 'fs';
+import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  // CORS configuration - adjust origins for production
+  const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:3001'];
+
   app.enableCors({
-    origin: '*',
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
-    credentials: false,
+    credentials: true,
   });
 
-  app.use(require('express').json({ limit: '100mb' }));
-  app.use(require('express').urlencoded({ limit: '100mb', extended: true }));
+  // Enable compression middleware - reduce response size
+  app.use(compression());
+
+  // Reduce payload limits to reasonable sizes (from 100mb to 10mb)
+  app.use(require('express').json({ limit: '10mb' }));
+  app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
 
   const uploadsPath = resolve(process.cwd(), 'uploads');
   if (!existsSync(uploadsPath)) {
@@ -82,15 +35,17 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
 
-  // debug SMTP env variables (do not print secrets in production!)
-  console.log('SMTP configuration (host, port, user present?):', {
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    user: process.env.SMTP_USER ? 'yes' : 'no',
-  });
+  // Log SMTP configuration (sensitive info only in development)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('SMTP configuration:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      user: process.env.SMTP_USER ? 'configured' : 'missing',
+    });
+  }
 
   await app.listen(port, '0.0.0.0');
-  console.log(`Backend running on http://localhost:${port}`);
+  console.log(`Backend running on port ${port}`);
 }
 
 bootstrap();
