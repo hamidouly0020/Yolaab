@@ -5,3 +5,8 @@ dist/
 npm-debug.log
 /.idea
 .vscode
+.nuxt/
+.output/
+Frontend/.nuxt/
+Frontend/.output/
+Frontend/dist
