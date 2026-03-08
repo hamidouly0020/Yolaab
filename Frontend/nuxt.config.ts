@@ -2,8 +2,18 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-03-05',
   ssr: false,
   nitro: {
-  preset: 'static'
-        },
+    preset: 'static',
+    prerender: {
+      crawlLinks: true
+    }
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '#app-manifest': '#app'
+      }
+    }
+  },
   css: ['~/assets/css/global.css'],
   app: {
     baseURL: '/',
