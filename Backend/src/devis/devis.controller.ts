@@ -5,6 +5,17 @@ import { DevisService } from './devis.service'
 export class DevisController {
   constructor(private readonly service: DevisService) {}
 
+  @Post()
+  async create(@Body() data: any) {
+    // minimal server-side validation - description is optional
+    if (!data.nom || !data.prenom || !data.telephone) {
+      return { ok: false, error: 'Nom, Prénom et Téléphone sont requis' }
+    }
+
+    const created = await this.service.create(data)
+    return { ok: true, devis: created }
+  }
+
   @Post('test-email')
   async testEmail() {
     try {
