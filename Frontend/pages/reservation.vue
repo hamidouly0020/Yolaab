@@ -104,9 +104,9 @@
         </div>
 
         <!-- Service-specific details -->
-        <div v-if="getServiceDetails()" class="space-y-4 bg-blue-50 rounded-2xl p-6">
+        <div v-if="showServiceDetails" class="space-y-4 bg-blue-50 rounded-2xl p-6">
           <h2 class="text-2xl font-bold text-blue-600">Détails du service</h2>
-          
+
           <!-- Canapes - Nombre de places -->
           <div v-if="formData.typeService === 'canapes'">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -153,7 +153,7 @@
                 />
               </div>
             </div>
-            <p class="text-sm text-gray-500">La surface ({{ formData.serviceDetails.longueur * formData.serviceDetails.largeur }}m²) aide à estimer le délai</p>
+            <p class="text-sm text-gray-500">La surface ({{ tapisSurface }}m²) aide à estimer le délai</p>
           </div>
 
           <!-- Nettoyage automobile - Type de véhicule -->
@@ -235,7 +235,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { Car, Layers, Sofa, Building2, Calendar, Check, XCircle } from 'lucide-vue-next'
 
 const formData = ref({
@@ -244,14 +244,16 @@ const formData = ref({
   telephone: '',
   localisation: '',
   typeService: 'nettoyage-automobile',
-  duree: '1 semaine',  serviceDetails: {
+  duree: '1_semaine',
+  serviceDetails: {
     places: 3,
     longueur: 5,
     largeur: 4,
     typeVehicule: '',
     surface: 100,
     nombrePieces: 1,
-  },})
+  },
+})
 
 const isLoading = ref(false)
 const successMessage = ref('')
@@ -272,15 +274,23 @@ const durees = [
   { id: '1_mois', label: '1 mois' },
 ]
 
-const getServiceDetails = () => {
+// Memoized computed property
+const showServiceDetails = computed(() => {
   return ['canapes', 'tapis', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
-}
+})
+
+// Memoized computed property for surface
+const tapisSurface = computed(() => {
+  const long = formData.value.serviceDetails.longueur || 0
+  const larg = formData.value.serviceDetails.largeur || 0
+  return (long * larg).toFixed(2)
+})
 
 const handleSubmit = async () => {
   isLoading.value = true
   errorMessage.value = ''
   successMessage.value = ''
-  
+
   const config = useRuntimeConfig()
   const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
