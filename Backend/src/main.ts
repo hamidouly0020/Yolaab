@@ -9,16 +9,23 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // CORS configuration - adjust origins for production
-  const allowedOrigins = process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',')
-    : ['http://localhost:3001'];
-
-  app.enableCors({
-    origin: allowedOrigins,
+  // If CORS_ORIGIN is unset or set to '*' we allow any origin by reflecting
+  // the request origin. Otherwise split the comma-separated list.
+  const allowedOriginsEnv = process.env.CORS_ORIGIN;
+  let corsOptions: any = {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
-  });
+  };
+
+  if (allowedOriginsEnv && allowedOriginsEnv.trim() !== '*' ) {
+    corsOptions.origin = allowedOriginsEnv.split(',');
+  } else {
+    // allow all origins (reflect) when '*' or not defined
+    corsOptions.origin = true;
+  }
+
+  app.enableCors(corsOptions);
 
   // Enable compression middleware - reduce response size
   app.use(compression());
