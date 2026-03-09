@@ -22,6 +22,13 @@ export class DevisService {
     const user = process.env.SMTP_USER
     const pass = process.env.SMTP_PASS
 
+    console.log('[DEVIS SMTP] Configuration check:', {
+      host: host ? '✓ set' : '✗ missing',
+      port: port || 587,
+      user: user ? '✓ set' : '✗ missing',
+      pass: pass ? '✓ set' : '✗ missing',
+    })
+
     if (!host || !user || !pass) {
       throw new InternalServerErrorException('SMTP configuration missing (SMTP_HOST/SMTP_USER/SMTP_PASS)')
     }
@@ -35,10 +42,11 @@ export class DevisService {
 
     // Verify connection
     try {
+      console.log('[DEVIS SMTP] Verifying SMTP connection to', host + ':' + port)
       await this.transporter.verify()
-      console.log('SMTP connection verified successfully')
+      console.log('[DEVIS SMTP] ✓ Connection verified successfully')
     } catch (error) {
-      console.error('SMTP connection failed:', error)
+      console.error('[DEVIS SMTP] ✗ Connection failed:', error)
       throw new InternalServerErrorException(`SMTP connection failed: ${error.message}`)
     }
 
@@ -77,6 +85,7 @@ export class DevisService {
 
     const emailLog: EmailLogEntry = { to: adminEmail, subject, body: text, status: 'pending' }
     try {
+      console.log(`[DEVIS EMAIL] Sending email to ${adminEmail}`)
       const info = await transporter.sendMail({
         from: process.env.SMTP_FROM || process.env.SMTP_USER,
         to: adminEmail,
@@ -85,22 +94,26 @@ export class DevisService {
       })
       emailLog.status = 'sent'
       emailLog.response = info
-      console.log('Devis email sent:', info.messageId || info)
+      console.log('[DEVIS EMAIL] ✓ Email sent successfully:', info.messageId || 'no messageId')
       // persist email log
       try {
         await this.prisma.emailLog.create({ data: { to: emailLog.to, subject: emailLog.subject, body: emailLog.body, status: emailLog.status, response: JSON.stringify(emailLog.response || {}) } })
       } catch (e) {
-        console.warn('Failed to persist email log', e)
+        console.warn('[DEVIS EMAIL LOG] Failed to persist email log', e)
       }
       return { ok: true, info }
     } catch (err) {
-      console.error('Error sending devis email', err)
+      console.error('[DEVIS EMAIL] ✗ Error sending devis email', {
+        error: err.message,
+        code: (err as any).code,
+        command: (err as any).command,
+      })
       emailLog.status = 'failed'
       emailLog.response = String(err?.message || err)
       try {
         await this.prisma.emailLog.create({ data: { to: emailLog.to, subject: emailLog.subject, body: emailLog.body, status: emailLog.status, response: emailLog.response } })
       } catch (e) {
-        console.warn('Failed to persist failed email log', e)
+        console.warn('[DEVIS EMAIL LOG] Failed to persist failed email log', e)
       }
       throw new InternalServerErrorException('Erreur lors de l\'envoi de l\'e-mail')
     }
@@ -119,14 +132,14 @@ export class DevisService {
         serviceDetails: payload.serviceDetails ? (typeof payload.serviceDetails === 'string' ? payload.serviceDetails : JSON.stringify(payload.serviceDetails)) : null,
       } })
 
-      // Send email in background (fire and forget) - don't wait for it
+      // Send email in background (fire and forget) - don't block creation if email fails
       this.sendDevisEmail(payload).catch(e => {
-        console.warn('Background email sending failed after creating devis', e)
+        console.warn('[DEVIS] Background email sending failed (demande still saved):', e.message)
       })
 
       return created
     } catch (err) {
-      console.error('Failed to create devis', err)
+      console.error('[DEVIS CREATE] Failed to create devis', err)
       throw new InternalServerErrorException('Erreur serveur lors de la création de la demande')
     }
   }

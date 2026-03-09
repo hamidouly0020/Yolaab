@@ -47,9 +47,16 @@ function getTransporter() {
   const user = process.env.SMTP_USER
   const pass = process.env.SMTP_PASS
 
+  console.log('[RESERVATION SMTP] Configuration check:', {
+    host: host ? '✓ set' : '✗ missing',
+    port: port || 587,
+    user: user ? '✓ set' : '✗ missing',
+    pass: pass ? '✓ set' : '✗ missing',
+  })
+
   if (!host || !user || !pass) {
     // don't throw here to avoid breaking reservation creation in dev without config
-    console.warn('SMTP not configured; reservation emails will not be sent')
+    console.warn('[RESERVATION SMTP] SMTP not configured; reservation emails will not be sent')
     return null
   }
 
@@ -82,6 +89,10 @@ export class ReservationService {
   private async sendReservationEmail(created: any) {
     try {
       const transporter = getTransporter()
+      if (!transporter) {
+        console.warn('[RESERVATION EMAIL] Transporter not configured, skipping email')
+        return
+      }
       if (transporter) {
         const admin = process.env.DEVIS_RECIPIENT || process.env.RESERVATION_RECIPIENT || 'yolaab.app@gmail.com'
         const subject = `Nouvelle réservation — ${created.typeService || 'Service'}`
@@ -96,21 +107,31 @@ export class ReservationService {
         lines.push('Détails:')
         lines.push(created.serviceDetails ? (typeof created.serviceDetails === 'string' ? created.serviceDetails : JSON.stringify(created.serviceDetails)) : '')
 
-        const info = await transporter.sendMail({
-          from: process.env.SMTP_FROM || process.env.SMTP_USER,
-          to: admin,
-          subject,
-          text: lines.join('\n'),
-        })
-        console.log('Reservation email sent:', info.messageId || info);
         try {
-          await this.prisma.emailLog.create({ data: { to: admin, subject, body: lines.join('\n'), status: 'sent', response: JSON.stringify(info || {}) } })
-        } catch (e) {
-          console.warn('Failed to persist reservation email log', e)
+          console.log(`[RESERVATION EMAIL] Sending email to ${admin}`)
+          const info = await transporter.sendMail({
+            from: process.env.SMTP_FROM || process.env.SMTP_USER,
+            to: admin,
+            subject,
+            text: lines.join('\n'),
+          })
+          console.log('[RESERVATION EMAIL] ✓ Email sent successfully:', info.messageId || 'no messageId')
+          try {
+            await this.prisma.emailLog.create({ data: { to: admin, subject, body: lines.join('\n'), status: 'sent', response: JSON.stringify(info || {}) } })
+          } catch (e) {
+            console.warn('[RESERVATION EMAIL LOG] Failed to persist reservation email log', e)
+          }
+        } catch (mailErr) {
+          console.error('[RESERVATION EMAIL] ✗ Error sending reservation email', {
+            error: mailErr.message,
+            code: (mailErr as any).code,
+            command: (mailErr as any).command,
+          })
+          throw mailErr
         }
       }
     } catch (err) {
-      console.error('Failed to send reservation email', err)
+      console.error('[RESERVATION EMAIL] ✗ Failed to send reservation email', err)
     }
   }
 
