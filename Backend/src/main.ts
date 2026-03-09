@@ -27,6 +27,24 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
+  // Add middleware to proxy missing upload files to S3 if configured
+  if (process.env.STORAGE_TYPE === 's3' || (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.S3_BUCKET && process.env.AWS_REGION)) {
+    const bucket = process.env.S3_BUCKET;
+    const region = process.env.AWS_REGION;
+    const publicBase = process.env.S3_PUBLIC_URL || (bucket ? `https://${bucket}.s3.${region}.amazonaws.com` : '');
+    app.use('/uploads/:file', (req, res, next) => {
+      const p = resolve(process.cwd(), 'uploads', req.params.file);
+      if (existsSync(p)) {
+        return next();
+      }
+      if (publicBase) {
+        // redirect to S3 location
+        return res.redirect(`${publicBase}/realisations/${req.params.file}`);
+      }
+      next();
+    });
+  }
+
   // Enable compression middleware - reduce response size
   app.use(compression());
 

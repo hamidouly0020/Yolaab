@@ -214,6 +214,28 @@
 - ✅ Mettez-la à jour sur Render → Environment → DATABASE_URL
 - ✅ Cliquez "Save Changes"
 
+### Erreur : 404 sur les vidéos/images téléchargées
+**Cause** : les fichiers sont stockés localement dans `uploads` et disparaissent à chaque redéploiement (système de fichiers éphémère sur Render).
+
+**Solutions** :
+1. **Activer le stockage S3** (recommandé)
+   - Ajoutez les variables suivantes dans Render :
+     ```
+     AWS_ACCESS_KEY_ID=<clé>
+     AWS_SECRET_ACCESS_KEY=<secret>
+     AWS_REGION=<région>
+     S3_BUCKET=<nom-du-bucket>
+     STORAGE_TYPE=s3            # force l'utilisation de S3
+     # optionnel : S3_PUBLIC_URL si vous utilisez un CDN ou domaine custom
+     ```
+   - Le backend enverra automatiquement chaque fichier vers S3 et supprimera la copie locale. Les anciennes ressources manquantes seront redirigées vers le bucket.
+2. **Utiliser un volume persistant**
+   - Dans Render, allez dans votre service → "Disks" → "Add Disk" et montez un disque sur `/uploads`.
+   - Les fichiers resteront disponibles après redéploiement.
+3. **Utiliser un service tiers de stockage** (UploadThing, Cloudinary, etc.).
+
+> Sans l'une de ces configurations, tous les médias ajoutés via l'administration seront perdus à chaque nouvelle version et provoqueront des 404.
+
 ### Les produits ne s'affichent pas
 **Cause** : La base de données est vide ou le schema n'est pas synchronisé
 - ✅ Vérifiez que vous avez bien exécuté `npx prisma db push` localement (ÉTAPE 3)

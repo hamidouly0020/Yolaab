@@ -21,10 +21,12 @@ const storage = diskStorage({
   },
 });
 
-// Initialize S3 client only if env vars are provided
+// Initialize S3 client only if env vars are provided (use STORAGE_TYPE="s3" to force)
 let s3Client: any = null;
 const S3_BUCKET = process.env.S3_BUCKET || '';
-if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && S3_BUCKET && process.env.AWS_REGION) {
+const useS3 = (process.env.STORAGE_TYPE === 's3') ||
+  (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && S3_BUCKET && process.env.AWS_REGION);
+if (useS3) {
   try {
     const awsS3 = require('@aws-sdk/client-s3');
     S3Client = awsS3.S3Client;
@@ -33,6 +35,9 @@ if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && S3_BUC
   } catch (e) {
     console.warn('AWS SDK not installed or failed to load, S3 uploads disabled');
     s3Client = null;
+  }
+  if (s3Client) {
+    console.log('S3 storage enabled for realisation uploads');
   }
 }
 
@@ -52,22 +57,22 @@ export class RealisationController {
       console.log('Realisation create called', { body: data, file: file ? { originalname: file.originalname, mimetype: file.mimetype, filename: file.filename } : null });
 
       if (file) {
-        // If S3 is configured, upload file to S3 and use public URL
         if (s3Client) {
+          // upload to S3 and set url to remote location
           const fileStream = require('fs').createReadStream(resolve(uploadsPath, file.filename));
           const key = `realisations/${file.filename}`;
           try {
             await s3Client.send(new PutObjectCommand({ Bucket: S3_BUCKET, Key: key, Body: fileStream, ContentType: file.mimetype, ACL: 'public-read' } as any));
-            // Construct public URL (S3 static website or bucket URL depending on provider)
             const url = process.env.S3_PUBLIC_URL || `https://${S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
             data.url = url;
-            // Remove local file after upload to free space
+            // cleanup local copy
             try { unlinkSync(resolve(uploadsPath, file.filename)); } catch (e) { /* ignore */ }
           } catch (e) {
             console.error('S3 upload failed, falling back to local file', e);
             data.url = `/uploads/${file.filename}`;
           }
         } else {
+          // local filesystem storage
           data.url = `/uploads/${file.filename}`;
         }
       }
