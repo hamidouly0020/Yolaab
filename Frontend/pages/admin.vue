@@ -7,26 +7,26 @@
       <div class="absolute -left-40 bottom-0 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
     </div>
     <div class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full relative z-10 border border-blue-200/30 login-card">
-      <div class="text-center mb-10">
-        <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 icon-circle-animate">
-          <Lock size="36" />
+      <div class="text-center mb-8">
+        <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 icon-circle-animate">
+          <Lock size="32" />
         </div>
-        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-2">Espace Admin</h1>
-        <p class="text-gray-600">Connexion requise</p>
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-1">Espace Admin</h1>
+        <p class="text-gray-600 text-sm">Connexion requise</p>
       </div>
-      <form @submit.prevent="handleLogin" class="space-y-6">
-        <div class="mb-6">
-          <label class="block mb-3 font-bold text-gray-700"><Lock size="16" class="inline-block mr-2 text-blue-600"/>Mot de passe</label>
+      <form @submit.prevent="handleLogin" class="space-y-4">
+        <div class="mb-4">
+          <label class="block mb-2 font-bold text-gray-700 text-sm"><Lock size="14" class="inline-block mr-2 text-blue-600"/>Mot de passe</label>
           <input
             v-model="password"
             type="password"
-            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg input-animate transition-all"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-base input-animate transition-all"
             placeholder="Entrez le mot de passe"
           />
         </div>
         <button
           type="submit"
-          class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 rounded-xl hover:shadow-lg transition-all font-bold text-lg button-animate"
+          class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all font-bold text-base button-animate"
         >
           Se connecter
         </button>
@@ -37,29 +37,29 @@
   <!-- Admin Dashboard -->
   <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
     <!-- Header -->
-    <div class="bg-white shadow-md px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 border-b-2 border-blue-100 header-animate">
-      <div class="flex items-center gap-3">
-        <div class="text-blue-600 p-2 bg-blue-50 rounded-lg">
-          <Lock class="w-6 h-6" />
+    <div class="bg-white shadow-md px-4 sm:px-6 py-3 flex items-center justify-between gap-4 border-b-2 border-blue-100 header-animate">
+      <div class="flex items-center gap-2">
+        <div class="text-blue-600 p-1 bg-blue-50 rounded-lg">
+          <Lock class="w-5 h-5" />
         </div>
-        <h1 class="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Espace Admin</h1>
+        <h1 class="text-base sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Espace Admin</h1>
       </div>
       <button
         @click="logout"
-        class="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-bold text-sm md:text-base flex items-center gap-2"
+        class="bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:shadow-lg transition-all font-bold text-xs md:text-sm flex items-center gap-1"
       >
-        <XCircle class="w-4 h-4" /> <span class="uppercase">Déconnexion</span>
+        <XCircle class="w-3 h-3" /> <span class="uppercase">Déco</span>
       </button>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto px-4 py-6">
       <!-- Tabs -->
-      <div class="bg-white rounded-3xl shadow-lg overflow-x-auto mb-8 tabs-container">
+      <div class="bg-white rounded-3xl shadow-lg overflow-x-auto mb-6 tabs-container">
         <div class="flex">
           <button
             @click="activeTab = 'reservations'"
             :class="[
-              'flex-1 py-4 px-6 flex items-center justify-center gap-2 transition-all',
+              'flex-1 py-3 px-4 flex items-center justify-center gap-2 transition-all text-sm',
               activeTab === 'reservations' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
             ]"
           >
@@ -139,16 +139,16 @@
       </div>
 
       <!-- Reservations Tab -->
-      <div v-if="activeTab === 'reservations'" class="bg-white rounded-2xl shadow-lg p-6">
-        <h2 class="text-2xl font-bold text-blue-600 mb-6 flex items-center gap-2"><Calendar class="w-5 h-5" /> Réservations ({{ reservations.length }})</h2>
-        <div v-if="reservations.length === 0" class="text-center py-12">
-          <div class="text-6xl mb-4"><Calendar class="w-16 h-16 text-blue-400" /></div>
-          <p class="text-xl text-gray-600">Aucune réservation pour le moment</p>
+      <div v-if="activeTab === 'reservations'" class="bg-white rounded-2xl shadow-lg p-4">
+        <h2 class="text-xl font-bold text-blue-600 mb-4 flex items-center gap-2"><Calendar class="w-4 h-4" /> Réservations ({{ reservations.length }})</h2>
+        <div v-if="reservations.length === 0" class="text-center py-8">
+          <div class="text-4xl mb-3"><Calendar class="w-12 h-12 text-blue-400 mx-auto" /></div>
+          <p class="text-lg text-gray-600">Aucune réservation pour le moment</p>
         </div>
         <div v-else>
           <!-- Mobile: stacked cards -->
-          <div class="md:hidden space-y-4">
-            <div v-for="(res, idx) in reservations" :key="'mobile-'+idx" class="border-2 border-blue-50 rounded-xl p-4 bg-white">
+          <div class="md:hidden space-y-3">
+            <div v-for="(res, idx) in reservations" :key="'mobile-'+idx" class="border-2 border-blue-50 rounded-xl p-3 bg-white">
               <div class="flex items-start justify-between">
                 <div>
                   <div class="font-bold">{{ res.prenom }} {{ res.nom }}</div>
@@ -164,8 +164,8 @@
                     <div v-if="res.serviceDetails.typeVehicule">Véhicule: {{ res.serviceDetails.typeVehicule || 'Non spécifié' }}</div>
                   </div>
                 </div>
-                <div class="ml-4 flex-shrink-0">
-                  <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-all">Supprimer</button>
+                <div class="ml-3 flex-shrink-0">
+                  <button @click="deleteReservation(res.id)" class="bg-red-500 text-white p-1 rounded-lg hover:bg-red-600 transition-all text-xs">X</button>
                 </div>
               </div>
             </div>
@@ -212,9 +212,9 @@
       </div>
 
       <!-- Products Tab -->
-      <div v-if="activeTab === 'products'" class="bg-white rounded-2xl shadow-lg p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-blue-600 flex items-center gap-2"><ShoppingCart class="w-5 h-5"/> Produits ({{ products.length }})</h2>
+      <div v-if="activeTab === 'products'" class="bg-white rounded-2xl shadow-lg p-4">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-blue-600 flex items-center gap-2"><ShoppingCart class="w-4 h-4"/> Produits ({{ products.length }})</h2>
           <button
             @click="showAddProduct = true"
             class="bg-blue-500 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-blue-600 transition-all flex items-center gap-2 text-sm sm:text-base"

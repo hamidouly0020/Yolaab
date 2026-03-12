@@ -5,19 +5,19 @@
       <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
       <div class="absolute -left-40 top-1/2 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
     </div>
-    <div class="max-w-4xl mx-auto px-4 py-16 relative z-10">
-      <div class="text-center mb-16">
-        <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4 page-title">
+    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
+      <div class="text-center mb-12">
+        <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-3 page-title">
           Réserver Un Service
         </h1>
-        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-4 rounded-full"></div>
+        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-3xl shadow-xl hover:shadow-2xl p-8 md:p-12 space-y-8 form-container border border-blue-200/30 transition-all duration-500">
+      <form @submit.prevent="handleSubmit" class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-3xl shadow-xl hover:shadow-2xl p-6 md:p-8 space-y-6 form-container border border-blue-200/30 transition-all duration-500">
         <!-- Informations Personnelles -->
-        <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Vos Informations</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="space-y-3">
+          <h2 class="text-xl font-bold text-blue-600">Vos Informations</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
                 Nom *
@@ -69,9 +69,9 @@
         </div>
 
         <!-- Service Selection -->
-        <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Sélectionner Un Service</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="space-y-3">
+          <h2 class="text-xl font-bold text-blue-600">Sélectionner Un Service</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <button
               v-for="service in services"
               :key="service.id"
@@ -84,16 +84,16 @@
                   : 'border-gray-300 hover:border-blue-400'
               ]"
             >
-                <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="28" />
-                <p class="font-semibold text-gray-700">{{ service.label }}</p>
+                <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="24" />
+                <p class="font-semibold text-gray-700 text-sm">{{ service.label }}</p>
             </button>
           </div>
         </div>
 
         <!-- Durée de l'intervention -->
-        <div class="space-y-4">
-          <h2 class="text-2xl font-bold text-blue-600">Durée souhaitée</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="space-y-3">
+          <h2 class="text-xl font-bold text-blue-600">Durée souhaitée</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <button
               v-for="d in durees"
               :key="d.id"
@@ -112,8 +112,8 @@
         </div>
 
         <!-- Service-specific details -->
-        <div v-if="showServiceDetails" class="space-y-4 bg-blue-50 rounded-2xl p-6">
-          <h2 class="text-2xl font-bold text-blue-600">Détails du service</h2>
+        <div v-if="showServiceDetails" class="space-y-3 bg-blue-50 rounded-2xl p-5">
+          <h2 class="text-xl font-bold text-blue-600">Détails du service</h2>
 
           <!-- Canapes - Nombre de places -->
           <div v-if="formData.typeService === 'canapes'">
@@ -212,29 +212,29 @@
         </div>
 
         <!-- Submit Button -->
-        <div class="flex gap-4">
+        <div class="flex gap-3">
           <button
             type="submit"
             :disabled="isLoading"
-            class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-lg disabled:opacity-50"
+            class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-base disabled:opacity-50"
           >
             <template v-if="isLoading"><Calendar size="18" class="inline-block mr-2"/>En cours...</template>
             <template v-else><Check size="18" class="inline-block mr-2"/>RÉSERVER</template>
           </button>
           <NuxtLink
             to="/home"
-            class="px-6 py-4 bg-gray-300 text-gray-700 rounded-2xl hover:bg-gray-400 transition-all font-bold"
+            class="px-5 py-3 bg-gray-300 text-gray-700 rounded-2xl hover:bg-gray-400 transition-all font-bold text-sm"
           >
             ← RETOUR
           </NuxtLink>
         </div>
 
-        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-4 rounded-xl flex items-start gap-3">
-          <Check size="20" class="flex-shrink-0 text-green-700" />
+        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-3 rounded-xl flex items-start gap-2">
+          <Check size="18" class="flex-shrink-0 text-green-700" />
           <div>{{ successMessage }}</div>
         </div>
-        <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-4 rounded-xl flex items-start gap-3">
-          <XCircle size="20" class="flex-shrink-0 text-red-700" />
+        <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-3 rounded-xl flex items-start gap-2">
+          <XCircle size="18" class="flex-shrink-0 text-red-700" />
           <div>{{ errorMessage }}</div>
         </div>
       </form>
