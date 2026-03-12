@@ -36,10 +36,10 @@
             <HomeIcon size="36" class="inline-block mr-3 align-middle" /> Yolaab
           </h1>
           <p class="text-2xl md:text-3xl font-semibold mb-4 text-white/95">
-            L'art du nettoyage professionnel sur mesure
+            Simplifier votre quotidien en professionnalisant les services domestiques
           </p>
           <p class="text-lg md:text-xl mb-8 text-white/90">
-            Votre partenaire de confiance pour des espaces, équipements, et véhicules éclatants
+            Libérer votre temps pour l'essentiel
           </p>
           <NuxtLink
             to="/reservation"
@@ -55,44 +55,61 @@
     </div>
 
     <!-- About Section -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
-      <div class="bg-blue-50 rounded-2xl p-8 md:p-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-blue-600 mb-6">À Propos de Yolaab</h2>
-        <p class="text-lg text-gray-700 leading-8 mb-6">
-          Yolaab est une entreprise de nettoyage qui place votre satisfaction au cœur de sa mission. 
-          Avec une approche innovante et une équipe passionnée, nous offrons des services de nettoyage 
-          sur mesure pour chaque espace et équipement, en apportant une attention unique aux détails. 
-          Chez Yolaab, chaque intervention est pensée pour transformer les lieux en espaces accueillants, 
-          propres et revitalisés.
+    <div class="max-w-7xl mx-auto px-4 py-20 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+        <div class="absolute -left-40 -bottom-40 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+      </div>
+      <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-8 md:p-16 relative z-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-blue-200/50 about-card">
+        <div class="mb-8 text-5xl text-blue-600 opacity-10 absolute top-8 right-8">✓</div>
+        <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-8">Qui est Yolaab ?</h2>
+        <p class="text-lg text-gray-700 leading-10 mb-8 hover:text-gray-900 transition-colors">
+          Yolaab est une entreprise qui structure et professionnalise le secteur des services domestiques,
+          un secteur essentiel mais encore largement dominé par l'informel. Nous construisons un écosystème
+          intégré capable d'offrir aux ménages et aux entreprises une solution fiable, centralisée et
+          professionnelle pour leurs besoins quotidiens.
         </p>
-        <p class="text-xl font-semibold text-blue-600 border-l-4 border-blue-600 pl-4">
-          Notre mission : Rendre chaque espace accueillant, propre et revitalisé, 
-          grâce à un service attentif et personnalisé.
+        <p class="text-lg text-gray-700 leading-10 mb-10 hover:text-gray-900 transition-colors">
+          Yolaab n'est pas un simple prestataire. C'est une organisation structurée qui transforme un
+          marché fragmenté en une expérience cohérente et rassurante. Nous remplaçons l'improvisation
+          par l'organisation.
         </p>
+        <div class="relative p-6 md:p-8 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-2xl border-l-4 border-blue-600 mission-card">
+          <p class="text-xl md:text-2xl font-bold text-blue-700">
+            Notre mission
+          </p>
+          <p class="text-lg text-gray-800 mt-3 leading-8">
+            Simplifier votre quotidien en professionnalisant les services domestiques,
+            afin de libérer votre temps pour l'essentiel.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- Services Section with Company Images Gallery -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
-      <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-12">
-        Nos Services en Action
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="max-w-7xl mx-auto px-4 py-20 relative">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4 services-title">
+          Notre Écosystème Intégré de Services
+        </h2>
+        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-4 rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
         <!-- Image 1 -->
         <NuxtLink
           to="/reservation"
-          class="relative rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 block h-80"
+          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
         >
-          <img 
-            src="~/assets/service1.jpeg" 
-            alt="Service Yoolab 1" 
-            class="w-full h-full object-cover object-center"
-            loading="lazy"
+          <img
+            src="~/assets/service1.jpeg"
+            alt="Service Yolaab 1"
+            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end">
-            <div class="p-6 w-full">
-              <h3 class="text-2xl font-bold text-white mb-2">Nettoyage Professionnel</h3>
-              <p class="text-gray-100">Découvrez notre expertise en nettoyage sur mesure</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+            <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+              <h3 class="text-3xl font-bold text-white mb-3">Services Professionnels</h3>
+              <p class="text-gray-100 text-lg">Équipes formées et encadrées</p>
             </div>
           </div>
         </NuxtLink>
@@ -100,18 +117,17 @@
         <!-- Image 2 -->
         <NuxtLink
           to="/reservation"
-          class="relative rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 block h-80"
+          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
         >
-          <img 
-            src="~/assets/service2.jpeg" 
-            alt="Service Yoolab 2" 
-            class="w-full h-full object-cover object-center"
-            loading="lazy"
+          <img
+            src="~/assets/service2.jpeg"
+            alt="Service Yolaab 2"
+            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end">
-            <div class="p-6 w-full">
-              <h3 class="text-2xl font-bold text-white mb-2">Excellence et Précision</h3>
-              <p class="text-gray-100">Un travail méticuleux pour chaque espace</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+            <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+              <h3 class="text-3xl font-bold text-white mb-3">Un Standard Unique de Qualité</h3>
+              <p class="text-gray-100 text-lg">Homogénéité et excellence</p>
             </div>
           </div>
         </NuxtLink>
@@ -119,84 +135,117 @@
         <!-- Image 3 -->
         <NuxtLink
           to="/reservation"
-          class="relative rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:scale-105 block h-80"
+          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
         >
-          <img 
-            src="~/assets/service3.jpeg" 
-            alt="Service Yoolab 3" 
-            class="w-full h-full object-cover object-center"
-            loading="lazy"
+          <img
+            src="~/assets/service3.jpeg"
+            alt="Service Yolaab 3"
+            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end">
-            <div class="p-6 w-full">
-              <h3 class="text-2xl font-bold text-white mb-2">Votre Satisfaction</h3>
-              <p class="text-gray-100">Notre engagement pour la qualité</p>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+            <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+              <h3 class="text-3xl font-bold text-white mb-3">Un Seul Interlocuteur</h3>
+              <p class="text-gray-100 text-lg">Plusieurs solutions, solution centralisée</p>
             </div>
           </div>
         </NuxtLink>
       </div>
 
       <!-- Service Description -->
-      <div class="bg-blue-50 rounded-2xl p-8 md:p-12 text-center">
-        <h3 class="text-2xl font-bold text-blue-600 mb-4">Nos Domaines d'Expertise</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div class="text-center">
-            <div class="flex items-center justify-center text-blue-600 mb-2">
-              <Car size="44" />
+      <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-8 md:p-16 text-center shadow-xl border border-blue-200/50 overflow-hidden relative">
+        <div class="absolute -right-32 -top-32 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-5"></div>
+        <div class="relative z-10">
+          <h3 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-6">Le Problème que Nous Résolvons</h3>
+          <p class="text-lg text-gray-700 leading-9 mb-12 max-w-4xl mx-auto">
+            Le secteur domestique souffre d'un manque de structuration. Les ménages et les entreprises rencontrent
+            des prestataires peu encadrés, une qualité irrégulière, une absence de garanties et des standards peu clairs.
+            Cette multiplication des interlocuteurs crée un déficit de confiance et une perte de temps considérable.
+          </p>
+          <h3 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-10">Notre Solution</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
+              <div class="flex items-center justify-center text-blue-600 mb-6 w-20 h-20 mx-auto bg-blue-100 rounded-full">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
+                </svg>
+              </div>
+              <p class="font-bold text-gray-800 text-lg">Équipes formées et encadrées</p>
             </div>
-            <p class="font-semibold text-gray-700 mt-2">Nettoyage Automobile</p>
-          </div>
-          <div class="text-center">
-            <div class="flex items-center justify-center text-blue-600 mb-2">
-              <Sofa size="44" />
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
+              <div class="flex items-center justify-center text-blue-600 mb-6 w-20 h-20 mx-auto bg-green-100 rounded-full">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <p class="font-bold text-gray-800 text-lg">Processus clairs et garanties</p>
             </div>
-            <p class="font-semibold text-gray-700 mt-2">Moquettes & Canapés</p>
-          </div>
-          <div class="text-center">
-            <div class="flex items-center justify-center text-blue-600 mb-2">
-              <Building2 size="44" />
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
+              <div class="flex items-center justify-center text-blue-600 mb-6 w-20 h-20 mx-auto bg-purple-100 rounded-full">
+                <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+              </div>
+              <p class="font-bold text-gray-800 text-lg">Suivi client rigoureux</p>
             </div>
-            <p class="font-semibold text-gray-700 mt-2">Fin de Chantier</p>
-          </div>
-          <div class="text-center">
-            <div class="flex items-center justify-center text-blue-600 mb-2">
-              <Building2 size="44" />
-            </div>
-            <p class="font-semibold text-gray-700 mt-2">Entretien Bureaux</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Values Section -->
-    <div class="bg-gradient-to-b from-white to-blue-50 py-16">
-      <div class="max-w-7xl mx-auto px-4">
-        <h2 class="text-3xl md:text-4xl font-bold text-center text-blue-600 mb-12">
-          Nos Valeurs
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4"><Smile size="40" class="mx-auto" /></div>
-            <h3 class="text-xl font-bold text-blue-600 mb-3">Satisfaction Client</h3>
-            <p class="text-gray-700">Vous êtes notre priorité. Notre équipe s'engage à offrir un service qui dépasse vos attentes.</p>
+    <div class="bg-gradient-to-b from-white to-blue-50 py-24 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute left-0 top-1/2 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-blob"></div>
+        <div class="absolute right-0 bottom-0 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-5 animate-blob animation-delay-6000"></div>
+      </div>
+      <div class="max-w-7xl mx-auto px-4 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4">
+            Nos Valeurs
+          </h2>
+          <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><Shield size="40" class="mx-auto text-blue-600" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Fiabilité</h3>
+            <p class="text-gray-700 text-sm leading-6">Vous pouvez compter sur nous</p>
           </div>
 
-          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4"><Star size="40" class="mx-auto" /></div>
-            <h3 class="text-xl font-bold text-blue-600 mb-3">Professionnalisme</h3>
-            <p class="text-gray-700">Nos experts mettent tout en œuvre pour assurer des résultats impeccables avec soin et efficacité.</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><Star size="40" class="mx-auto text-yellow-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Excellence</h3>
+            <p class="text-gray-700 text-sm leading-6">Excellence opérationnelle</p>
           </div>
 
-          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4"><Lightbulb size="40" class="mx-auto" /></div>
-            <h3 class="text-xl font-bold text-blue-600 mb-3">Innovation</h3>
-            <p class="text-gray-700">Nous utilisons des méthodes modernes et du matériel performant pour garantir des résultats durables.</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><Heart size="40" class="mx-auto text-red-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Responsabilité</h3>
+            <p class="text-gray-700 text-sm leading-6">Impact social assumé</p>
           </div>
 
-          <div class="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all">
-            <div class="text-5xl mb-4"><Target size="40" class="mx-auto" /></div>
-            <h3 class="text-xl font-bold text-blue-600 mb-3">Adaptabilité</h3>
-            <p class="text-gray-700">Chaque espace est unique. Nous adaptons nos services à vos besoins spécifiques.</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><Handshake size="40" class="mx-auto text-green-600" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Respect</h3>
+            <p class="text-gray-700 text-sm leading-6">Respect de tous</p>
+          </div>
+
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><CheckCircle size="40" class="mx-auto text-indigo-600" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Rigueur</h3>
+            <p class="text-gray-700 text-sm leading-6">Processus clairs</p>
+          </div>
+
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
+            <div class="text-5xl mb-6 relative"><Zap size="40" class="mx-auto text-orange-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3">Engagement</h3>
+            <p class="text-gray-700 text-sm leading-6">Dedicate commitment</p>
           </div>
         </div>
       </div>
@@ -346,8 +395,8 @@
 
 <script setup lang="ts">
 import heroImg from '../assets/service1.jpeg'
-import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image } from 'lucide-vue-next'
-// Page data is now hardcoded with Yoolab branding - no need for services/features arrays
+import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image, Shield, Heart, Handshake, CheckCircle, Zap } from 'lucide-vue-next'
+// Page data is now hardcoded with Yolaab branding - no need for services/features arrays
 </script>
 
 <style scoped>
@@ -359,16 +408,89 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
 
 .fade-up{ animation: fadeUp .9s ease both; }
 
+/* Blob animation for background elements */
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 6s;
+}
+
+/* About, Service, Values Cards animations */
+.about-card {
+  animation: slideInUp 0.8s ease-out;
+}
+
+.mission-card {
+  animation: slideInUp 1s ease-out 0.2s both;
+}
+
+.service-card {
+  animation: slideInUp 0.8s ease-out;
+}
+
+.service-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.service-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.solution-card {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.solution-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.solution-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.value-card {
+  animation: slideInUp 0.8s ease-out;
+}
+
+.value-card:nth-child(1) { animation-delay: 0s; }
+.value-card:nth-child(2) { animation-delay: 0.1s; }
+.value-card:nth-child(3) { animation-delay: 0.2s; }
+.value-card:nth-child(4) { animation-delay: 0.3s; }
+.value-card:nth-child(5) { animation-delay: 0.4s; }
+.value-card:nth-child(6) { animation-delay: 0.5s; }
+
+.services-title {
+  animation: slideInDown 0.8s ease-out;
+}
+
 @keyframes float{
   0%{ transform: translateY(0) scale(1); }
- 50%{ transform: translateY(-12px) scale(1.02); }
- 100%{ transform: translateY(0) scale(1); }
+  50%{ transform: translateY(-12px) scale(1.02); }
+  100%{ transform: translateY(0) scale(1); }
+}
+
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
 }
 
 @keyframes pulse{
   0%{ box-shadow: 0 6px 18px rgba(2,6,23,0.08); transform: translateY(0); }
   50%{ box-shadow: 0 14px 36px rgba(2,6,23,0.12); transform: translateY(-4px); }
- 100%{ box-shadow: 0 6px 18px rgba(2,6,23,0.08); transform: translateY(0); }
+  100%{ box-shadow: 0 6px 18px rgba(2,6,23,0.08); transform: translateY(0); }
 }
 
 @keyframes fadeUp{
@@ -376,17 +498,56 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
   to{ opacity: 1; transform: translateY(0); }
 }
 
-/* Contact section refinements */
-.card-contact{ background: rgba(255,255,255,0.06); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.1); }
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-.icon-circle{ 
-  width: 100px; 
-  height: 100px; 
-  background: rgba(255,255,255,0.12); 
-  border-radius: 50%; 
-  display: flex; 
-  align-items: center; 
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Contact section refinements */
+.card-contact{
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.1);
+  animation: slideInUp 0.8s ease-out;
+  transition: all 0.3s ease;
+}
+
+.card-contact:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-4px);
+}
+
+.icon-circle{
+  width: 100px;
+  height: 100px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.card-contact:hover .icon-circle {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1) rotate(5deg);
 }
 
 .social-btn{
@@ -394,13 +555,18 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
   align-items: center;
   gap: 0.5rem;
   border: 2px solid rgba(255,255,255,0.5);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 2rem;
   color: white;
   font-weight: 600;
-  transition: all 300ms;
+  transition: all 300ms ease;
   position: relative;
+  animation: slideInUp 0.8s ease-out;
 }
+
+.social-btn:nth-child(1) { animation-delay: 0.1s; }
+.social-btn:nth-child(2) { animation-delay: 0.2s; }
+.social-btn:nth-child(3) { animation-delay: 0.3s; }
 
 .social-btn:after{
   content: '';
@@ -417,6 +583,7 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
 .social-btn:hover{
   border-color: rgba(255,255,255,0.8);
   background: rgba(255,255,255,0.08);
+  transform: translateY(-2px);
 }
 
 .social-btn:hover:after{
@@ -425,6 +592,14 @@ import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbul
 
 /* Hero social-proof / testimonial */
 .testimonial{ border-left: 4px solid rgba(255,255,255,0.06); }
-.hero-trust img{ opacity: 0.9; filter: grayscale(20%); transition: transform .2s, opacity .2s; }
-.hero-trust img:hover{ transform: translateY(-3px); opacity: 1; filter: none; }
+.hero-trust img{
+  opacity: 0.9;
+  filter: grayscale(20%);
+  transition: transform .3s, opacity .3s;
+}
+.hero-trust img:hover{
+  transform: translateY(-3px) scale(1.05);
+  opacity: 1;
+  filter: none;
+}
 </style>

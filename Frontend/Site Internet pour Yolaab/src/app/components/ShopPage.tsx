@@ -156,7 +156,7 @@ export function ShopPage({ onOrderSubmit }: ShopPageProps) {
                 🛒 Boutique YOLAAB
               </h1>
               <p className="text-xl md:text-2xl opacity-90">
-                Produits de nettoyage professionnels
+                Produits professionnels
               </p>
             </div>
             

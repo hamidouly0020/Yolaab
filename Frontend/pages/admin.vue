@@ -1,27 +1,32 @@
 <template>
   <!-- Login Screen -->
-  <div v-if="!isAuthenticated" class="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-md w-full">
-      <div class="text-center mb-8">
-        <div class="bg-blue-100 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-          <Lock size="28" />
+  <div v-if="!isAuthenticated" class="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4 relative overflow-hidden">
+    <!-- Animated background blobs -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+      <div class="absolute -left-40 bottom-0 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+    </div>
+    <div class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-3xl shadow-xl p-8 md:p-12 max-w-md w-full relative z-10 border border-blue-200/30 login-card">
+      <div class="text-center mb-10">
+        <div class="bg-gradient-to-br from-blue-100 to-blue-200 text-blue-600 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6 icon-circle-animate">
+          <Lock size="36" />
         </div>
-        <h1 class="text-3xl font-bold text-blue-600 mb-2">Espace Admin</h1>
+        <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-2">Espace Admin</h1>
         <p class="text-gray-600">Connexion requise</p>
       </div>
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="handleLogin" class="space-y-6">
         <div class="mb-6">
-          <label class="block mb-2 font-bold"><Lock size="16" class="inline-block mr-2"/>Mot de passe</label>
+          <label class="block mb-3 font-bold text-gray-700"><Lock size="16" class="inline-block mr-2 text-blue-600"/>Mot de passe</label>
           <input
             v-model="password"
             type="password"
-            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg"
+            class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none text-lg input-animate transition-all"
             placeholder="Entrez le mot de passe"
           />
         </div>
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white px-6 py-4 rounded-xl hover:bg-blue-700 transition-all font-bold text-lg"
+          class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 rounded-xl hover:shadow-lg transition-all font-bold text-lg button-animate"
         >
           Se connecter
         </button>
@@ -32,14 +37,16 @@
   <!-- Admin Dashboard -->
   <div v-else class="min-h-screen bg-gradient-to-b from-blue-50 to-white">
     <!-- Header -->
-    <div class="bg-white shadow-sm px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-4">
+    <div class="bg-white shadow-md px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 border-b-2 border-blue-100 header-animate">
       <div class="flex items-center gap-3">
-        <Lock class="w-6 h-6 text-blue-600" />
-        <h1 class="text-lg sm:text-2xl font-bold text-blue-600">Espace Admin</h1>
+        <div class="text-blue-600 p-2 bg-blue-50 rounded-lg">
+          <Lock class="w-6 h-6" />
+        </div>
+        <h1 class="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Espace Admin</h1>
       </div>
       <button
         @click="logout"
-        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all font-bold text-sm md:text-base flex items-center gap-2"
+        class="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all font-bold text-sm md:text-base flex items-center gap-2"
       >
         <XCircle class="w-4 h-4" /> <span class="uppercase">Déconnexion</span>
       </button>
@@ -47,7 +54,7 @@
 
     <div class="max-w-7xl mx-auto px-4 py-8">
       <!-- Tabs -->
-      <div class="bg-white rounded-2xl shadow-lg overflow-x-auto mb-8">
+      <div class="bg-white rounded-3xl shadow-lg overflow-x-auto mb-8 tabs-container">
         <div class="flex">
           <button
             @click="activeTab = 'reservations'"
@@ -244,7 +251,13 @@
               v-model="newProduct.categorie"
               class="px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none"
             >
-              <option value="nettoyage">Nettoyage</option>
+              <option
+                v-for="cat in productCategories"
+                :key="cat"
+                :value="cat"
+              >
+                {{ cat }}
+              </option>
               <option value="autre">Autre</option>
             </select>
             <div class="md:col-span-2">
@@ -660,13 +673,22 @@ const newProduct = ref({
   nom: '',
   prix: '' as string | number,
   quantite: '' as string | number,
-  categorie: 'nettoyage',
+  categorie: 'Nettoyage professionnel',
 })
 
 const imageFile = ref<File | null>(null)
 
 const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
 
+  const productCategories = [
+    'Nettoyage professionnel',
+    'Placement de personnel qualifié',
+    'Laverie & Pressing',
+    'Service de déménagement',
+    'Plateforme de seconde main',
+    'Commerce spécialisé',
+    'Autre',
+  ];
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
@@ -854,7 +876,7 @@ const addProduct = async () => {
     if (response.ok) {
       const data = await response.json()
       products.value.push(data)
-      newProduct.value = { nom: '', prix: '', quantite: '', categorie: 'nettoyage' }
+      newProduct.value = { nom: '', prix: '', quantite: '', categorie: productCategories[0] }
       imageFile.value = null
       showAddProduct.value = false
       alert('✅ Produit ajouté avec succès')
@@ -1033,3 +1055,113 @@ onMounted(() => {
   loadRealisations()
 })
 </script>
+
+<style scoped>
+/* Login Screen Animations */
+.login-card {
+  animation: slideInUp 0.8s ease-out;
+}
+
+.icon-circle-animate {
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.input-animate {
+  animation: slideInUp 0.6s ease-out 0.1s both;
+}
+
+.button-animate {
+  animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+/* Admin Dashboard Animations */
+.header-animate {
+  animation: slideInDown 0.6s ease-out;
+}
+
+.tabs-container {
+  animation: slideInUp 0.6s ease-out 0.1s both;
+}
+
+/* Blob animation for background elements */
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Keyframes */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Hover effects */
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* Button hover */
+button:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Table animations */
+table {
+  animation: slideInUp 0.8s ease-out;
+}
+
+tr:hover {
+  background-color: rgba(37, 99, 235, 0.05);
+  transition: background-color 0.3s ease;
+}
+</style>

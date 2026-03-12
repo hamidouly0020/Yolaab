@@ -9,27 +9,39 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const services = [
     {
       icon: Car,
-      title: 'Lavage Voiture',
-      description: 'Nettoyage complet de votre véhicule',
-      image: 'https://images.unsplash.com/photo-1760827797819-4361cd5cd353?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYXIlMjB3YXNoJTIwY2xlYW5pbmclMjBzZXJ2aWNlfGVufDF8fHx8MTc2OTkzNzA1Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-    },
-    {
-      icon: HomeIcon,
-      title: 'Lavage Maison',
-      description: 'Nettoyage de votre domicile',
+      title: 'Nettoyage professionnel',
+      description: 'Entretien et nettoyage de tous types de surfaces et équipements.',
       image: 'https://images.unsplash.com/photo-1581578949510-fa7315c4c350?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxob3VzZSUyMGNsZWFuaW5nJTIwc2VydmljZSUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3Njk5NzU5MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
     },
     {
-      icon: Building2,
-      title: 'Lavage Bureau',
-      description: 'Nettoyage de vos bureaux',
-      image: 'https://images.unsplash.com/photo-1701651545983-c3b357a8387f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvZmZpY2UlMjBjbGVhbmluZyUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3Njk5NzU5MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+      icon: Users,
+      title: 'Placement de personnel qualifié',
+      description: 'Recrutement et mise à disposition de professionnels formés.',
+      image: 'https://images.unsplash.com/photo-1560264280-88bcacae0a76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     },
     {
       icon: Sofa,
-      title: 'Lavage Salon',
-      description: 'Nettoyage de vos meubles',
-      image: 'https://images.unsplash.com/photo-1684165610413-2401399e0e59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmdXJuaXR1cmUlMjBzb2ZhJTIwY2xlYW5pbmd8ZW58MXx8fHwxNzY5OTc1OTEyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+      title: 'Laverie & Pressing',
+      description: 'Services de blanchisserie et pressing pour particuliers et entreprises.',
+      image: 'https://images.unsplash.com/photo-1557682260-9678a7fa195c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    },
+    {
+      icon: Building2,
+      title: 'Service de déménagement',
+      description: 'Organisation et accompagnement pour vos déménagements.',
+      image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    },
+    {
+      icon: Layers,
+      title: 'Plateforme de seconde main',
+      description: 'Achetez et vendez des objets d’occasion en toute confiance.',
+      image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    },
+    {
+      icon: HomeIcon,
+      title: 'Commerce spécialisé',
+      description: 'Boutique dédiée à des produits professionnels de qualité.',
+      image: 'https://images.unsplash.com/photo-1601924928380-7b52b59176bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
     },
   ];
 

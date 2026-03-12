@@ -1,11 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
-    <div class="max-w-4xl mx-auto px-4 py-12">
-      <h1 class="text-4xl md:text-5xl font-bold text-center text-blue-600 mb-12">
-        Demander Un Devis
-      </h1>
+  <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8 relative overflow-hidden">
+    <!-- Animated background blobs -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+      <div class="absolute -left-40 top-1/2 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+    </div>
+    <div class="max-w-4xl mx-auto px-4 py-16 relative z-10">
+      <div class="text-center mb-16">
+        <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4 page-title">
+          Demander Un Devis
+        </h1>
+        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-4 rounded-full"></div>
+      </div>
 
-      <form @submit.prevent="handleSubmit" class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 space-y-8">
+      <form @submit.prevent="handleSubmit" class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-3xl shadow-xl hover:shadow-2xl p-8 md:p-12 space-y-8 form-container border border-blue-200/30 transition-all duration-500">
         <!-- Informations Personnelles -->
         <div class="space-y-4">
           <h2 class="text-2xl font-bold text-blue-600">Vos Informations</h2>
@@ -366,3 +374,107 @@ const getServiceDetails = () => {
   }
 }
 </script>
+
+<style scoped>
+/* Page animations */
+.page-title {
+  animation: slideInDown 0.8s ease-out;
+}
+
+.form-container {
+  animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+/* Blob animation for background elements */
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Input and select styling with animation */
+input,
+textarea,
+select {
+  animation: slideInUp 0.6s ease-out;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Button animations */
+.bg-blue-600,
+button[type="submit"],
+button[type="button"] {
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Keyframes */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section headers */
+h2 {
+  animation: slideInUp 0.6s ease-out;
+  color: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+/* Error message animation */
+.error-message {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+</style>
