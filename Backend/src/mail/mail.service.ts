@@ -47,7 +47,6 @@ export class MailService {
       throw error;
     }
   }
-  }
 
   async sendDevisNotification(data: any) {
     console.log('📧 Tentative envoi mail devis...');
@@ -78,6 +77,5 @@ export class MailService {
       });
       throw error;
     }
-  }
   }
 }
