@@ -90,17 +90,7 @@
           </div>
         </div>
 
-        <!-- Description du Projet (texte) -->
-        <div class="space-y-3">
-          <h2 class="text-xl font-bold text-blue-600">Description du Projet</h2>
-          <p class="text-sm text-gray-600">Décrivez votre projet en quelques lignes (texte).</p>
 
-          <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Description du projet *</label>
-            <textarea v-model="formData.description" required class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none" rows="4" placeholder="Décrivez votre projet..."></textarea>
-            <p class="text-sm text-gray-500 mt-2">Le contenu sera inclus dans le message WhatsApp.</p>
-          </div>
-        </div>
 
         <!-- Service-specific details -->
         <div v-if="getServiceDetails()" class="space-y-3 bg-blue-50 rounded-2xl p-5">
@@ -241,7 +231,7 @@ const formData = ref({
   telephone: '',
   localisation: '',
   typeService: 'nettoyage-automobile',
-  description: '',
+  // description: '',
   serviceDetails: {
     places: 3,
     longueur: 5,
@@ -286,10 +276,7 @@ const getServiceDetails = () => {
     return
   }
 
-  if (!formData.value.description || !formData.value.description.trim()) {
-    errorMessage.value = 'Veuillez fournir une description du projet'
-    return
-  }
+
 
   // Envoyer au backend pour persistance + notification email
   try {
@@ -302,7 +289,7 @@ const getServiceDetails = () => {
       telephone: formData.value.telephone,
       localisation: formData.value.localisation,
       typeService: formData.value.typeService,
-      description: formData.value.description,
+      // description: formData.value.description,
       serviceDetails: formData.value.serviceDetails,
     }
 
@@ -339,8 +326,7 @@ const getServiceDetails = () => {
       messageLines.push(`Localisation: ${payload.localisation || 'Non fournie'}`)
       messageLines.push(`Service: ${payload.typeService}`)
       messageLines.push('')
-      messageLines.push('Description:')
-      messageLines.push(payload.description || '')
+
 
       const encodedMessage = encodeURIComponent(messageLines.join('\n'))
       const whatsappNumber = '221767957899'

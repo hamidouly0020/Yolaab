@@ -1,30 +1,77 @@
 import { Injectable } from '@nestjs/common';
-import { Resend } from 'resend';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  private resend: Resend;
-  private adminEmail: string = 'yolaab.app@gmail.com';
+  private transporter: nodemailer.Transporter;
 
   constructor() {
-    this.resend = new Resend(process.env.RESEND_API_KEY);
-  }
-
-  async sendReservationNotification(clientName: string, clientEmail: string, message: string) {
-    return this.resend.emails.send({
-      from: this.adminEmail,
-      to: this.adminEmail,
-      subject: `Nouvelle réservation de ${clientName}`,
-      html: `<p>Nom: ${clientName}</p><p>Email: ${clientEmail}</p><p>Message: ${message}</p>`
+    this.transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT),
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
     });
   }
 
-  async sendDevisNotification(clientName: string, clientEmail: string, details: string) {
-    return this.resend.emails.send({
-      from: this.adminEmail,
-      to: this.adminEmail,
-      subject: `Nouvelle demande de devis de ${clientName}`,
-      html: `<p>Nom: ${clientName}</p><p>Email: ${clientEmail}</p><p>Détails: ${details}</p>`
-    });
+  async sendReservationNotification(data: any) {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: process.env.RESERVATION_RECIPIENT,
+      subject: `Nouvelle réservation de ${data.nom || ''} ${data.prenom || ''}`,
+      html:
+        `<p>Nom: ${data.nom || ''}</p>` +
+        `<p>Prénom: ${data.prenom || ''}</p>` +
+        `<p>Email: ${data.email || ''}</p>` +
+        `<p>Téléphone: ${data.telephone || ''}</p>` +
+        `<p>Localisation: ${data.localisation || ''}</p>` +
+        `<p>Service: ${data.typeService || ''}</p>`,
+    };
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      // ...log supprimé...
+      return info;
+    } catch (err) {
+      // Envoie l'erreur par mail à l'admin, ne log plus dans le backend
+      await this.transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: process.env.RESERVATION_RECIPIENT,
+        subject: 'Erreur lors de l\'envoi de la notification réservation',
+        html: `<p>Erreur : ${err?.message || err}</p>`,
+      });
+      throw err;
+    }
+  }
+
+  async sendDevisNotification(data: any) {
+    const mailOptions = {
+      from: process.env.SMTP_FROM,
+      to: process.env.DEVIS_RECIPIENT,
+      subject: `Nouvelle demande de devis de ${data.nom || ''} ${data.prenom || ''}`,
+      html:
+        `<p>Nom: ${data.nom || ''}</p>` +
+        `<p>Prénom: ${data.prenom || ''}</p>` +
+        `<p>Email: ${data.email || ''}</p>` +
+        `<p>Téléphone: ${data.telephone || ''}</p>` +
+        `<p>Localisation: ${data.localisation || ''}</p>` +
+        `<p>Service: ${data.typeService || ''}</p>`,
+    };
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      // ...log supprimé...
+      return info;
+    } catch (err) {
+      // Envoie l'erreur par mail à l'admin, ne log plus dans le backend
+      await this.transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: process.env.DEVIS_RECIPIENT,
+        subject: 'Erreur lors de l\'envoi de la notification devis',
+        html: `<p>Erreur : ${err?.message || err}</p>`,
+      });
+      throw err;
+    }
   }
 }
