@@ -7,6 +7,7 @@ export class ReservationController {
 
   @Post()
   create(@Body() data: any) {
+    console.log('📨 Appel envoi mail pour:', data.email);
     return this.service.create(data);
   }
 

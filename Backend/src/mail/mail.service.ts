@@ -18,6 +18,7 @@ export class MailService {
   }
 
   async sendReservationNotification(data: any) {
+    console.log('📧 Tentative envoi mail réservation...');
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: process.env.RESERVATION_RECIPIENT,
@@ -32,21 +33,24 @@ export class MailService {
     };
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      // ...log supprimé...
+      console.log('✅ Mail réservation envoyé avec succès:', info.messageId);
       return info;
-    } catch (err) {
-      // Envoie l'erreur par mail à l'admin, ne log plus dans le backend
+    } catch (error) {
+      console.error('❌ Erreur envoi mail réservation:', error.message);
+      console.error('❌ Détails:', error);
       await this.transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: process.env.RESERVATION_RECIPIENT,
         subject: 'Erreur lors de l\'envoi de la notification réservation',
-        html: `<p>Erreur : ${err?.message || err}</p>`,
+        html: `<p>Erreur : ${error?.message || error}</p>`,
       });
-      throw err;
+      throw error;
     }
+  }
   }
 
   async sendDevisNotification(data: any) {
+    console.log('📧 Tentative envoi mail devis...');
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: process.env.DEVIS_RECIPIENT,
@@ -60,18 +64,20 @@ export class MailService {
         `<p>Service: ${data.typeService || ''}</p>`,
     };
     try {
-      const info = await this.transporter.sendMail(mailOptions);
-      // ...log supprimé...
-      return info;
-    } catch (err) {
-      // Envoie l'erreur par mail à l'admin, ne log plus dans le backend
+      const result = await this.transporter.sendMail(mailOptions);
+      console.log('✅ Mail devis envoyé avec succès:', result.messageId);
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur envoi mail devis:', error.message);
+      console.error('❌ Détails:', error);
       await this.transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: process.env.DEVIS_RECIPIENT,
         subject: 'Erreur lors de l\'envoi de la notification devis',
-        html: `<p>Erreur : ${err?.message || err}</p>`,
+        html: `<p>Erreur : ${error?.message || error}</p>`,
       });
-      throw err;
+      throw error;
     }
+  }
   }
 }
