@@ -39,44 +39,31 @@
 
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import * as nodemailer from 'nodemailer';
-
-function getTransporter() {
-  const host = process.env.SMTP_HOST
-  const port = parseInt(process.env.SMTP_PORT || '587', 10)
-  const user = process.env.SMTP_USER
-  const pass = process.env.SMTP_PASS
-
-  console.log('[RESERVATION SMTP] Configuration check:', {
-    host: host ? '✓ set' : '✗ missing',
-    port: port || 587,
-    user: user ? '✓ set' : '✗ missing',
-    pass: pass ? '✓ set' : '✗ missing',
-  })
-
-  if (!host || !user || !pass) {
-    // don't throw here to avoid breaking reservation creation in dev without config
-    console.warn('[RESERVATION SMTP] SMTP not configured; reservation emails will not be sent')
-    return null
-  }
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass },
-  })
-}
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class ReservationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   async create(data: any) {
     if (data.serviceDetails && typeof data.serviceDetails === 'object') {
       data.serviceDetails = JSON.stringify(data.serviceDetails);
     }
-    const created = await this.prisma.reservation.create({ data })
+    const created = await this.prisma.reservation.create({ data });
+    // Envoi notification admin via Resend
+    try {
+      await this.mailService.sendReservationNotification(
+        `${data.nom || ''} ${data.prenom || ''}`,
+        data.email || '',
+        data.description || ''
+      );
+    } catch (e) {
+      console.warn('[RESERVATION EMAIL] Erreur lors de l\'envoi de la notification admin', e);
+    }
+    return created;
 
     // Send notification email in background (fire and forget)
     this.sendReservationEmail(created).catch(e => {

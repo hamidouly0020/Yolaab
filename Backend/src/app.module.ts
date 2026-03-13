@@ -11,6 +11,7 @@ import { InvoiceModule } from './invoice/invoice.module';
 import { RealisationModule } from './realisation/realisation.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { DevisModule } from './devis/devis.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DevisModule } from './devis/devis.module';
     RealisationModule,
     UploadsModule,
     DevisModule,
+    MailModule,
   ],
   controllers: [],
   providers: [

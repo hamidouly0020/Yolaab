@@ -1,83 +1,64 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
-import * as nodemailer from 'nodemailer'
-import { PrismaService } from '../prisma/prisma.service'
-
-interface EmailLogEntry {
-  to: string
-  subject: string
-  body: string
-  status: string
-  response?: any
-}
+import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class DevisService {
-  private transporter: nodemailer.Transporter | null = null
-  constructor(private prisma: PrismaService) {}
-
-  private async getTransporter() {
-    if (this.transporter) return this.transporter
-    const host = process.env.SMTP_HOST
-    const port = parseInt(process.env.SMTP_PORT || '587', 10)
-    const user = process.env.SMTP_USER
-    const pass = process.env.SMTP_PASS
-
-    console.log('[DEVIS SMTP] Configuration check:', {
-      host: host ? '✓ set' : '✗ missing',
-      port: port || 587,
-      user: user ? '✓ set' : '✗ missing',
-      pass: pass ? '✓ set' : '✗ missing',
-    })
-
-    if (!host || !user || !pass) {
-      throw new InternalServerErrorException('SMTP configuration missing (SMTP_HOST/SMTP_USER/SMTP_PASS)')
-    }
-
-    this.transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
-    })
-
-    // Verify connection
-    try {
-      console.log('[DEVIS SMTP] Verifying SMTP connection to', host + ':' + port)
-      await this.transporter.verify()
-      console.log('[DEVIS SMTP] ✓ Connection verified successfully')
-    } catch (error) {
-      console.error('[DEVIS SMTP] ✗ Connection failed:', error)
-      throw new InternalServerErrorException(`SMTP connection failed: ${error.message}`)
-    }
-
-    return this.transporter
-  }
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   async sendDevisEmail(payload: any) {
-    const transporter = await this.getTransporter()
-
-    const adminEmail = process.env.DEVIS_RECIPIENT || 'yolaab.app@gmail.com'
-
-    const subject = `Nouvelle demande de devis — ${payload.service || payload.typeService || 'Service'}`
-    const bodyLines: string[] = []
-    bodyLines.push('Nouvelle demande de devis reçue via le site Yolaab')
-    bodyLines.push('')
-    bodyLines.push(`Nom: ${payload.nom || ''}`)
-    bodyLines.push(`Prénom: ${payload.prenom || ''}`)
-    bodyLines.push(`Téléphone: ${payload.telephone || ''}`)
-    bodyLines.push(`Localisation: ${payload.localisation || ''}`)
-    bodyLines.push(`Service: ${payload.service || payload.typeService || ''}`)
-    bodyLines.push('')
-    bodyLines.push('Description:')
-    bodyLines.push(payload.description || '')
-    bodyLines.push('')
+    // Construction du message
+    const subject = `Nouvelle demande de devis — ${payload.service || payload.typeService || 'Service'}`;
+    let details = '';
     if (payload.serviceDetails) {
-      bodyLines.push('Détails du service:')
       try {
-        const details = typeof payload.serviceDetails === 'string' ? JSON.parse(payload.serviceDetails) : payload.serviceDetails
-        bodyLines.push(JSON.stringify(details, null, 2))
+        details = typeof payload.serviceDetails === 'string' ? payload.serviceDetails : JSON.stringify(payload.serviceDetails);
       } catch (e) {
-        bodyLines.push(String(payload.serviceDetails))
+        details = String(payload.serviceDetails);
+      }
+    }
+    const html = `<p>Nom: ${payload.nom || ''}</p><p>Prénom: ${payload.prenom || ''}</p><p>Téléphone: ${payload.telephone || ''}</p><p>Localisation: ${payload.localisation || ''}</p><p>Service: ${payload.service || payload.typeService || ''}</p><p>Description: ${payload.description || ''}</p><p>Détails: ${details}</p>`;
+    try {
+      await this.mailService.sendDevisNotification(
+        `${payload.nom || ''} ${payload.prenom || ''}`,
+        payload.email || '',
+        html
+      );
+      return { ok: true };
+    } catch (err) {
+      throw new InternalServerErrorException('Erreur lors de l\'envoi de l\'e-mail');
+    }
+  }
+
+  async create(payload: any) {
+    try {
+      const created = await this.prisma.devis.create({ data: {
+        nom: payload.nom || '',
+        prenom: payload.prenom || '',
+        telephone: payload.telephone || '',
+        localisation: payload.localisation || null,
+        typeService: payload.typeService || '',
+        description: payload.description || '',
+        serviceDetails: payload.serviceDetails ? (typeof payload.serviceDetails === 'string' ? payload.serviceDetails : JSON.stringify(payload.serviceDetails)) : null,
+      } });
+
+      // Envoi notification admin via Resend
+      try {
+        await this.sendDevisEmail(payload);
+      } catch (e) {
+        console.warn('[DEVIS EMAIL] Erreur lors de l\'envoi de la notification admin', e);
+      }
+
+      return created;
+    } catch (err) {
+      console.error('[DEVIS CREATE] Failed to create devis', err);
+      throw new InternalServerErrorException('Erreur serveur lors de la création de la demande');
+    }
+  }
+}
       }
     }
 
