@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException, Query } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 
 @Controller('reservations')
@@ -12,9 +12,11 @@ export class ReservationController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string) {
     try {
-      return await this.service.findAll();
+      const l = limit ? parseInt(limit, 10) : undefined;
+      const o = offset ? parseInt(offset, 10) : undefined;
+      return await this.service.findAll({ limit: l, offset: o });
     } catch (err) {
       console.error('Error fetching reservations', err);
       throw new InternalServerErrorException('Erreur serveur lors du chargement des réservations');

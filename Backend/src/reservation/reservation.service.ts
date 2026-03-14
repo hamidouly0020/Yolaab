@@ -25,9 +25,13 @@ export class ReservationService {
     return created;
   }
 
-  async findAll() {
+  async findAll(params?: { limit?: number; offset?: number }) {
+    const limit = params?.limit ?? 20;
+    const offset = params?.offset ?? 0;
     const reservations = await this.prisma.reservation.findMany({
       orderBy: { createdAt: 'desc' },
+      skip: offset,
+      take: limit,
     });
     return reservations.map(r => ({
       ...r,
