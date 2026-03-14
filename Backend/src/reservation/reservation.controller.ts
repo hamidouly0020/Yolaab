@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException, Query, CacheTTL } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 
 @Controller('reservations')
@@ -12,6 +12,7 @@ export class ReservationController {
   }
 
   @Get()
+  @CacheTTL(60) // Cache for 60 seconds
   async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string) {
     try {
       const l = limit ? parseInt(limit, 10) : undefined;

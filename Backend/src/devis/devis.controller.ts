@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common'
+import { Controller, Post, Body, Get, Query, CacheTTL } from '@nestjs/common'
 import { DevisService } from './devis.service'
 
 @Controller('devis')
@@ -32,5 +32,13 @@ export class DevisController {
     } catch (error) {
       return { success: false, error: error.message }
     }
+  }
+
+  @Get()
+  @CacheTTL(60) // Cache for 60 seconds
+  async findAll(@Query('limit') limit?: string, @Query('offset') offset?: string) {
+    const l = limit ? parseInt(limit, 10) : undefined;
+    const o = offset ? parseInt(offset, 10) : undefined;
+    return await this.service.findAll({ limit: l, offset: o });
   }
 }
