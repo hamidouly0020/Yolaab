@@ -16,32 +16,13 @@ export class ReservationService {
       data.serviceDetails = JSON.stringify(data.serviceDetails);
     }
     const created = await this.prisma.reservation.create({ data });
-    // Envoi notification admin via Resend
-    try {
-      await this.mailService.sendReservationNotification(data);
-    } catch (e) {
-      console.warn('[RESERVATION EMAIL] Erreur lors de l\'envoi de la notification admin', e);
-    }
+
+    // Send notification email in background (fire and forget - non-bloquant)
+    this.mailService.sendReservationNotification(created).catch(e => {
+      console.error('[RESERVATION EMAIL] Erreur lors de l\'envoi de la notification admin:', e);
+    });
+
     return created;
-
-    // Send notification email in background (fire and forget)
-    this.sendReservationEmail(created).catch(e => {
-      console.warn('Background email sending failed after creating reservation', e)
-    })
-
-    return created
-  }
-
-  private async sendReservationEmail(created: any) {
-    try {
-      // Notification admin via Resend
-      const admin = process.env.DEVIS_RECIPIENT || process.env.RESERVATION_RECIPIENT || 'yolaab.app@gmail.com';
-      const subject = `Nouvelle réservation — ${created.typeService || 'Service'}`;
-      const html = `<p>Nom: ${created.nom || ''}</p><p>Prénom: ${created.prenom || ''}</p><p>Téléphone: ${created.telephone || ''}</p><p>Localisation: ${created.localisation || ''}</p><p>Service: ${created.typeService || ''}</p><p>Détails: ${created.serviceDetails ? (typeof created.serviceDetails === 'string' ? created.serviceDetails : JSON.stringify(created.serviceDetails)) : ''}</p>`;
-      await this.mailService.sendReservationNotification(created);
-    } catch (e) {
-      console.warn('[RESERVATION EMAIL] Erreur lors de l\'envoi de la notification admin', e);
-    }
   }
 
   async findAll() {
