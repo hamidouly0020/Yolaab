@@ -18,7 +18,6 @@ export class MailService {
   }
 
   async sendReservationNotification(data: any) {
-    console.log('📧 Tentative envoi mail réservation...');
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: process.env.RESERVATION_RECIPIENT,
@@ -33,7 +32,6 @@ export class MailService {
     };
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log('✅ Mail réservation envoyé avec succès:', info.messageId);
       return info;
     } catch (error) {
       console.error('❌ Erreur envoi mail réservation:', error.message);
@@ -49,7 +47,6 @@ export class MailService {
   }
 
   async sendDevisNotification(data: any) {
-    console.log('📧 Tentative envoi mail devis...');
     const mailOptions = {
       from: process.env.SMTP_FROM,
       to: process.env.DEVIS_RECIPIENT,
@@ -64,7 +61,6 @@ export class MailService {
     };
     try {
       const result = await this.transporter.sendMail(mailOptions);
-      console.log('✅ Mail devis envoyé avec succès:', result.messageId);
       return result;
     } catch (error) {
       console.error('❌ Erreur envoi mail devis:', error.message);

@@ -12,7 +12,6 @@ export class DevisController {
       return { ok: false, error: 'Nom, Prénom et Téléphone sont requis' }
     }
 
-    console.log('📨 Appel envoi mail pour:', data.email);
     const created = await this.service.create(data)
     return { ok: true, devis: created }
   }

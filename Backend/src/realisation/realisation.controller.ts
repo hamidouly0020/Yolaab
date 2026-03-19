@@ -58,8 +58,6 @@ export class RealisationController {
   )
   async create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
     try {
-      console.log('Realisation create called', { body: data, file: file ? { originalname: file.originalname, mimetype: file.mimetype, path: file.path } : null });
-
       if (file) {
         // Upload direct Cloudinary
         const url = file.path || (file as any).secure_url;
