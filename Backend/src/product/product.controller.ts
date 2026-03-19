@@ -1,15 +1,14 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import multerStorageCloudinary from 'multer-storage-cloudinary';
 import { ProductService } from './product.service';
 
-const storage = diskStorage({
-  destination: './uploads',
-  filename: (req, file, cb) => {
-    const randomName = Array(32).fill(null).map(() => Math.round(Math.random() * 16).toString(16)).join('');
-    cb(null, `${randomName}${extname(file.originalname)}`);
-  },
+const storage = multerStorageCloudinary({
+  cloudinary: require('cloudinary').v2,
+  params: (req, file) => ({
+    folder: 'products',
+    resource_type: 'auto',
+  }),
 });
 
 @Controller('products')
@@ -30,7 +29,7 @@ export class ProductController {
   )
   create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
     if (file) {
-      data.image = `/uploads/${file.filename}`;
+      data.image = file.path || (file as any).secure_url;
     }
 
     // Convert numeric fields coming from multipart/form-data (always strings)

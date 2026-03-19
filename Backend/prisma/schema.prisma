@@ -7,38 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Reservation {
-  id             String   @id @default(cuid())
-  nom            String
-  prenom         String
-  telephone      String
-  localisation   String?
-  typeService    String
-  duree          String?
-  serviceDetails String?  @db.LongText
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  description    String?
-}
-
-model Product {
-  id          String   @id @default(cuid())
-  nom         String
-  description String?
-  prix        Float
-  quantite    Int
-  categorie   String
-  image       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Application {
+model application {
   id         String   @id @default(cuid())
   nom        String
   prenom     String
   telephone  String
-  email      String?
+  email      String
   poste      String
   experience String
   message    String?
@@ -46,7 +20,18 @@ model Application {
   updatedAt  DateTime @updatedAt
 }
 
-model Order {
+model invoice {
+  id        String   @id @default(cuid())
+  client    String
+  service   String
+  montant   Float
+  date      String
+  statut    String   @default("en attente")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model order {
   id           String   @id @default(cuid())
   items        String   @db.LongText
   total        Float
@@ -59,7 +44,43 @@ model Order {
   updatedAt    DateTime @updatedAt
 }
 
-model Worker {
+model product {
+  id          String   @id @default(cuid())
+  nom         String
+  description String?
+  prix        Float
+  quantite    Int
+  categorie   String
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model realisation {
+  id          String   @id @default(cuid())
+  titre       String
+  description String?
+  type        String
+  url         String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model reservation {
+  id             String   @id @default(cuid())
+  nom            String
+  prenom         String
+  telephone      String
+  localisation   String?
+  typeService    String
+  duree          String
+  serviceDetails String?  @db.LongText
+  email          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model worker {
   id           String   @id @default(cuid())
   nom          String
   prenom       String
@@ -70,28 +91,7 @@ model Worker {
   updatedAt    DateTime @updatedAt
 }
 
-model Invoice {
-  id        String   @id @default(cuid())
-  client    String
-  service   String
-  montant   Float
-  date      String
-  statut    String   @default("en attente")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Realisation {
-  id          String   @id @default(cuid())
-  titre       String
-  description String?
-  type        String
-  url         String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Devis {
+model devis {
   id             String   @id @default(cuid())
   nom            String
   prenom         String
@@ -102,9 +102,11 @@ model Devis {
   serviceDetails String?  @db.LongText
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+
+  @@index([createdAt])
 }
 
-model EmailLog {
+model emailLog {
   id        String   @id @default(cuid())
   to        String
   subject   String

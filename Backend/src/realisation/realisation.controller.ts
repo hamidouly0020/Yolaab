@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import multerStorageCloudinary from 'multer-storage-cloudinary';
 import { extname, resolve } from 'path';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 // Make AWS SDK optional to avoid compile errors when package is not installed
@@ -13,12 +14,12 @@ if (!existsSync(uploadsPath)) {
   mkdirSync(uploadsPath, { recursive: true });
 }
 
-const storage = diskStorage({
-  destination: uploadsPath,
-  filename: (req, file, cb) => {
-    const randomName = Array(32).fill(null).map(() => Math.round(Math.random() * 16).toString(16)).join('');
-    cb(null, `${randomName}${extname(file.originalname)}`);
-  },
+const storage = multerStorageCloudinary({
+  cloudinary: require('cloudinary').v2,
+  params: (req, file) => ({
+    folder: 'uploads',
+    resource_type: 'auto',
+  }),
 });
 
 // Initialize S3 client only if env vars are provided (use STORAGE_TYPE="s3" to force)
@@ -43,7 +44,10 @@ if (useS3) {
 
 @Controller('realisations')
 export class RealisationController {
-  constructor(private readonly service: RealisationService) {}
+  constructor(
+    private readonly service: RealisationService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post()
   @UseInterceptors(
@@ -54,32 +58,15 @@ export class RealisationController {
   )
   async create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
     try {
-      console.log('Realisation create called', { body: data, file: file ? { originalname: file.originalname, mimetype: file.mimetype, filename: file.filename } : null });
+      console.log('Realisation create called', { body: data, file: file ? { originalname: file.originalname, mimetype: file.mimetype, path: file.path } : null });
 
       if (file) {
-        if (s3Client) {
-          // upload to S3 and set url to remote location
-          const fileStream = require('fs').createReadStream(resolve(uploadsPath, file.filename));
-          const key = `realisations/${file.filename}`;
-          try {
-            await s3Client.send(new PutObjectCommand({ Bucket: S3_BUCKET, Key: key, Body: fileStream, ContentType: file.mimetype, ACL: 'public-read' } as any));
-            const url = process.env.S3_PUBLIC_URL || `https://${S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
-            data.url = url;
-            // cleanup local copy
-            try { unlinkSync(resolve(uploadsPath, file.filename)); } catch (e) { /* ignore */ }
-          } catch (e) {
-            console.error('S3 upload failed, falling back to local file', e);
-            data.url = `/uploads/${file.filename}`;
-          }
-        } else {
-          // local filesystem storage
-          data.url = `/uploads/${file.filename}`;
-        }
+        // Upload direct Cloudinary
+        const url = file.path || (file as any).secure_url;
+        data.url = url;
       }
 
-      // ensure type is present
       if (!data.type) data.type = 'image';
-
       return this.service.create(data);
     } catch (err: any) {
       console.error('Error creating realisation', err);
