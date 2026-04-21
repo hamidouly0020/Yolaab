@@ -87,14 +87,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Home, Calendar, Clipboard, Film, ShoppingCart, Lock } from 'lucide-vue-next'
+import { Home, Film, ShoppingCart, Settings, Lock } from 'lucide-vue-next'
 
 const navItems = [
   { id: 'home', icon: Home, label: 'Accueil' },
-  { id: 'reservation', icon: Calendar, label: 'Réserver' },
-  { id: 'devis', icon: Clipboard, label: 'Devis' },
-  { id: 'realisation', icon: Film, label: 'Réalisations' },
   { id: 'shop', icon: ShoppingCart, label: 'Boutique' },
+  { id: 'realisation', icon: Film, label: 'Réalisations' },
+  { id: 'services', icon: Settings, label: 'Services' },
 ]
 
 const route = useRoute()

@@ -92,7 +92,9 @@ export default defineNuxtConfig({
   routeRules: {
     '/products/**': { cache: { maxAge: 60 * 10 } },
     '/realisations/**': { cache: { maxAge: 60 * 10 } },
-    '/devis': { cache: { maxAge: 60 * 60 } },  // Cache devis page for 1 hour
+    '/reservation': { cache: { maxAge: 60 * 60 } },  // Cache reservation page for 1 hour
+    '/pressing': { cache: { maxAge: 60 * 60 } },  // Cache pressing page for 1 hour
+    '/services': { cache: { maxAge: 60 * 60 } },  // Cache services page for 1 hour
     '/**': { cache: { maxAge: 60 * 5 } },      // Cache all other pages for 5 minutes
   },
 })

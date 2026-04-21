@@ -1,5 +1,38 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8 relative overflow-hidden">
+    <!-- Service Availability Check -->
+    <div v-if="!isServiceAvailable" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6">
+        <div class="flex justify-between items-start gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">Bienvenue sur Laverie & Pressing</h2>
+            <p class="text-slate-600 mt-2">Le service sera bientôt disponible.</p>
+          </div>
+          <button @click="goBack" class="text-slate-500 hover:text-slate-900">✕</button>
+        </div>
+
+        <p class="text-slate-700 mb-6">Pour contacter le service client Yolaab, appuyez sur le bouton WhatsApp.</p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between">
+          <a
+            :href="whatsappLink"
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-full bg-green-500 px-5 py-3 text-white font-bold hover:bg-green-600"
+          >
+            WhatsApp
+          </a>
+          <NuxtLink
+            to="/home"
+            class="inline-flex items-center justify-center rounded-full bg-slate-100 px-5 py-3 text-slate-900 font-bold hover:bg-slate-200"
+          >
+            Retour à l'accueil
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content - Only show if service is available -->
+    <div v-else>
     <!-- Animated background blobs -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
       <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
@@ -8,7 +41,7 @@
     <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
       <div class="text-center mb-12">
         <h1 class="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-3 page-title">
-          Demander Un Devis
+          Pressing
         </h1>
         <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
       </div>
@@ -84,18 +117,37 @@
                   : 'border-gray-300 hover:border-blue-400'
               ]"
             >
-              <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="24" />
-              <p class="font-semibold text-gray-700 text-sm">{{ service.label }}</p>
+                <component :is="service.icon" :class="formData.typeService === service.id ? 'text-blue-600' : 'text-gray-500'" size="24" />
+                <p class="font-semibold text-gray-700 text-sm">{{ service.label }}</p>
             </button>
           </div>
         </div>
 
-
+        <!-- Durée de l'intervention -->
+        <div class="space-y-3">
+          <h2 class="text-xl font-bold text-blue-600">Durée souhaitée</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <button
+              v-for="d in durees"
+              :key="d.id"
+              type="button"
+              @click="formData.duree = d.id"
+              :class="[
+                'p-4 rounded-2xl border-2 transition-all text-center cursor-pointer',
+                formData.duree === d.id
+                  ? 'border-blue-600 bg-blue-50 shadow-lg'
+                  : 'border-gray-300 hover:border-blue-400'
+              ]"
+            >
+              <div class="text-lg mb-1">{{ d.label }}</div>
+            </button>
+          </div>
+        </div>
 
         <!-- Service-specific details -->
-        <div v-if="getServiceDetails()" class="space-y-3 bg-blue-50 rounded-2xl p-5">
+        <div v-if="showServiceDetails" class="space-y-3 bg-blue-50 rounded-2xl p-5">
           <h2 class="text-xl font-bold text-blue-600">Détails du service</h2>
-          
+
           <!-- Canapes - Nombre de places -->
           <div v-if="formData.typeService === 'canapes'">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -142,7 +194,7 @@
                 />
               </div>
             </div>
-            <p class="text-sm text-gray-500">La surface ({{ formData.serviceDetails.longueur * formData.serviceDetails.largeur }}m²) aide à estimer le délai</p>
+            <p class="text-sm text-gray-500">La surface ({{ tapisSurface }}m²) aide à estimer le délai</p>
           </div>
 
           <!-- Nettoyage automobile - Type de véhicule -->
@@ -196,10 +248,11 @@
         <div class="flex gap-3">
           <button
             type="submit"
-            class="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-2xl hover:from-green-600 hover:to-green-700 transition-all font-bold text-base flex items-center justify-center gap-2"
+            :disabled="isLoading"
+            class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 transition-all font-bold text-base disabled:opacity-50"
           >
-            <MessageCircle size="18" class="inline-block mr-2" />
-            <span>ENVOYER PAR WHATSAPP</span>
+            <template v-if="isLoading"><Calendar size="18" class="inline-block mr-2"/>En cours...</template>
+            <template v-else><Check size="18" class="inline-block mr-2"/>RÉSERVER</template>
           </button>
           <NuxtLink
             to="/home"
@@ -209,21 +262,39 @@
           </NuxtLink>
         </div>
 
+        <div v-if="successMessage" class="bg-green-100 border-2 border-green-600 text-green-700 p-3 rounded-xl flex items-start gap-2">
+          <Check size="18" class="flex-shrink-0 text-green-700" />
+          <div>{{ successMessage }}</div>
+        </div>
         <div v-if="errorMessage" class="bg-red-100 border-2 border-red-600 text-red-700 p-3 rounded-xl flex items-start gap-2">
           <XCircle size="18" class="flex-shrink-0 text-red-700" />
           <div>{{ errorMessage }}</div>
         </div>
       </form>
     </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Car, Layers, Sofa, Building2, MessageCircle, XCircle } from 'lucide-vue-next'
+import { ref, computed } from 'vue'
+import { Car, Layers, Sofa, Building2, Calendar, Check, XCircle } from 'lucide-vue-next'
+import { useRouter } from '#imports'
 
-const config = useRuntimeConfig()
-const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+const router = useRouter()
+
+// Service availability check
+const isServiceAvailable = ref(false) // Set to false since pressing is now unavailable
+
+const whatsappLink = 'https://api.whatsapp.com/send?phone=221767957899&text=Bonjour%20Yolaab%20%2C%20je%20souhaite%20obtenir%20plus%20d%27informations%20sur%20le%20service%20Laverie%20%26%20Pressing.'
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push('/home')
+  }
+}
 
 const formData = ref({
   nom: '',
@@ -231,7 +302,7 @@ const formData = ref({
   telephone: '',
   localisation: '',
   typeService: 'nettoyage-automobile',
-  // description: '',
+  duree: '1_semaine',
   serviceDetails: {
     places: 3,
     longueur: 5,
@@ -242,6 +313,8 @@ const formData = ref({
   },
 })
 
+const isLoading = ref(false)
+const successMessage = ref('')
 const errorMessage = ref('')
 
 const services = [
@@ -252,111 +325,80 @@ const services = [
   { id: 'entretien-bureaux', label: 'Entretien Bureaux', icon: Building2 },
 ]
 
-const getServiceLabel = (serviceId: string): string => {
-  const service = services.find(s => s.id === serviceId)
-  return service ? service.label : serviceId
-}
+const durees = [
+  { id: '2_jours', label: '2 jours' },
+  { id: '1_semaine', label: '1 semaine' },
+  { id: '2_semaines', label: '2 semaines' },
+  { id: '1_mois', label: '1 mois' },
+]
 
-const getServiceDetails = () => {
+// Memoized computed property
+const showServiceDetails = computed(() => {
   return ['canapes', 'tapis', 'nettoyage-automobile', 'fin-de-chantier', 'entretien-bureaux'].includes(formData.value.typeService)
-}
+})
 
+// Memoized computed property for surface
+const tapisSurface = computed(() => {
+  const long = formData.value.serviceDetails.longueur || 0
+  const larg = formData.value.serviceDetails.largeur || 0
+  return (long * larg).toFixed(2)
+})
 
-
-// Nous n'utilisons plus l'upload serveur ici :
-// On privilégie le partage local via Web Share API (partage direct du fichier vers WhatsApp sur mobile).
-// Si non disponible, on ouvre le lien WhatsApp et invite l'utilisateur à attacher le fichier manuellement.
-
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
+  isLoading.value = true
   errorMessage.value = ''
+  successMessage.value = ''
 
-  // Validation champs obligatoires (front)
-  if (!formData.value.nom || !formData.value.prenom || !formData.value.telephone) {
-    errorMessage.value = 'Veuillez remplir tous les champs obligatoires'
-    return
-  }
+  const config = useRuntimeConfig()
+  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
-
-
-  // Envoyer au backend pour persistance + notification email
   try {
-    const config = useRuntimeConfig()
-    const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
-
-    const payload = {
-      nom: formData.value.nom,
-      prenom: formData.value.prenom,
-      telephone: formData.value.telephone,
-      localisation: formData.value.localisation,
-      typeService: formData.value.typeService,
-      // description: formData.value.description,
-      serviceDetails: formData.value.serviceDetails,
-    }
-
-    const res = await fetch(`${apiBaseUrl}/devis`, {
+    const response = await fetch(`${apiBaseUrl}/reservations`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nom: formData.value.nom,
+        prenom: formData.value.prenom,
+        telephone: formData.value.telephone,
+        localisation: formData.value.localisation || null,
+        typeService: formData.value.typeService,
+        duree: formData.value.duree,
+        serviceDetails: formData.value.serviceDetails,
+      }),
     })
 
-    const json = await res.json()
-    if (!res.ok || json.ok === false) {
-      errorMessage.value = json.error || 'Erreur lors de l\'envoi de la demande'
-      return
+    if (!response.ok) {
+      throw new Error('Erreur lors de la réservation')
     }
 
-    // succès: reset form and notify user
+    successMessage.value = 'Réservation confirmée ! Merci de votre confiance.'
     formData.value = {
       nom: '',
       prenom: '',
       telephone: '',
       localisation: '',
       typeService: 'nettoyage-automobile',
-      description: '',
-      serviceDetails: { places: 3, longueur: 5, largeur: 4, typeVehicule: '', surface: 100, nombrePieces: 1 },
+      duree: '1_semaine',
+      serviceDetails: {
+        places: 3,
+        longueur: 5,
+        largeur: 4,
+        typeVehicule: '',
+        surface: 100,
+        nombrePieces: 1,
+      },
     }
 
-    // Open WhatsApp for client to send the same message to admin
-    try {
-      const messageLines: string[] = []
-      messageLines.push('DEMANDE DE DEVIS YOLAAB')
-      messageLines.push(`Nom: ${payload.nom}`)
-      messageLines.push(`Prénom: ${payload.prenom}`)
-      messageLines.push(`Téléphone: ${payload.telephone}`)
-      messageLines.push(`Localisation: ${payload.localisation || 'Non fournie'}`)
-      messageLines.push(`Service: ${payload.typeService}`)
-      messageLines.push('')
-
-
-      const encodedMessage = encodeURIComponent(messageLines.join('\n'))
-      const whatsappNumber = '221767957899'
-      const apiLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
-      const appLink = `whatsapp://send?phone=${whatsappNumber}&text=${encodedMessage}`
-
-      const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : ''
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)
-
-      if (isMobile) {
-        // try native app first
-        try {
-          window.location.href = appLink
-          setTimeout(() => { window.open(apiLink, '_blank') }, 1200)
-        } catch (err) {
-          window.open(apiLink, '_blank')
-        }
-      } else {
-        // desktop: open WhatsApp Web
-        window.open(apiLink, '_blank')
-      }
-    } catch (err) {
-      console.warn('Unable to open WhatsApp link', err)
-    }
-
-    alert('Demande de devis envoyée — nous vous contacterons bientôt.')
-    navigateTo('/home')
-  } catch (err) {
-    console.error(err)
-    errorMessage.value = 'Erreur lors de l\'envoi. Veuillez réessayer plus tard.'
+    setTimeout(() => {
+      navigateTo('/home')
+    }, 2000)
+  } catch (error) {
+    errorMessage.value = 'Erreur lors de la réservation. Veuillez réessayer.'
+    console.error(error)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
