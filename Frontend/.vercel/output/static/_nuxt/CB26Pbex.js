@@ -1,0 +1,1 @@
+import{a as s}from"./CHVf8vh6.js";import{l as a,B as r,O as e,G as t}from"./CHNET86N.js";const o=a({__name:"reservations",setup(a){const o=s();return r(()=>{o.replace("/reservation")}),(s,a)=>(t(),e("div"))}});export{o as default};

@@ -1,0 +1,1 @@
+import{a}from"./CHVf8vh6.js";import{l as s,B as r,O as t,G as e}from"./CHNET86N.js";const o=s({__name:"realisations",setup(s){const o=a();return r(()=>{o.replace("/realisation")}),(a,s)=>(e(),t("div"))}});export{o as default};
