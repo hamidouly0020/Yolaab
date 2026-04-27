@@ -87,10 +87,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Home, Film, ShoppingCart, Settings, Lock } from 'lucide-vue-next'
+import { Home, Film, ShoppingCart, Settings, Lock, Info } from 'lucide-vue-next'
 
 const navItems = [
   { id: 'home', icon: Home, label: 'Accueil' },
+  { id: 'about', icon: Info, label: 'À Propos' },
   { id: 'shop', icon: ShoppingCart, label: 'Boutique' },
   { id: 'realisation', icon: Film, label: 'Réalisations' },
   { id: 'services', icon: Settings, label: 'Services' },

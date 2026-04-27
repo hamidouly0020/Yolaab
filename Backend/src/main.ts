@@ -4,9 +4,13 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { resolve } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import * as compression from 'compression';
+import * as helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Security headers
+  app.use(helmet());
 
   // CORS configuration - robust handling for dev and production
   const allowedOriginsEnv = process.env.CORS_ORIGIN || '';
@@ -32,25 +36,7 @@ async function bootstrap() {
   }
 
   const corsOptions: any = {
-    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Allow requests with no origin (like mobile apps or Postman)
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      // In development, allow all origins for convenience
-      if (isDevelopment) {
-        return callback(null, true);
-      }
-
-      // In production, check against allowed list
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.warn(`[CORS] Rejected origin: ${origin}`);
-        callback(new Error(`CORS: Origin ${origin} not allowed`));
-      }
-    },
+    origin: isDevelopment ? true : allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,

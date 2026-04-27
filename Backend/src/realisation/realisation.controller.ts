@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query, ValidationPipe, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import multerStorageCloudinary from 'multer-storage-cloudinary';
@@ -8,6 +8,7 @@ import { existsSync, mkdirSync, unlinkSync } from 'fs';
 declare const require: any;
 let S3Client: any, PutObjectCommand: any;
 import { RealisationService } from './realisation.service';
+import { CreateRealisationDto, UpdateRealisationDto } from './realisation.dto';
 
 const uploadsPath = resolve(process.cwd(), 'uploads');
 if (!existsSync(uploadsPath)) {
@@ -43,6 +44,7 @@ if (useS3) {
 }
 
 @Controller('realisations')
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class RealisationController {
   constructor(
     private readonly service: RealisationService,
@@ -56,7 +58,7 @@ export class RealisationController {
       limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB
     }),
   )
-  async create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
+  async create(@Body() data: CreateRealisationDto, @UploadedFile() file?: Express.Multer.File) {
     try {
       if (file) {
         // Upload direct Cloudinary

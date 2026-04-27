@@ -59,9 +59,12 @@
                 v-model="formData.nom"
                 type="text"
                 required
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                @blur="validateField('nom', formData.nom)"
+                class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                :class="errors.nom ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                 placeholder="Votre nom"
               />
+              <p v-if="errors.nom" class="text-red-500 text-sm mt-1">{{ errors.nom }}</p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -71,9 +74,12 @@
                 v-model="formData.prenom"
                 type="text"
                 required
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                @blur="validateField('prenom', formData.prenom)"
+                class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                :class="errors.prenom ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                 placeholder="Votre prénom"
               />
+              <p v-if="errors.prenom" class="text-red-500 text-sm mt-1">{{ errors.prenom }}</p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -83,9 +89,12 @@
                 v-model="formData.telephone"
                 type="tel"
                 required
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
-                placeholder="Votre numéro"
+                @blur="validateField('telephone', formData.telephone)"
+                class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                :class="errors.telephone ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
+                placeholder="77 123 45 67"
               />
+              <p v-if="errors.telephone" class="text-red-500 text-sm mt-1">{{ errors.telephone }}</p>
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -94,9 +103,12 @@
               <input
                 v-model="formData.localisation"
                 type="text"
-                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                @blur="validateField('localisation', formData.localisation)"
+                class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                :class="errors.localisation ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                 placeholder="Votre localisation (ville, adresse)"
               />
+              <p v-if="errors.localisation" class="text-red-500 text-sm mt-1">{{ errors.localisation }}</p>
             </div>
           </div>
         </div>
@@ -139,9 +151,12 @@
               type="number"
               min="1"
               max="10"
-              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+              @blur="validateField('places', formData.serviceDetails.places)"
+              class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+              :class="errors.serviceDetails.places ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
               placeholder="Ex: 3"
             />
+            <p v-if="errors.serviceDetails.places" class="text-red-500 text-sm mt-1">{{ errors.serviceDetails.places }}</p>
             <p class="text-sm text-gray-500 mt-2">Précisez le nombre de places pour un calcul tarifaire exact</p>
           </div>
 
@@ -157,9 +172,12 @@
                   type="number"
                   min="0.5"
                   step="0.5"
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                  @blur="validateField('longueur', formData.serviceDetails.longueur)"
+                  class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                  :class="errors.serviceDetails.longueur ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                   placeholder="Ex: 5"
                 />
+                <p v-if="errors.serviceDetails.longueur" class="text-red-500 text-sm mt-1">{{ errors.serviceDetails.longueur }}</p>
               </div>
               <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">
@@ -170,9 +188,13 @@
                   type="number"
                   min="0.5"
                   step="0.5"
-                  class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+                  @blur="validateField('largeur', formData.serviceDetails.largeur)"
+                  class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
+                  :class="border-gray-300 focus:border-blue-600"
+                  :class="errors.serviceDetails.largeur ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                   placeholder="Ex: 4"
                 />
+                <p v-if="errors.serviceDetails.largeur" class="text-red-500 text-sm mt-1">{{ errors.serviceDetails.largeur }}</p>
               </div>
             </div>
             <p class="text-sm text-gray-500">La surface ({{ formData.serviceDetails.longueur * formData.serviceDetails.largeur }}m²) aide à estimer le délai</p>
@@ -291,7 +313,153 @@ const formData = ref({
   },
 })
 
+const errors = ref({
+  nom: '',
+  prenom: '',
+  telephone: '',
+  localisation: '',
+  typeService: '',
+  serviceDetails: {
+    places: '',
+    longueur: '',
+    largeur: '',
+    typeVehicule: '',
+    surface: '',
+    nombrePieces: '',
+  },
+})
+
 const errorMessage = ref('')
+
+// Validation functions
+const validateField = (field: string, value: any) => {
+  switch (field) {
+    case 'nom':
+      if (!value.trim()) {
+        errors.value.nom = 'Le nom est requis'
+        return false
+      }
+      if (value.length < 2) {
+        errors.value.nom = 'Le nom doit contenir au moins 2 caractères'
+        return false
+      }
+      if (!/^[a-zA-ZÀ-ÿ\s-]+$/.test(value)) {
+        errors.value.nom = 'Le nom ne peut contenir que des lettres'
+        return false
+      }
+      errors.value.nom = ''
+      return true
+
+    case 'prenom':
+      if (!value.trim()) {
+        errors.value.prenom = 'Le prénom est requis'
+        return false
+      }
+      if (value.length < 2) {
+        errors.value.prenom = 'Le prénom doit contenir au moins 2 caractères'
+        return false
+      }
+      if (!/^[a-zA-ZÀ-ÿ\s-]+$/.test(value)) {
+        errors.value.prenom = 'Le prénom ne peut contenir que des lettres'
+        return false
+      }
+      errors.value.prenom = ''
+      return true
+
+    case 'telephone':
+      if (!value.trim()) {
+        errors.value.telephone = 'Le numéro de téléphone est requis'
+        return false
+      }
+      // Format sénégalais: 77/78/76/70 + 7 chiffres
+      if (!/^7[0678]\d{7}$/.test(value.replace(/\s+/g, ''))) {
+        errors.value.telephone = 'Format invalide (ex: 77 123 45 67)'
+        return false
+      }
+      errors.value.telephone = ''
+      return true
+
+    case 'localisation':
+      if (!value.trim()) {
+        errors.value.localisation = 'La localisation est requise'
+        return false
+      }
+      if (value.length < 3) {
+        errors.value.localisation = 'La localisation doit contenir au moins 3 caractères'
+        return false
+      }
+      errors.value.localisation = ''
+      return true
+
+    case 'places':
+      if (!value || value < 1 || value > 10) {
+        errors.value.serviceDetails.places = 'Nombre de places entre 1 et 10'
+        return false
+      }
+      errors.value.serviceDetails.places = ''
+      return true
+
+    case 'longueur':
+      if (!value || value < 1 || value > 50) {
+        errors.value.serviceDetails.longueur = 'Longueur entre 1 et 50 mètres'
+        return false
+      }
+      errors.value.serviceDetails.longueur = ''
+      return true
+
+    case 'largeur':
+      if (!value || value < 1 || value > 50) {
+        errors.value.serviceDetails.largeur = 'Largeur entre 1 et 50 mètres'
+        return false
+      }
+      errors.value.serviceDetails.largeur = ''
+      return true
+
+    case 'surface':
+      if (!value || value < 10 || value > 1000) {
+        errors.value.serviceDetails.surface = 'Surface entre 10 et 1000 m²'
+        return false
+      }
+      errors.value.serviceDetails.surface = ''
+      return true
+
+    case 'nombrePieces':
+      if (!value || value < 1 || value > 20) {
+        errors.value.serviceDetails.nombrePieces = 'Nombre de pièces entre 1 et 20'
+        return false
+      }
+      errors.value.serviceDetails.nombrePieces = ''
+      return true
+
+    default:
+      return true
+  }
+}
+
+const validateForm = () => {
+  let isValid = true
+
+  // Validate basic fields
+  isValid &= validateField('nom', formData.value.nom)
+  isValid &= validateField('prenom', formData.value.prenom)
+  isValid &= validateField('telephone', formData.value.telephone)
+  isValid &= validateField('localisation', formData.value.localisation)
+
+  // Validate service-specific fields
+  if (formData.value.typeService === 'canapes') {
+    isValid &= validateField('places', formData.value.serviceDetails.places)
+  } else if (formData.value.typeService === 'tapis') {
+    isValid &= validateField('longueur', formData.value.serviceDetails.longueur)
+    isValid &= validateField('largeur', formData.value.serviceDetails.largeur)
+  } else if (formData.value.typeService === 'nettoyage-automobile') {
+    // Add validation for vehicle type if needed
+  } else if (formData.value.typeService === 'fin-de-chantier') {
+    isValid &= validateField('surface', formData.value.serviceDetails.surface)
+    isValid &= validateField('nombrePieces', formData.value.serviceDetails.nombrePieces)
+  }
+
+  return isValid
+}
 
 const services = [
   { id: 'nettoyage-automobile', label: 'Nettoyage Automobile', icon: Car },
@@ -319,13 +487,26 @@ const getServiceDetails = () => {
   const handleSubmit = async () => {
   errorMessage.value = ''
 
-  // Validation champs obligatoires (front)
-  if (!formData.value.nom || !formData.value.prenom || !formData.value.telephone) {
-    errorMessage.value = 'Veuillez remplir tous les champs obligatoires'
+  // Validation complète du formulaire
+  if (!validateForm()) {
+    errorMessage.value = 'Veuillez corriger les erreurs dans le formulaire'
     return
   }
 
+  // Protection XSS basique - échapper les caractères spéciaux
+  const sanitizedData = {
+    ...formData.value,
+    nom: formData.value.nom.replace(/[<>]/g, ''),
+    prenom: formData.value.prenom.replace(/[<>]/g, ''),
+    localisation: formData.value.localisation.replace(/[<>]/g, ''),
+  }
 
+  // Rate limiting basique (éviter spam)
+  const lastSubmit = localStorage.getItem('lastReservationSubmit')
+  if (lastSubmit && Date.now() - parseInt(lastSubmit) < 30000) { // 30 secondes
+    errorMessage.value = 'Veuillez attendre 30 secondes avant de soumettre une nouvelle demande'
+    return
+  }
 
   // Envoyer au backend pour persistance + notification email
   try {
@@ -333,13 +514,13 @@ const getServiceDetails = () => {
     const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
 
     const payload = {
-      nom: formData.value.nom,
-      prenom: formData.value.prenom,
-      telephone: formData.value.telephone,
-      localisation: formData.value.localisation,
-      typeService: formData.value.typeService,
-      // description: formData.value.description,
-      serviceDetails: formData.value.serviceDetails,
+      nom: sanitizedData.nom,
+      prenom: sanitizedData.prenom,
+      telephone: sanitizedData.telephone,
+      localisation: sanitizedData.localisation,
+      typeService: sanitizedData.typeService,
+      // description: sanitizedData.description,
+      serviceDetails: sanitizedData.serviceDetails,
     }
 
     const res = await fetch(`${apiBaseUrl}/devis`, {
@@ -354,7 +535,9 @@ const getServiceDetails = () => {
       return
     }
 
-    // succès: reset form and notify user
+    // succès: enregistrer le timestamp et reset form
+    localStorage.setItem('lastReservationSubmit', Date.now().toString())
+    
     formData.value = {
       nom: '',
       prenom: '',
@@ -365,7 +548,8 @@ const getServiceDetails = () => {
       serviceDetails: { places: 3, longueur: 5, largeur: 4, typeVehicule: '', surface: 100, nombrePieces: 1 },
     }
 
-    // Open WhatsApp for client to send the same message to admin
+    alert('Réservation envoyée — nous vous contacterons bientôt.')
+    navigateTo('/home')
     try {
       const messageLines: string[] = []
       messageLines.push('DEMANDE DE RÉSERVATION YOLAAB')

@@ -107,6 +107,14 @@ export default defineNuxtConfig({
     // Supprimer preset: 'static' — Vercel le détecte automatiquement
     compress: true,
     minify: true,
+    // Security headers
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'SAMEORIGIN',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+    },
   },
 
   vite: {
@@ -128,6 +136,13 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/',
     head: {
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { httpEquiv: 'X-UA-Compatible', content: 'IE=edge' },
+        { name: 'description', content: 'Yolaab - Services domestiques professionnels' },
+        // Add security meta tags
+        { httpEquiv: 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' http://localhost:3000 https://api.whatsapp.com" }
+      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
@@ -136,8 +151,11 @@ export default defineNuxtConfig({
     }
   },
 
-  // Supprimer le bloc "server" entier — inutile sur Vercel
-  
+  server: {
+    host: '0.0.0.0',
+    port: 3001,
+  },
+
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
 
   image: {

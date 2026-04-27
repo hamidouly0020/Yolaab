@@ -1,17 +1,10 @@
-<template>
+  <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <!-- Hero Section -->
-    <div class="relative text-white overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center">
-      <!-- runtime background image (uses provided asset from Frontend/assets) -->
-      <div
-        class="absolute inset-0 z-0 bg-cover bg-center"
-        :style="{ backgroundImage: `url(${heroImg})` }"
-      ></div>
-      <!-- darker overlay above image for better text contrast -->
-      <div class="absolute inset-0 z-10 bg-black/45 pointer-events-none"></div>
-      <!-- Decorative blobs -->
-      <div aria-hidden="true" class="absolute inset-0 pointer-events-none z-5">
-        <svg class="decor-blob absolute left-[-8%] top-[-10%] opacity-30" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="relative overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center fade-up">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(26,58,107,0.16),transparent_20%),_linear-gradient(135deg,#f8fbff_0%,#eef5fb_100%)]"></div>
+      <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
+        <svg class="absolute left-[-8%] top-[-10%] opacity-30" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="g1" x1="0" x2="1">
               <stop offset="0%" stop-color="#7DD3FC" />
@@ -20,36 +13,40 @@
           </defs>
           <circle cx="210" cy="210" r="180" fill="url(#g1)" />
         </svg>
-        <svg class="decor-blob absolute right-[-6%] bottom-[-8%] opacity-20" width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="g2" x1="0" x2="1">
-              <stop offset="0%" stop-color="#34D399" />
-              <stop offset="100%" stop-color="#06B6D4" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width="320" height="320" rx="80" fill="url(#g2)" />
+        <svg class="absolute right-[-10%] top-[10%] w-72 h-72 opacity-30" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="80" fill="#17a2b8" />
         </svg>
       </div>
-      <div class="max-w-7xl mx-auto px-4 relative z-20 w-full transform translate-y-6 md:translate-y-12">
+      <div class="max-w-7xl mx-auto px-4 relative z-20 w-full">
         <div class="text-center mx-auto">
-          <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white drop-shadow-xl">
-            <HomeIcon size="36" class="inline-block mr-3 align-middle" /> Yolaab
-          </h1>
-          <p class="text-2xl md:text-3xl font-semibold mb-4 text-white/95">
-            Simplifier votre quotidien en professionnalisant les services domestiques
-          </p>
-          <p class="text-lg md:text-xl mb-8 text-white/90">
-            Libérer votre temps pour l'essentiel
-          </p>
-          <button
-            @click="openServicesModal"
-            class="inline-block bg-white text-blue-600 px-12 py-5 rounded-full hover:bg-blue-50 transition-all transform hover:scale-105 shadow-lg font-bold pulse-cta"
-          >
-            <span class="flex items-center gap-3">
-              <Calendar size="20" />
-              <span class="text-xl">CHOISIR UN SERVICE</span>
-            </span>
-          </button>
+          <div class="inline-flex items-center justify-center gap-3 mb-6">
+            <HomeIcon :size="40" class="text-blue-900" />
+            <span class="text-5xl md:text-6xl font-black tracking-tight text-blue-900">YOLAAB</span>
+          </div>
+          <p class="text-3xl md:text-5xl font-bold text-slate-900 leading-tight mb-4">Tous vos services domestiques en un seul écosystème.</p>
+          <p class="text-lg md:text-2xl text-slate-600 max-w-2xl mx-auto mb-8">Simplifiez votre quotidien en professionnalisant les services domestiques, afin de libérer votre temps pour l’essentiel.</p>
+
+          <div class="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-full px-6 py-3 shadow-sm mb-8">
+            <Sparkles class="w-6 h-6 text-teal-600" />
+            <span class="font-semibold text-slate-900">Un écosystème intégré de services domestiques, centralisé et structuré.</span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              @click="openServicesModal"
+              class="inline-flex items-center justify-center gap-3 bg-blue-900 text-white px-10 py-4 rounded-full hover:bg-blue-950 transition-all shadow-lg font-bold text-lg group hover:shadow-xl hover:scale-105 transform"
+            >
+              <Calendar :size="20" class="group-hover:scale-110 transition-transform" />
+              Commencer
+            </button>
+            <button
+              @click="scrollToService('nettoyage')"
+              class="inline-flex items-center justify-center gap-2 border border-slate-300 text-slate-900 bg-white px-8 py-4 rounded-full hover:bg-slate-100 transition-all font-semibold group hover:border-slate-400"
+            >
+              Voir nos services
+              <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -117,38 +114,6 @@
       </div>
     </div>
 
-    <!-- About Section -->
-    <div class="max-w-7xl mx-auto px-4 py-10 relative overflow-hidden">
-      <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute -right-40 -top-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div class="absolute -left-40 -bottom-40 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
-      </div>
-      <div class="bg-gradient-to-br from-blue-50 via-white to-blue-50 rounded-3xl p-6 md:p-10 relative z-10 shadow-xl hover:shadow-2xl transition-all duration-500 border border-blue-200/50 about-card">
-        <div class="mb-5 text-5xl text-blue-600 opacity-10 absolute top-6 right-6">✓</div>
-        <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-5">Qui est Yolaab ?</h2>
-        <p class="text-lg text-gray-700 leading-10 mb-5 hover:text-gray-900 transition-colors">
-          Yolaab est une entreprise qui structure et professionnalise le secteur des services domestiques,
-          un secteur essentiel mais encore largement dominé par l'informel. Nous construisons un écosystème
-          intégré capable d'offrir aux ménages et aux entreprises une solution fiable, centralisée et
-          professionnelle pour leurs besoins quotidiens.
-        </p>
-        <p class="text-lg text-gray-700 leading-10 mb-6 hover:text-gray-900 transition-colors">
-          Yolaab n'est pas un simple prestataire. C'est une organisation structurée qui transforme un
-          marché fragmenté en une expérience cohérente et rassurante. Nous remplaçons l'improvisation
-          par l'organisation.
-        </p>
-        <div class="relative p-5 md:p-6 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-2xl border-l-4 border-blue-600 mission-card">
-          <p class="text-xl md:text-2xl font-bold text-blue-700">
-            Notre mission
-          </p>
-          <p class="text-lg text-gray-800 mt-3 leading-8">
-            Simplifier votre quotidien en professionnalisant les services domestiques,
-            afin de libérer votre temps pour l'essentiel.
-          </p>
-        </div>
-      </div>
-    </div>
-
     <!-- Services Presentation Section -->
     <div class="max-w-7xl mx-auto px-4 py-16 relative">
       <div class="text-center mb-12">
@@ -157,27 +122,34 @@
         </h2>
         <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
         <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-          Découvrez notre gamme complète de services professionnels pour simplifier votre quotidien
+          Découvrez notre gamme complète de services professionnels pour simplifier votre quotidien.
         </p>
       </div>
 
+      
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
-          v-for="service in services"
+          v-for="(service, index) in services"
           :key="service.id"
+          :id="service.id"
           @click="selectService(service)"
-          class="service-card bg-white rounded-3xl shadow-lg hover:shadow-2xl p-6 transition-all transform hover:scale-105 cursor-pointer border border-blue-100 hover:border-blue-300"
+          class="service-card bg-white rounded-3xl shadow-lg hover:shadow-2xl p-6 transition-all transform hover:scale-105 cursor-pointer border border-blue-100 hover:border-blue-300 group overflow-hidden relative"
+          :style="{ animationDelay: `${index * 80}ms` }"
         >
-          <div class="flex items-center justify-between mb-4">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="flex items-center justify-between mb-4 relative z-10">
             <h3 class="text-xl font-bold text-slate-900">{{ service.title }}</h3>
-            <component :is="service.icon" class="text-blue-600" size="24" />
+            <div class="p-2 bg-blue-100 rounded-lg group-hover:scale-110 transition-transform duration-300">
+              <component :is="service.icon" class="text-blue-600" :size="24" />
+            </div>
           </div>
-          <p class="text-slate-600 mb-4">{{ service.description }}</p>
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-blue-600">
+          <p class="text-slate-600 mb-4 relative z-10">{{ service.description }}</p>
+          <div class="flex items-center justify-between relative z-10">
+            <span class="text-sm font-medium px-3 py-1 rounded-full" :class="service.available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'">
               {{ service.available ? 'Disponible' : 'Bientôt disponible' }}
             </span>
-            <button class="text-blue-600 hover:text-blue-800 font-semibold">
+            <button class="text-blue-600 hover:text-blue-800 font-semibold group-hover:translate-x-1 transition-transform">
               En savoir plus →
             </button>
           </div>
@@ -205,7 +177,7 @@
             alt="Service Yolaab 1"
             class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
             <div class="p-6 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
               <h3 class="text-2xl font-bold text-white mb-2">Services Professionnels</h3>
               <p class="text-gray-100 text-lg">Équipes formées et encadrées</p>
@@ -223,7 +195,7 @@
             alt="Service Yolaab 2"
             class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
             <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
               <h3 class="text-3xl font-bold text-white mb-3">Un Standard Unique de Qualité</h3>
               <p class="text-gray-100 text-lg">Homogénéité et excellence</p>
@@ -241,7 +213,7 @@
             alt="Service Yolaab 3"
             class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
             <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
               <h3 class="text-3xl font-bold text-white mb-3">Un Seul Interlocuteur</h3>
               <p class="text-gray-100 text-lg">Plusieurs solutions, solution centralisée</p>
@@ -262,29 +234,32 @@
           </p>
           <h3 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-6">Notre Solution</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
-              <div class="flex items-center justify-center text-blue-600 mb-4 w-16 h-16 mx-auto bg-blue-100 rounded-full">
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100 group overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="flex items-center justify-center text-blue-600 mb-4 w-16 h-16 mx-auto bg-blue-100 rounded-full group-hover:scale-110 transition-transform duration-300 relative z-10">
                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
                 </svg>
               </div>
-              <p class="font-bold text-gray-800 text-lg">Équipes formées et encadrées</p>
+              <p class="font-bold text-gray-800 text-lg relative z-10">Équipes formées et encadrées</p>
             </div>
-            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
-              <div class="flex items-center justify-center text-blue-600 mb-6 w-20 h-20 mx-auto bg-green-100 rounded-full">
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100 group overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="flex items-center justify-center text-green-600 mb-6 w-20 h-20 mx-auto bg-green-100 rounded-full group-hover:scale-110 transition-transform duration-300 relative z-10">
                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
               </div>
-              <p class="font-bold text-gray-800 text-lg">Processus clairs et garanties</p>
+              <p class="font-bold text-gray-800 text-lg relative z-10">Processus clairs et garanties</p>
             </div>
-            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100">
-              <div class="flex items-center justify-center text-blue-600 mb-6 w-20 h-20 mx-auto bg-purple-100 rounded-full">
+            <div class="solution-card bg-white rounded-2xl shadow-md hover:shadow-xl p-8 text-center transition-all transform hover:translate-y-1 cursor-pointer border border-blue-100 group overflow-hidden relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="flex items-center justify-center text-purple-600 mb-6 w-20 h-20 mx-auto bg-purple-100 rounded-full group-hover:scale-110 transition-transform duration-300 relative z-10">
                 <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                 </svg>
               </div>
-              <p class="font-bold text-gray-800 text-lg">Suivi client rigoureux</p>
+              <p class="font-bold text-gray-800 text-lg relative z-10">Suivi client rigoureux</p>
             </div>
           </div>
         </div>
@@ -305,46 +280,46 @@
           <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-6 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-16 h-16 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-4xl mb-4 relative"><Shield size="32" class="mx-auto text-blue-600" /></div>
-            <h3 class="text-base font-bold text-blue-600 mb-2">Fiabilité</h3>
-            <p class="text-gray-700 text-sm leading-6">Vous pouvez compter sur nous</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-6 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 relative z-10"><Shield :size="32" class="mx-auto text-blue-600" /></div>
+            <h3 class="text-base font-bold text-blue-600 mb-2 relative z-10">Fiabilité</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Vous pouvez compter sur nous</p>
           </div>
 
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-5xl mb-6 relative"><Star size="40" class="mx-auto text-yellow-500" /></div>
-            <h3 class="text-lg font-bold text-blue-600 mb-3">Excellence</h3>
-            <p class="text-gray-700 text-sm leading-6">Excellence opérationnelle</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10"><Star :size="40" class="mx-auto text-yellow-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3 relative z-10">Excellence</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Excellence opérationnelle</p>
           </div>
 
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-red-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-5xl mb-6 relative"><Heart size="40" class="mx-auto text-red-500" /></div>
-            <h3 class="text-lg font-bold text-blue-600 mb-3">Responsabilité</h3>
-            <p class="text-gray-700 text-sm leading-6">Impact social assumé</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10"><Heart :size="40" class="mx-auto text-red-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3 relative z-10">Responsabilité</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Impact social assumé</p>
           </div>
 
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-5xl mb-6 relative"><Handshake size="40" class="mx-auto text-green-600" /></div>
-            <h3 class="text-lg font-bold text-blue-600 mb-3">Respect</h3>
-            <p class="text-gray-700 text-sm leading-6">Respect de tous</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10"><Handshake :size="40" class="mx-auto text-green-600" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3 relative z-10">Respect</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Respect de tous</p>
           </div>
 
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-indigo-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-5xl mb-6 relative"><CheckCircle size="40" class="mx-auto text-indigo-600" /></div>
-            <h3 class="text-lg font-bold text-blue-600 mb-3">Rigueur</h3>
-            <p class="text-gray-700 text-sm leading-6">Processus clairs</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10"><CheckCircle :size="40" class="mx-auto text-indigo-600" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3 relative z-10">Rigueur</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Processus clairs</p>
           </div>
 
-          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-orange-400 rounded-full mix-blend-multiply filter blur-xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-            <div class="text-5xl mb-6 relative"><Zap size="40" class="mx-auto text-orange-500" /></div>
-            <h3 class="text-lg font-bold text-blue-600 mb-3">Engagement</h3>
-            <p class="text-gray-700 text-sm leading-6">Dedicate commitment</p>
+          <div class="value-card bg-gradient-to-br from-white to-blue-50 rounded-2xl shadow-lg hover:shadow-2xl p-8 text-center hover:scale-105 transition-all duration-300 transform border border-blue-200/50 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-orange-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 relative z-10"><Zap :size="40" class="mx-auto text-orange-500" /></div>
+            <h3 class="text-lg font-bold text-blue-600 mb-3 relative z-10">Engagement</h3>
+            <p class="text-gray-700 text-sm leading-6 relative z-10">Committed to excellence</p>
           </div>
         </div>
       </div>
@@ -450,7 +425,7 @@
           <!-- Phone Card -->
           <div class="card-contact rounded-3xl p-5 md:p-6 hover:shadow-2xl transition-all duration-300">
             <div class="flex justify-center mb-3">
-              <div class="icon-circle"><Phone size="40" /></div>
+              <div class="icon-circle"><Phone :size="40" /></div>
             </div>
             <h3 class="text-xl md:text-2xl font-semibold mb-1">Téléphone</h3>
             <p class="text-lg md:text-xl"><a href="tel:+221784800361" class="hover:underline">78 480 03 61</a></p>
@@ -459,7 +434,7 @@
           <!-- Location Card -->
           <div class="card-contact rounded-3xl p-6 md:p-8 hover:shadow-2xl transition-all duration-300">
             <div class="flex justify-center mb-4">
-              <div class="icon-circle"><MapPin size="48" /></div>
+              <div class="icon-circle"><MapPin :size="48" /></div>
             </div>
             <h3 class="text-2xl md:text-3xl font-semibold mb-2">Localisation</h3>
             <p class="text-lg md:text-xl">Keur Massar, Dakar</p>
@@ -493,10 +468,9 @@
 </template>
 
 <script setup lang="ts">
-import heroImg from '../assets/service1.jpeg'
-import { Home as HomeIcon, Calendar, Car, Sofa, Building2, Smile, Star, Lightbulb, Target, MapPin, Phone, Film, Image, Shield, Heart, Handshake, CheckCircle, Zap, Sparkles, ShoppingBag, Users, Truck, RefreshCw, Wrench } from 'lucide-vue-next'
+import { Home as HomeIcon, Calendar, Sparkles, ArrowRight, ShoppingBag, Package, Users, Truck, RefreshCw, MapPin, Phone, Shield, Star, Handshake, CheckCircle, Zap, Heart } from 'lucide-vue-next'
 import { ref } from 'vue'
-import { useRouter } from '#imports'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showServiceModal = ref(false)
@@ -522,8 +496,8 @@ const services = [
   },
   {
     id: 'personnel',
-    title: 'Recherche et Acquisition de Personnel Qualifié',
-    description: 'Service de recrutement de personnel qualifié',
+    title: 'Placement de Personnel Qualifié',
+    description: 'Placement de personnel qualifié',
     available: false,
     icon: Users,
   },
@@ -536,17 +510,17 @@ const services = [
   },
   {
     id: 'seconde-main',
-    title: 'Service de Seconde Main',
-    description: 'Vente et achat d\'articles d\'occasion',
+    title: 'Plateforme de Seconde Main',
+    description: 'Commerce spécialisé',
     available: false,
     icon: RefreshCw,
   },
   {
-    id: 'depannage',
-    title: 'Entretien et Dépannage Spécialisé',
-    description: 'Services de réparation et maintenance',
+    id: 'commerce',
+    title: 'Commerce Spécialisé',
+    description: 'Produits sélectionnés de qualité',
     available: false,
-    icon: Wrench,
+    icon: Package,
   },
 ]
 
@@ -690,13 +664,131 @@ const selectService = (service: typeof services[number]) => {
   }
 }
 
+@keyframes headingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+@keyframes cardBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 /* Contact section refinements */
 .service-card {
   transition: all 0.3s ease;
 }
 
 .service-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(26, 58, 107, 0.2);
+}
+
+.heading-reveal {
+  animation: headingReveal 0.8s ease-out 0.3s both;
+}
+
+.card-bounce {
+  animation: cardBounce 3s ease-in-out infinite;
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 1000px 100%;
+  animation: shimmer 3s infinite;
+}
+
+.wheel-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(59, 130, 246, 0.22);
+  border-radius: 9999px;
+}
+
+.wheel-center {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wheel-item {
+  position: absolute;
+  width: 170px;
+  min-height: 110px;
+  border-radius: 28px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
+}
+
+.wheel-item span {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.wheel-top {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -10%);
+}
+
+.wheel-right-top {
+  top: 10%;
+  right: 0;
+  transform: translate(6%, 0);
+}
+
+.wheel-right-bottom {
+  bottom: 10%;
+  right: 0;
+  transform: translate(6%, 0);
+}
+
+.wheel-bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 10%);
+}
+
+.wheel-left-bottom {
+  bottom: 10%;
+  left: 0;
+  transform: translate(-6%, 0);
+}
+
+.wheel-left-top {
+  top: 10%;
+  left: 0;
+  transform: translate(-6%, 0);
 }
 
 .card-contact{

@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException, Query, CacheTTL } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, InternalServerErrorException, Query, CacheTTL, ValidationPipe, UsePipes } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
+import { CreateReservationDto, UpdateReservationDto } from './reservation.dto';
 
 @Controller('reservations')
+@UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
 export class ReservationController {
   constructor(private readonly service: ReservationService) {}
 
   @Post()
-  create(@Body() data: any) {
+  create(@Body() data: CreateReservationDto) {
     return this.service.create(data);
   }
 
@@ -29,7 +31,7 @@ export class ReservationController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: UpdateReservationDto) {
     return this.service.update(id, data);
   }
 
