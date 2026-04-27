@@ -1,5 +1,4 @@
-import { Module, CacheModule, CacheInterceptor } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { ProductModule } from './product/product.module';
@@ -14,10 +13,6 @@ import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 60 * 1000, // 60 seconds
-    }),
     PrismaModule,
     ReservationModule,
     ProductModule,
@@ -31,11 +26,6 @@ import { MailModule } from './mail/mail.module';
     MailModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

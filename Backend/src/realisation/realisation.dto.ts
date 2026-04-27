@@ -15,6 +15,14 @@ export class CreateRealisationDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsUrl()
+  url?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
 }
 
 export class UpdateRealisationDto {
@@ -33,4 +41,12 @@ export class UpdateRealisationDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsUrl()
+  url?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
 }

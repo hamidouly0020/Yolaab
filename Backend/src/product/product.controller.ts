@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import multerStorageCloudinary from 'multer-storage-cloudinary';
+const multerStorageCloudinary = require('multer-storage-cloudinary');
 import { ProductService } from './product.service';
 
 const storage = multerStorageCloudinary({

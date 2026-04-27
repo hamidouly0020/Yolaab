@@ -1,13 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { NestExpressApplication } from '@nestjs/platform-express';
+import * as express from 'express';
 import { resolve } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import * as compression from 'compression';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create(AppModule);
 
   // Security headers
   app.use(helmet());
@@ -72,14 +72,14 @@ async function bootstrap() {
   app.use(compression());
 
   // Reduce payload limits to reasonable sizes (from 100mb to 10mb)
-  app.use(require('express').json({ limit: '10mb' }));
-  app.use(require('express').urlencoded({ limit: '10mb', extended: true }));
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
   const uploadsPath = resolve(process.cwd(), 'uploads');
   if (!existsSync(uploadsPath)) {
     mkdirSync(uploadsPath, { recursive: true });
   }
-  app.useStaticAssets(uploadsPath, { prefix: '/uploads' });
+  app.use('/uploads', express.static(uploadsPath));
 
   const port = process.env.PORT || 3000;
 

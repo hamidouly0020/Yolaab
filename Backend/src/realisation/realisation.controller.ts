@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query, ValidationPipe, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import multerStorageCloudinary from 'multer-storage-cloudinary';
+const multerStorageCloudinary = require('multer-storage-cloudinary');
 import { extname, resolve } from 'path';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 // Make AWS SDK optional to avoid compile errors when package is not installed
