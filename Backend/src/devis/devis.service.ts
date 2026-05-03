@@ -28,17 +28,8 @@ export class DevisService {
       return devis;
     }
   async sendDevisEmail(payload: any) {
-    // Ne transmet que les champs essentiels
-    const minimalPayload = {
-      nom: payload.nom || '',
-      prenom: payload.prenom || '',
-      email: payload.email || '',
-      telephone: payload.telephone || '',
-      localisation: payload.localisation || '',
-      typeService: payload.typeService || '',
-    };
     try {
-      await this.mailService.sendDevisNotification(minimalPayload);
+      await this.mailService.sendDevisNotification(payload);
       return { ok: true };
     } catch (err) {
       throw new InternalServerErrorException('Erreur lors de l\'envoi de l\'e-mail');

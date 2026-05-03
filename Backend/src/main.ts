@@ -5,6 +5,19 @@ import { resolve } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import * as compression from 'compression';
 import helmet from 'helmet';
+import { config as loadEnv } from 'dotenv';
+
+const envPaths = [
+  resolve(__dirname, '../.env'),
+  resolve(__dirname, '../../.env'),
+  resolve(process.cwd(), '.env'),
+];
+for (const path of envPaths) {
+  if (existsSync(path)) {
+    loadEnv({ path });
+    break;
+  }
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

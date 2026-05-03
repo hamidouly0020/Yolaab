@@ -1,8 +1,8 @@
   <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24 md:pb-8">
     <!-- Hero Section -->
-    <div class="relative overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center fade-up">
-      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(26,58,107,0.16),transparent_20%),_linear-gradient(135deg,#f8fbff_0%,#eef5fb_100%)]"></div>
+    <div class="relative overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center fade-up bg-cover bg-center bg-no-repeat" :style="{ backgroundImage: `url(${heroBackground})` }">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(26,58,107,0.2),transparent_20%),_linear-gradient(135deg,rgba(248,251,255,0.36)_0%,rgba(238,245,251,0.28)_100%)]"></div>
       <div aria-hidden="true" class="absolute inset-0 pointer-events-none">
         <svg class="absolute left-[-8%] top-[-10%] opacity-30" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -33,129 +33,18 @@
 
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              @click="openServicesModal"
+              @click="router.push('/services')"
               class="inline-flex items-center justify-center gap-3 bg-blue-900 text-white px-10 py-4 rounded-full hover:bg-blue-950 transition-all shadow-lg font-bold text-lg group hover:shadow-xl hover:scale-105 transform"
             >
               <Calendar :size="20" class="group-hover:scale-110 transition-transform" />
-              Commencer
-            </button>
-            <button
-              @click="scrollToService('nettoyage')"
-              class="inline-flex items-center justify-center gap-2 border border-slate-300 text-slate-900 bg-white px-8 py-4 rounded-full hover:bg-slate-100 transition-all font-semibold group hover:border-slate-400"
-            >
               Voir nos services
-              <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Services Modal -->
-    <div v-if="showServiceModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div class="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-6 border-b border-slate-200">
-          <div>
-            <h2 class="text-3xl font-bold text-slate-900">Choisissez un service</h2>
-            <p class="text-slate-600 mt-2">Cliquez sur le service dont vous avez besoin.</p>
-          </div>
-          <button
-            @click="closeServiceModal"
-            class="rounded-full border border-slate-200 px-4 py-2 text-slate-600 hover:bg-slate-100"
-          >
-            Fermer
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 overflow-y-auto max-h-[60vh] md:max-h-none">
-          <button
-            v-for="service in services"
-            :key="service.id"
-            @click="selectService(service)"
-            class="text-left rounded-3xl border border-blue-100 bg-white p-6 transition-all hover:shadow-lg hover:border-blue-300"
-          >
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-xl font-bold text-slate-900">{{ service.title }}</h3>
-            </div>
-            <p class="text-slate-600">{{ service.description }}</p>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Unavailable Service Modal -->
-    <div v-if="selectedService && !selectedService.available" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6">
-        <div class="flex justify-between items-start gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl font-bold text-slate-900">Bienvenue sur {{ selectedService.title }}</h2>
-            <p class="text-slate-600 mt-2">Le service sera bientôt disponible.</p>
-          </div>
-          <button @click="selectedService = null" class="text-slate-500 hover:text-slate-900">✕</button>
-        </div>
-
-        <p class="text-slate-700 mb-6">Pour contacter le service client Yolaab, appuyez sur le bouton WhatsApp.</p>
-        <div class="flex flex-col gap-3 sm:flex-row sm:justify-between">
-          <a
-            :href="whatsappLink"
-            target="_blank"
-            rel="noreferrer"
-            class="inline-flex items-center justify-center rounded-full bg-green-500 px-5 py-3 text-white font-bold hover:bg-green-600"
-          >
-            WhatsApp
-          </a>
-          <NuxtLink
-            to="/home"
-            class="inline-flex items-center justify-center rounded-full bg-slate-100 px-5 py-3 text-slate-900 font-bold hover:bg-slate-200"
-          >
-            Retour à l'accueil
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
-
-    <!-- Services Presentation Section -->
-    <div class="max-w-7xl mx-auto px-4 py-16 relative">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-3">
-          Nos Services
-        </h2>
-        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
-        <p class="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-          Découvrez notre gamme complète de services professionnels pour simplifier votre quotidien.
-        </p>
-      </div>
-
-      
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="(service, index) in services"
-          :key="service.id"
-          :id="service.id"
-          @click="selectService(service)"
-          class="service-card bg-white rounded-3xl shadow-lg hover:shadow-2xl p-6 transition-all transform hover:scale-105 cursor-pointer border border-blue-100 hover:border-blue-300 group overflow-hidden relative"
-          :style="{ animationDelay: `${index * 80}ms` }"
-        >
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-teal-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="flex items-center justify-between mb-4 relative z-10">
-            <h3 class="text-xl font-bold text-slate-900">{{ service.title }}</h3>
-            <div class="p-2 bg-blue-100 rounded-lg group-hover:scale-110 transition-transform duration-300">
-              <component :is="service.icon" class="text-blue-600" :size="24" />
-            </div>
-          </div>
-          <p class="text-slate-600 mb-4 relative z-10">{{ service.description }}</p>
-          <div class="flex items-center justify-between relative z-10">
-            <span class="text-sm font-medium px-3 py-1 rounded-full" :class="service.available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'">
-              {{ service.available ? 'Disponible' : 'Bientôt disponible' }}
-            </span>
-            <button class="text-blue-600 hover:text-blue-800 font-semibold group-hover:translate-x-1 transition-transform">
-              En savoir plus →
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    
 
     <!-- Services Section with Company Images Gallery -->
     <div class="max-w-7xl mx-auto px-4 py-10 relative">
@@ -166,60 +55,31 @@
         <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-blue-600 mx-auto mt-3 rounded-full"></div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <!-- Image 1 -->
-        <NuxtLink
-          to="/reservation"
-          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
-        >
-          <img
-            src="~/assets/service1.jpeg"
-            alt="Service Yolaab 1"
-            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="p-6 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-              <h3 class="text-2xl font-bold text-white mb-2">Services Professionnels</h3>
-              <p class="text-gray-100 text-lg">Équipes formées et encadrées</p>
-            </div>
-          </div>
-        </NuxtLink>
+      <!-- Ecosystem Visualization -->
+      <div class="flex justify-center items-center mb-10">
+        <div class="relative group cursor-pointer" @click="router.push('/services')">
+          <!-- Subtle background glow -->
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-blue-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-        <!-- Image 2 -->
-        <NuxtLink
-          to="/reservation"
-          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
-        >
-          <img
-            src="~/assets/service2.jpeg"
-            alt="Service Yolaab 2"
-            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-              <h3 class="text-3xl font-bold text-white mb-3">Un Standard Unique de Qualité</h3>
-              <p class="text-gray-100 text-lg">Homogénéité et excellence</p>
-            </div>
-          </div>
-        </NuxtLink>
+          <!-- Image container with integrated design -->
+          <div class="relative bg-gradient-to-br from-white via-blue-50/30 to-white rounded-3xl p-8 shadow-xl border border-blue-200/30 backdrop-blur-sm overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full opacity-10"></div>
+            <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full opacity-8"></div>
 
-        <!-- Image 3 -->
-        <NuxtLink
-          to="/reservation"
-          class="service-card relative rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all transform hover:scale-105 block h-96 group"
-        >
-          <img
-            src="~/assets/service3.jpeg"
-            alt="Service Yolaab 3"
-            class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end opacity-100 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="p-8 w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-              <h3 class="text-3xl font-bold text-white mb-3">Un Seul Interlocuteur</h3>
-              <p class="text-gray-100 text-lg">Plusieurs solutions, solution centralisée</p>
+            <!-- Image with subtle styling -->
+            <img
+              src="../assets/image_ecosysteme.jpeg"
+              alt="Écosystème intégré de services Yolaab"
+              class="relative z-10 w-full max-w-2xl h-auto max-h-[380px] object-contain rounded-2xl transition-all duration-300 group-hover:scale-[1.02]"
+            />
+
+            <!-- Overlay text -->
+            <div class="absolute bottom-4 left-4 right-4 bg-gradient-to-r from-blue-600/90 to-blue-700/90 text-white p-4 rounded-xl backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <p class="text-sm font-medium">Découvrez notre écosystème complet de services</p>
             </div>
           </div>
-        </NuxtLink>
+        </div>
       </div>
 
       <!-- Service Description -->
@@ -337,15 +197,15 @@
       <!-- Timeline Container -->
       <div class="relative">
         <!-- Timeline line (hidden on mobile) -->
-        <div class="hidden md:block absolute top-20 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300"></div>
+        <div class="hidden md:block absolute top-16 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300"></div>
 
         <!-- Timeline Steps -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           <!-- Step 1 -->
           <div class="relative group">
             <!-- Step Circle -->
-            <div class="flex justify-center mb-6">
-              <div class="relative w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
+            <div class="flex justify-center mb-8">
+              <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
                 <!-- Number -->
                 <span class="absolute text-4xl md:text-5xl font-bold opacity-30">1</span>
                 <!-- Icon - Clipboard/Form -->
@@ -354,7 +214,7 @@
                 </svg>
               </div>
             </div>
-            
+
             <!-- Content -->
             <div class="text-center">
               <h3 class="text-xl md:text-lg font-bold text-blue-600 mb-2">Réception</h3>
@@ -370,18 +230,18 @@
             <div class="flex justify-center mb-8">
               <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
                 <!-- Number -->
-                <span class="absolute text-5xl md:text-6xl font-bold opacity-30">2</span>
+                <span class="absolute text-4xl md:text-5xl font-bold opacity-30">2</span>
                 <!-- Icon - SMS/Message -->
-                <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 md:w-16 md:h-16 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12h-8v-2h8v2zm0-3h-8V9h8v2zm0-3H4V6h14v2z"/>
                 </svg>
               </div>
             </div>
-            
+
             <!-- Content -->
             <div class="text-center">
-              <h3 class="text-2xl md:text-xl font-bold text-blue-600 mb-3">Notification Auto</h3>
-              <p class="text-gray-700 text-sm md:text-base leading-relaxed px-2">
+              <h3 class="text-xl md:text-lg font-bold text-blue-600 mb-2">Notification Auto</h3>
+              <p class="text-gray-700 text-sm leading-relaxed px-2">
                 Quand le service est complété et approuvé, cliquez sur "Prêt". Le client reçoit un SMS pour venir chercher ou nous livrer.
               </p>
             </div>
@@ -393,18 +253,18 @@
             <div class="flex justify-center mb-8">
               <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white shadow-lg hover:shadow-2xl transition-all duration-300 transform group-hover:scale-110 z-10">
                 <!-- Number -->
-                <span class="absolute text-5xl md:text-6xl font-bold opacity-30">3</span>
+                <span class="absolute text-4xl md:text-5xl font-bold opacity-30">3</span>
                 <!-- Icon - Payment/Credit Card -->
-                <svg class="w-16 h-16 md:w-20 md:h-20 relative z-10" fill="currentColor" viewBox="0 0 24 24">
+                <svg class="w-12 h-12 md:w-16 md:h-16 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 8H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H4V10h16v10zm-4-5h4v2h-4v-2z"/>
                 </svg>
               </div>
             </div>
-            
+
             <!-- Content -->
             <div class="text-center">
-              <h3 class="text-2xl md:text-xl font-bold text-blue-600 mb-3">Encaissement</h3>
-              <p class="text-gray-700 text-sm md:text-base leading-relaxed px-2">
+              <h3 class="text-xl md:text-lg font-bold text-blue-600 mb-2">Encaissement</h3>
+              <p class="text-gray-700 text-sm leading-relaxed px-2">
                 Validez le paiement (Cash, Wave ou OM). L'application met à jour votre chiffre d'affaires du jour automatiquement.
               </p>
             </div>
@@ -471,6 +331,7 @@
 import { Home as HomeIcon, Calendar, Sparkles, ArrowRight, ShoppingBag, Package, Users, Truck, RefreshCw, MapPin, Phone, Shield, Star, Handshake, CheckCircle, Zap, Heart } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import heroBackground from '~/assets/background_home.jpeg'
 
 const router = useRouter()
 const showServiceModal = ref(false)

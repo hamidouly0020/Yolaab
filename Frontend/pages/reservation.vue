@@ -83,7 +83,8 @@
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
-                Téléphone *
+                <h6>Téléphone *</h6>
+                <p class="text-xs text-gray-500">Format sénégalais (ex: 77 123 45 67)</p>
               </label>
               <input
                 v-model="formData.telephone"
@@ -98,7 +99,8 @@
             </div>
             <div>
               <label class="block text-sm font-semibold text-gray-700 mb-2">
-                Localisation
+                <h6>Localisation *</h6>
+                <p class="text-xs text-gray-500">Soyez le plus detaillé possible sur votre localisation</p>
               </label>
               <input
                 v-model="formData.localisation"
@@ -106,7 +108,7 @@
                 @blur="validateField('localisation', formData.localisation)"
                 class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
                 :class="errors.localisation ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
-                placeholder="Votre localisation (ville, adresse)"
+                placeholder="Senegal/Dakar/Keur Massar..."
               />
               <p v-if="errors.localisation" class="text-red-500 text-sm mt-1">{{ errors.localisation }}</p>
             </div>
@@ -190,7 +192,6 @@
                   step="0.5"
                   @blur="validateField('largeur', formData.serviceDetails.largeur)"
                   class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors"
-                  :class="border-gray-300 focus:border-blue-600"
                   :class="errors.serviceDetails.largeur ? 'border-red-500 focus:border-red-600' : 'border-gray-300 focus:border-blue-600'"
                   placeholder="Ex: 4"
                 />
@@ -523,7 +524,7 @@ const getServiceDetails = () => {
       serviceDetails: sanitizedData.serviceDetails,
     }
 
-    const res = await fetch(`${apiBaseUrl}/devis`, {
+    const res = await fetch(`${apiBaseUrl}/nettoyage-professionnel`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -557,7 +558,40 @@ const getServiceDetails = () => {
       messageLines.push(`Prénom: ${payload.prenom}`)
       messageLines.push(`Téléphone: ${payload.telephone}`)
       messageLines.push(`Localisation: ${payload.localisation || 'Non fournie'}`)
-      messageLines.push(`Service: ${payload.typeService}`)
+      messageLines.push(`Service: ${getServiceLabel(payload.typeService)}`)
+      
+      // Ajouter les détails du service selon le type
+      if (payload.serviceDetails) {
+        switch (payload.typeService) {
+          case 'canapes':
+            if (payload.serviceDetails.places) {
+              messageLines.push(`Nombre de places: ${payload.serviceDetails.places}`)
+            }
+            break
+          case 'tapis':
+            if (payload.serviceDetails.longueur && payload.serviceDetails.largeur) {
+              const surface = payload.serviceDetails.longueur * payload.serviceDetails.largeur
+              messageLines.push(`Dimensions: ${payload.serviceDetails.longueur}m x ${payload.serviceDetails.largeur}m`)
+              messageLines.push(`Surface: ${surface}m²`)
+            }
+            break
+          case 'nettoyage-automobile':
+            if (payload.serviceDetails.typeVehicule) {
+              messageLines.push(`Type de véhicule: ${payload.serviceDetails.typeVehicule}`)
+            }
+            break
+          case 'fin-de-chantier':
+            if (payload.serviceDetails.surface) {
+              messageLines.push(`Surface à nettoyer: ${payload.serviceDetails.surface}m²`)
+            }
+            break
+          case 'entretien-bureaux':
+            if (payload.serviceDetails.nombrePieces) {
+              messageLines.push(`Nombre de pièces/bureaux: ${payload.serviceDetails.nombrePieces}`)
+            }
+            break
+        }
+      }
       messageLines.push('')
 
 
