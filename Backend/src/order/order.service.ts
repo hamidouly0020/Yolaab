@@ -1,15 +1,25 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   async create(data: any) {
     try {
-      return await this.prisma.order.create({
+      const created = await this.prisma.order.create({
         data: { ...data, items: JSON.stringify(data.items) }
       });
+
+      this.mailService.sendOrderNotification(created).catch(e => {
+        console.error('[ORDER EMAIL] Erreur lors de l\'envoi de la notification admin:', e);
+      });
+
+      return created;
     } catch (err) {
       console.error('Failed to create order', err);
       throw new InternalServerErrorException('Erreur serveur lors de la création de la commande');

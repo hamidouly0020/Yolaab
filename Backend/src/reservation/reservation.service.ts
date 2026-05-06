@@ -12,6 +12,9 @@ export class ReservationService {
   ) {}
 
   async create(data: any) {
+    if (!data.duree) {
+      data.duree = 'À définir';
+    }
     if (data.serviceDetails && typeof data.serviceDetails === 'object') {
       data.serviceDetails = JSON.stringify(data.serviceDetails);
     }

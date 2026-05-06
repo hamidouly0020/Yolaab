@@ -678,7 +678,7 @@ const newProduct = ref({
 
 const imageFile = ref<File | null>(null)
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
+const apiUrl = useRuntimeConfig().public.apiUrl || 'http://127.0.0.1:3000'
 
   const productCategories = [
     'Nettoyage professionnel',
@@ -735,7 +735,7 @@ const handleLogin = () => {
 const loadData = async () => {
   isLoadingData.value = true
   const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
+  apiBaseUrl.value = config.public.apiUrl || 'http://127.0.0.1:3000'
 
   try {
     const resRes = await fetch(`${apiBaseUrl.value}/reservations`)

@@ -1,19 +1,31 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-const multerStorageCloudinary = require('multer-storage-cloudinary');
+import { diskStorage } from 'multer';
+import { extname, resolve } from 'path';
+import { existsSync, mkdirSync, unlinkSync } from 'fs';
 import { ProductService } from './product.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
-const storage = multerStorageCloudinary({
-  cloudinary: require('cloudinary').v2,
-  params: (req, file) => ({
-    folder: 'products',
-    resource_type: 'auto',
-  }),
+const uploadsPath = resolve(process.cwd(), 'uploads');
+if (!existsSync(uploadsPath)) {
+  mkdirSync(uploadsPath, { recursive: true });
+}
+
+const storage = diskStorage({
+  destination: uploadsPath,
+  filename: (req, file, cb) => {
+    const name = `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`;
+    const extension = extname(file.originalname) || '';
+    cb(null, `${name}${extension}`);
+  },
 });
 
 @Controller('products')
 export class ProductController {
-  constructor(private readonly service: ProductService) {}
+  constructor(
+    private readonly service: ProductService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post()
   @UseInterceptors(
@@ -27,24 +39,33 @@ export class ProductController {
       },
     }),
   )
-  create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
+  async create(@Body() data: any, @UploadedFile() file?: Express.Multer.File) {
     if (file) {
-      data.image = file.path || (file as any).secure_url;
+      try {
+        const uploadUrl = await this.cloudinaryService.uploadFile(file);
+        data.image = uploadUrl;
+      } finally {
+        try {
+          unlinkSync(file.path);
+        } catch {
+          // ignore cleanup errors
+        }
+      }
     }
 
     // Convert numeric fields coming from multipart/form-data (always strings)
     if (data.prix !== undefined) {
-      const p = parseFloat(data.prix as any)
-      data.prix = Number.isNaN(p) ? undefined : p
+      const p = parseFloat(data.prix as any);
+      data.prix = Number.isNaN(p) ? undefined : p;
     }
     if (data.quantite !== undefined) {
-      const q = parseInt(data.quantite as any, 10)
-      data.quantite = Number.isNaN(q) ? undefined : q
+      const q = parseInt(data.quantite as any, 10);
+      data.quantite = Number.isNaN(q) ? undefined : q;
     }
 
     // Ensure optional description if empty string
     if (data.description === '') {
-      delete data.description
+      delete data.description;
     }
 
     return this.service.create(data);

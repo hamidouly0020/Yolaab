@@ -524,7 +524,7 @@ const getServiceDetails = () => {
       serviceDetails: sanitizedData.serviceDetails,
     }
 
-    const res = await fetch(`${apiBaseUrl}/nettoyage-professionnel`, {
+    const res = await fetch(`${apiBaseUrl}/reservations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

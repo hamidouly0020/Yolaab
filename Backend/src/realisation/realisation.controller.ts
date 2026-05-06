@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFile, BadRequestException, InternalServerErrorException, Query, ValidationPipe, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-const multerStorageCloudinary = require('multer-storage-cloudinary');
 import { extname, resolve } from 'path';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 // Make AWS SDK optional to avoid compile errors when package is not installed
-declare const require: any;
 let S3Client: any, PutObjectCommand: any;
 import { RealisationService } from './realisation.service';
 import { CreateRealisationDto, UpdateRealisationDto } from './realisation.dto';
@@ -15,12 +14,13 @@ if (!existsSync(uploadsPath)) {
   mkdirSync(uploadsPath, { recursive: true });
 }
 
-const storage = multerStorageCloudinary({
-  cloudinary: require('cloudinary').v2,
-  params: (req, file) => ({
-    folder: 'uploads',
-    resource_type: 'auto',
-  }),
+const storage = diskStorage({
+  destination: uploadsPath,
+  filename: (req, file, cb) => {
+    const name = `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`;
+    const extension = extname(file.originalname) || '';
+    cb(null, `${name}${extension}`);
+  },
 });
 
 // Initialize S3 client only if env vars are provided (use STORAGE_TYPE="s3" to force)
@@ -56,14 +56,23 @@ export class RealisationController {
     FileInterceptor('file', {
       storage,
       limits: { fileSize: 500 * 1024 * 1024 }, // 500 MB
+      fileFilter: (req, file, cb) => {
+        const isAllowed = file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/');
+        if (isAllowed) cb(null, true);
+        else cb(new Error('Type de fichier non autorisé'), false);
+      },
     }),
   )
   async create(@Body() data: CreateRealisationDto, @UploadedFile() file?: Express.Multer.File) {
     try {
       if (file) {
-        // Upload direct Cloudinary
-        const url = file.path || (file as any).secure_url;
+        const url = await this.cloudinaryService.uploadFile(file);
         data.url = url;
+        try {
+          unlinkSync(file.path);
+        } catch {
+          // ignore local cleanup failures
+        }
       }
 
       if (!data.type) data.type = 'image';

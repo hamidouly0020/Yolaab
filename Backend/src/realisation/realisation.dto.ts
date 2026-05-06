@@ -2,7 +2,7 @@ import { IsString, IsOptional, IsUrl } from 'class-validator';
 
 export class CreateRealisationDto {
   @IsString()
-  title: string;
+  titre: string;
 
   @IsOptional()
   @IsString()
@@ -28,7 +28,7 @@ export class CreateRealisationDto {
 export class UpdateRealisationDto {
   @IsOptional()
   @IsString()
-  title?: string;
+  titre?: string;
 
   @IsOptional()
   @IsString()

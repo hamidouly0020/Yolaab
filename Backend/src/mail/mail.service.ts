@@ -60,6 +60,17 @@ export class MailService {
     return await this.safeSendMail(mailOptions);
   }
 
+  async sendOrderNotification(data: any) {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || process.env.SMTP_USER || 'yolaab.app@gmail.com',
+      to: process.env.ORDER_RECIPIENT || 'yolaab.app@gmail.com',
+      subject: `Nouvelle commande de ${data.nom || ''} ${data.prenom || ''}`,
+      html: this.generateOrderEmailContent(data),
+    };
+
+    return await this.safeSendMail(mailOptions);
+  }
+
   private generateReservationEmailContent(data: any): string {
     const serviceLabels: { [key: string]: string } = {
       'nettoyage-automobile': 'Nettoyage Automobile',
@@ -143,6 +154,58 @@ export class MailService {
     `;
 
     return html;
+  }
+
+  private generateOrderEmailContent(data: any): string {
+    const lines = [`<p><strong>Nom:</strong> ${data.nom || 'Non fourni'}</p>`,
+      `<p><strong>Prénom:</strong> ${data.prenom || 'Non fourni'}</p>`,
+      `<p><strong>Téléphone:</strong> ${data.telephone || 'Non fourni'}</p>`,
+      `<p><strong>Localisation:</strong> ${data.localisation || 'Non fournie'}</p>`,
+      `<p><strong>Total:</strong> ${data.total ? data.total.toLocaleString() + ' FCFA' : 'N/A'}</p>`,
+      `<p><strong>WhatsApp:</strong> ${process.env.WHATSAPP_NUMBER || '+221 76 795 78 99'}</p>`,
+    ];
+
+    let itemsHtml = '';
+    try {
+      const items = typeof data.items === 'string' ? JSON.parse(data.items) : data.items;
+      if (Array.isArray(items)) {
+        itemsHtml = `
+          <ul style="padding-left: 18px; margin: 0;">
+            ${items.map((item: any) => `
+              <li style="margin-bottom: 8px;">
+                <strong>${item.name || 'Article'}</strong> - ${item.quantity || 1} x ${item.price ? item.price.toLocaleString() + ' FCFA' : 'N/A'}
+              </li>
+            `).join('')}
+          </ul>
+        `;
+      }
+    } catch {
+      itemsHtml = `<p>${JSON.stringify(data.items)}</p>`;
+    }
+
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 10px;">
+          Nouvelle commande Yolaab
+        </h2>
+        <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #1e40af; margin-top: 0;">Informations du client</h3>
+          ${lines.join('')}
+        </div>
+        <div style="background-color: #ecfdf5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #059669; margin-top: 0;">Articles commandés</h3>
+          ${itemsHtml}
+        </div>
+        <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+          <p style="margin: 0; color: #92400e;">
+            <strong>Action requise:</strong> Contactez le client rapidement pour confirmer la commande.
+          </p>
+        </div>
+        <p style="color: #6b7280; font-size: 12px; text-align: center; margin-top: 30px;">
+          Cet email a été envoyé automatiquement depuis l'application Yolaab.
+        </p>
+      </div>
+    `;
   }
 
   async sendDevisNotification(data: any) {

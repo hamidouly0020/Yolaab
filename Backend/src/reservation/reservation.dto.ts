@@ -1,61 +1,63 @@
-import { IsString, IsEmail, IsPhoneNumber, IsOptional, IsDateString, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEmail } from 'class-validator';
 
 export class CreateReservationDto {
   @IsString()
-  service: string;
+  nom: string;
 
   @IsString()
-  clientName: string;
+  prenom: string;
 
+  @IsString()
+  telephone: string;
+
+  @IsOptional()
+  @IsString()
+  localisation?: string;
+
+  @IsString()
+  typeService: string;
+
+  @IsOptional()
+  @IsString()
+  duree?: string;
+
+  @IsOptional()
+  serviceDetails?: any;
+
+  @IsOptional()
   @IsEmail()
-  clientEmail: string;
-
-  @IsString()
-  clientPhone: string;
-
-  @IsOptional()
-  @IsDateString()
-  date?: string;
-
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
+  email?: string;
 }
 
 export class UpdateReservationDto {
   @IsOptional()
   @IsString()
-  service?: string;
+  nom?: string;
 
   @IsOptional()
   @IsString()
-  clientName?: string;
+  prenom?: string;
+
+  @IsOptional()
+  @IsString()
+  telephone?: string;
+
+  @IsOptional()
+  @IsString()
+  localisation?: string;
+
+  @IsOptional()
+  @IsString()
+  typeService?: string;
+
+  @IsOptional()
+  @IsString()
+  duree?: string;
+
+  @IsOptional()
+  serviceDetails?: any;
 
   @IsOptional()
   @IsEmail()
-  clientEmail?: string;
-
-  @IsOptional()
-  @IsString()
-  clientPhone?: string;
-
-  @IsOptional()
-  @IsDateString()
-  date?: string;
-
-  @IsOptional()
-  @IsString()
-  address?: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
-
-  @IsOptional()
-  @IsEnum(['pending', 'confirmed', 'completed', 'cancelled'])
-  status?: string;
+  email?: string;
 }

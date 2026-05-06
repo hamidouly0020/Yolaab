@@ -258,6 +258,12 @@ const handleCheckout = async () => {
     }
 
     successMessage.value = '✅ Commande confirmée ! Nous vous contacterons bientôt.'
+
+    const customerName = orderData.value.nom
+    const customerSurname = orderData.value.prenom
+    const customerPhone = orderData.value.telephone
+    const customerLocation = orderData.value.localisation || 'Non fournie'
+
     localStorage.removeItem('cart')
     cartItems.value = []
     orderData.value = {
@@ -266,6 +272,22 @@ const handleCheckout = async () => {
       telephone: '',
       localisation: '',
     }
+
+    const whatsappNumber = '221767957899'
+    const messageLines = [
+      'NOUVELLE COMMANDE YOLAAB',
+      `Nom: ${customerName}`,
+      `Prénom: ${customerSurname}`,
+      `Téléphone: ${customerPhone}`,
+      `Localisation: ${customerLocation}`,
+      `Total: ${total.value.toLocaleString()} FCFA`,
+      '',
+      'Articles :',
+      ...items.map(item => `- ${item.name} x${item.quantity} (${item.price.toLocaleString()} FCFA)`),
+    ]
+    const encodedMessage = encodeURIComponent(messageLines.join('\n'))
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedMessage}`
+    window.open(whatsappUrl, '_blank')
 
     setTimeout(() => {
       navigateTo('/home')
