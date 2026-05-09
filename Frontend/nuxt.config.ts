@@ -99,36 +99,88 @@
 //   },
 // })
 
+// export default defineNuxtConfig({
+//   compatibilityDate: '2026-03-05',
+//   ssr: true,
+
+//   nitro: {
+//     // preset: 'node-server',
+//     // Supprimer preset: 'static' — Vercel le détecte automatiquement
+//     compress: true,
+//     minify: true,
+//     // Security headers
+//     headers: {
+//       'X-Content-Type-Options': 'nosniff',
+//       'X-Frame-Options': 'SAMEORIGIN',
+//       'X-XSS-Protection': '1; mode=block',
+//       'Referrer-Policy': 'strict-origin-when-cross-origin',
+//       'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+//     },
+//   },
+
+//   vite: {
+//     build: {
+//       minify: 'terser',
+//       rollupOptions: {
+//         output: {
+//           manualChunks: {
+//             'vendor': ['vue']
+//           }
+//         }
+//       }
+//     }
+//     // Supprimer l'alias #app-manifest, il cause des problèmes
+//   },
+
+//   css: ['~/assets/css/global.css'],
+
+//   app: {
+//     baseURL: '/',
+//     head: {
+//       meta: [
+//         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+//         { httpEquiv: 'X-UA-Compatible', content: 'IE=edge' },
+//         { name: 'description', content: 'Yolaab - Services domestiques professionnels' },
+//         // Add security meta tags
+//         // { httpEquiv: 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' http://localhost:3000 https://api.whatsapp.com" }
+//         { httpEquiv: 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' https://sc2alqj9462.universe.wf https://api.whatsapp.com" }
+//       ],
+//       link: [
+//         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+//         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+//         { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap' }
+//       ]
+//     }
+//   },
+
+//   server: {
+//     host: '0.0.0.0',
+//     port: 3001,
+//   },
+
+//   modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
+
+//   image: {
+//     // ... ta config image reste identique
+//   },
+
+//   runtimeConfig: {
+//     public: {
+//       // apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000'
+//       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://sc2alqj9462.universe.wf'
+//     }
+//   },
+
+//   // Supprimer les routeRules avec cache — incompatible avec ssr: false
+// })
+
 export default defineNuxtConfig({
   compatibilityDate: '2026-03-05',
   ssr: false,
 
   nitro: {
-    // Supprimer preset: 'static' — Vercel le détecte automatiquement
     compress: true,
     minify: true,
-    // Security headers
-    headers: {
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'SAMEORIGIN',
-      'X-XSS-Protection': '1; mode=block',
-      'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
-    },
-  },
-
-  vite: {
-    build: {
-      minify: 'terser',
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'vendor': ['vue']
-          }
-        }
-      }
-    }
-    // Supprimer l'alias #app-manifest, il cause des problèmes
   },
 
   css: ['~/assets/css/global.css'],
@@ -136,13 +188,6 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/',
     head: {
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { httpEquiv: 'X-UA-Compatible', content: 'IE=edge' },
-        { name: 'description', content: 'Yolaab - Services domestiques professionnels' },
-        // Add security meta tags
-        { httpEquiv: 'Content-Security-Policy', content: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; connect-src 'self' http://localhost:3000 https://api.whatsapp.com" }
-      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
@@ -151,22 +196,15 @@ export default defineNuxtConfig({
     }
   },
 
-  server: {
-    host: '0.0.0.0',
-    port: 3001,
-  },
-
   modules: ['@nuxtjs/tailwindcss', '@nuxt/image'],
-
-  image: {
-    // ... ta config image reste identique
-  },
 
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:3000'
+      apiUrl:
+        process.env.NUXT_PUBLIC_API_URL ||
+        (process.env.NODE_ENV === 'production'
+          ? 'https://sc2alqj9462.universe.wf'
+          : 'http://localhost:3000'),
     }
   },
-
-  // Supprimer les routeRules avec cache — incompatible avec ssr: false
 })

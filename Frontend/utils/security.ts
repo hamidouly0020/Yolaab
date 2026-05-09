@@ -79,7 +79,7 @@ export const getCSPHeaders = (): string => {
     "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
     "img-src 'self' data: https:",
     "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com",
-    "connect-src 'self' http://localhost:3000 https://api.whatsapp.com",
+    "connect-src 'self' https://sc2alqj9462.universe.wf https://api.whatsapp.com",
     "frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/",
     "object-src 'none'",
     "upgrade-insecure-requests",

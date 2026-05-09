@@ -22,8 +22,11 @@ for (const path of envPaths) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
   // Security headers
   app.use(helmet());
+
+  // Do not add a global /api prefix; backend routes are served directly at the root paths.
 
   // CORS configuration - robust handling for dev and production
   const allowedOriginsEnv = process.env.CORS_ORIGIN || '';
@@ -49,7 +52,7 @@ async function bootstrap() {
   }
 
   const corsOptions: any = {
-    origin: isDevelopment ? true : allowedOrigins,
+    origin: isDevelopment || !allowedOriginsEnv.trim() ? true : allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
