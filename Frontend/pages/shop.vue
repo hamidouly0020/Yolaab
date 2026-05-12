@@ -34,7 +34,7 @@
           <div class="relative h-64 bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden flex items-center justify-center" @click="openLightbox(product)">
             <template v-if="product.image">
               <img
-                :src="resolveProductImageUrl(product.image, apiBaseUrl)"
+                :src="resolveProductImageUrl(product.image, apiUrl)"
                 :alt="product.nom"
                 class="w-full h-full object-cover object-center transition-opacity duration-300"
                 loading="lazy"
@@ -69,7 +69,7 @@
       <div v-if="selectedProduct" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4" @click="closeLightbox">
         <div class="relative max-w-4xl w-full" @click.stop>
           <button @click="closeLightbox" class="absolute -top-10 right-0 text-white text-4xl hover:text-gray-300 transition z-20">✕</button>
-          <img :src="resolveProductImageUrl(selectedProduct.image, apiBaseUrl)" :alt="selectedProduct.nom" loading="eager" class="w-full h-auto rounded-2xl shadow-2xl transition-opacity duration-300" @load="$event.target.style.opacity = '1'" style="opacity: 0.9" />
+          <img :src="resolveProductImageUrl(selectedProduct.image, apiUrl)" :alt="selectedProduct.nom" loading="eager" class="w-full h-auto rounded-2xl shadow-2xl transition-opacity duration-300" @load="$event.target.style.opacity = '1'" style="opacity: 0.9" />
           <div class="text-white mt-4 text-center">
             <h3 class="text-2xl font-bold mb-2">{{ selectedProduct.nom }}</h3>
             <p class="text-gray-300">Prix: {{ selectedProduct.prix.toLocaleString() }} FCFA</p>
@@ -126,7 +126,7 @@ const products = ref<Product[]>([])
 const loading = ref(true)
 const loadingMore = ref(false)
 const error = ref('')
-const apiBaseUrl = ref('')
+const { apiUrl } = useApi()
 const currentPage = ref(1)
 const hasMore = ref(true)
 const itemsPerPage = 12
@@ -149,7 +149,7 @@ const loadProducts = async (page: number = 1) => {
     else loadingMore.value = true
 
     const response = await fetch(
-      `${apiBaseUrl.value}/products?page=${page}&limit=${itemsPerPage}`
+      `${apiUrl}/products?page=${page}&limit=${itemsPerPage}`
     )
     if (!response.ok) throw new Error('Erreur de chargement')
 
@@ -179,9 +179,6 @@ const loadMore = () => {
 }
 
 onMounted(async () => {
-  const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
-  
   await loadProducts(1)
 })
 
@@ -211,12 +208,13 @@ const handleImageError = (event: Event) => {
   img.classList.add('bg-gray-100')
 }
 
-const resolveProductImageUrl = (image: string | undefined, apiBaseUrl: string) => {
+const resolveProductImageUrl = (image: string | undefined, apiUrl: string) => {
   if (!image) return ''
   const trimmed = image.trim()
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
-  return `${apiBaseUrl.replace(/\/$/, '')}${path}`
+  const base = apiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '')
+  return `${base}${path}`
 }
 
 const addToCart = (product: Product) => {

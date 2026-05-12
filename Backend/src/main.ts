@@ -22,37 +22,30 @@ for (const path of envPaths) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Do not add a global /api prefix; backend routes are served directly at the root paths.
   app.setGlobalPrefix('api');
+  
+
   // Security headers
   app.use(helmet());
 
-  // Do not add a global /api prefix; backend routes are served directly at the root paths.
-
-  // CORS configuration - robust handling for dev and production
-  const allowedOriginsEnv = process.env.CORS_ORIGIN || '';
+  // CORS configuration - allow local dev and production origins.
+  const allowedOriginsEnv = (process.env.CORS_ORIGIN || '').trim();
   const isDevelopment = process.env.NODE_ENV !== 'production';
 
-  // Default origins list (always allow localhost for development)
-  let allowedOrigins = [
+  const defaultAllowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:3001',
   ];
 
-  // Add environment-configured origins
-  if (allowedOriginsEnv.trim()) {
-    const envOrigins = allowedOriginsEnv.split(',').map(o => o.trim()).filter(o => o);
-    allowedOrigins = [...new Set([...allowedOrigins, ...envOrigins])];
-  }
-
-  // In production, be more restrictive if CORS_ORIGIN is properly set
-  if (!isDevelopment && allowedOriginsEnv.trim()) {
-    allowedOrigins = allowedOriginsEnv.split(',').map(o => o.trim()).filter(o => o);
-  }
+  const allowedOrigins = allowedOriginsEnv
+    ? [...new Set([...defaultAllowedOrigins, ...allowedOriginsEnv.split(',').map(o => o.trim()).filter(Boolean)])]
+    : defaultAllowedOrigins;
 
   const corsOptions: any = {
-    origin: isDevelopment || !allowedOriginsEnv.trim() ? true : allowedOrigins,
+    origin: isDevelopment || !allowedOriginsEnv ? true : allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Accept, Authorization',
     credentials: true,
@@ -61,9 +54,8 @@ async function bootstrap() {
 
   app.enableCors(corsOptions);
 
-  // Log CORS configuration in development
   if (isDevelopment) {
-    console.log('[CORS] Development mode - allowing localhost origins');
+    console.log('[CORS] enabled for local development and configured origins:', allowedOrigins);
   }
 
   // Add middleware to proxy missing upload files to S3 if configured

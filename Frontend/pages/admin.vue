@@ -258,7 +258,6 @@
               >
                 {{ cat }}
               </option>
-              <option value="autre">Autre</option>
             </select>
             <div class="md:col-span-2">
               <label class="block text-sm font-semibold text-gray-700 mb-2">Image *</label>
@@ -635,7 +634,7 @@ const showAddInvoice = ref(false)
 const showAddProduct = ref(false)
 const isLoadingData = ref(false)
 
-const apiBaseUrl = ref('')
+const { apiUrl } = useApi()
 
 const newWorkerForm = ref({
   nom: '',
@@ -673,22 +672,18 @@ const newProduct = ref({
   nom: '',
   prix: '' as string | number,
   quantite: '' as string | number,
-  categorie: 'Nettoyage professionnel',
+  categorie: 'Nettoyage',
 })
 
 const imageFile = ref<File | null>(null)
 
-const apiUrl = useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
-
-  const productCategories = [ 
-    'Nettoyage professionnel',
-    'Placement de personnel qualifié',
-    'Laverie & Pressing',
-    'Service de déménagement',
-    'Plateforme de seconde main',
-    'Commerce spécialisé',
-    'Autre',
-  ];
+const productCategories = [
+  'Nettoyage',
+  'Vaisselle',
+  'Auto Mobile',
+  'Linge',
+  'Autre',
+]
 const reservations = ref<ReservationData[]>([])
 const applications = ref<ApplicationData[]>([])
 const orders = ref<any[]>([])
@@ -711,8 +706,8 @@ const resolveRealisationUrl = (raw: string | undefined | null): string => {
   const trimmed = raw.trim()
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
-  const base = apiBaseUrl.value || useRuntimeConfig().public.apiUrl || 'http://localhost:3000'
-  return `${base.replace(/\/$/, '')}${path}`
+  const base = apiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '')
+  return `${base}${path}`
 }
 
 const isLocalVideo = (url: string | undefined): boolean => {
@@ -734,23 +729,21 @@ const handleLogin = () => {
 
 const loadData = async () => {
   isLoadingData.value = true
-  const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
 
   try {
-    const resRes = await fetch(`${apiBaseUrl.value}/reservations`)
+    const resRes = await fetch(`${apiUrl}/reservations`)
     if (resRes.ok) reservations.value = await resRes.json()
 
-    const appRes = await fetch(`${apiBaseUrl.value}/applications`)
+    const appRes = await fetch(`${apiUrl}/applications`)
     if (appRes.ok) applications.value = await appRes.json()
 
-    const workerRes = await fetch(`${apiBaseUrl.value}/workers`)
+    const workerRes = await fetch(`${apiUrl}/workers`)
     if (workerRes.ok) workers.value = await workerRes.json()
 
-    const prodRes = await fetch(`${apiBaseUrl.value}/products`)
+    const prodRes = await fetch(`${apiUrl}/products`)
     if (prodRes.ok) products.value = await prodRes.json()
 
-    const ordRes = await fetch(`${apiBaseUrl.value}/orders`)
+    const ordRes = await fetch(`${apiUrl}/orders`)
     if (ordRes.ok) orders.value = await ordRes.json()
   } catch (err) {
     console.error('Erreur de chargement:', err)

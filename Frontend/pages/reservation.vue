@@ -281,8 +281,7 @@ import { Car, Layers, Sofa, Building2, MessageCircle, XCircle } from 'lucide-vue
 import { useRouter } from '#imports'
 
 const router = useRouter()
-const config = useRuntimeConfig()
-const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
+const { apiUrl } = useApi()
 
 // Service availability check
 const isServiceAvailable = ref(true) // Set to true since nettoyage is available
@@ -511,9 +510,6 @@ const getServiceDetails = () => {
 
   // Envoyer au backend pour persistance + notification email
   try {
-    const config = useRuntimeConfig()
-    const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
-
     const payload = {
       nom: sanitizedData.nom,
       prenom: sanitizedData.prenom,
@@ -524,7 +520,7 @@ const getServiceDetails = () => {
       serviceDetails: sanitizedData.serviceDetails,
     }
 
-    const res = await fetch(`${apiBaseUrl}/reservations`, {
+    const res = await fetch(`${apiUrl}/reservations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

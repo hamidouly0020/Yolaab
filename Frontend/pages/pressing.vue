@@ -283,6 +283,8 @@ import { useRouter } from '#imports'
 
 const router = useRouter()
 
+const { apiUrl } = useApi()
+
 // Service availability check
 const isServiceAvailable = ref(false) // Set to false since pressing is now unavailable
 
@@ -349,11 +351,8 @@ const handleSubmit = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
-  const config = useRuntimeConfig()
-  const apiBaseUrl = config.public.apiUrl || 'http://localhost:3000'
-
   try {
-    const response = await fetch(`${apiBaseUrl}/reservations`, {
+    const response = await fetch(`${apiUrl}/reservations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

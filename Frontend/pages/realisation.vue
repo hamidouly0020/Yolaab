@@ -199,7 +199,7 @@ const loadingMore = ref(false)
 const error = ref('')
 const filterType = ref<'all' | 'image' | 'video'>('all')
 const selectedItem = ref<Realisation | null>(null)
-const apiBaseUrl = ref('')
+const { apiUrl } = useApi()
 const currentPage = ref(1)
 const hasMore = ref(true)
 const itemsPerPage = 12
@@ -217,7 +217,8 @@ const resolveUrl = (raw: string | undefined | null) => {
   if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return trimmed
   // if the backend stored a full uploads path or just a filename, handle both
   const path = trimmed.startsWith('/') ? trimmed : `/uploads/${trimmed}`
-  return `${apiBaseUrl.value.replace(/\/$/, '')}${path}`
+  const base = apiUrl.replace(/\/api\/?$/, '').replace(/\/$/, '')
+  return `${base}${path}`
 }
 
 const loadRealisations = async (page: number = 1) => {
@@ -227,7 +228,7 @@ const loadRealisations = async (page: number = 1) => {
     else loadingMore.value = true
 
     const response = await fetch(
-      `${apiBaseUrl.value}/realisations?page=${page}&limit=${itemsPerPage}`
+      `${apiUrl}/realisations?page=${page}&limit=${itemsPerPage}`
     )
     if (!response.ok) throw new Error('Erreur de chargement')
 
@@ -256,9 +257,6 @@ const loadMore = () => {
 }
 
 onMounted(async () => {
-  const config = useRuntimeConfig()
-  apiBaseUrl.value = config.public.apiUrl || 'http://localhost:3000'
-  
   await loadRealisations(1)
 })
 
