@@ -1,5 +1,5 @@
 export const useApi = () => {
-  const productionUrl = 'https://sc2alqj9462.universe.wf/api'
+  const productionUrl = 'https://yolaab.com/api'
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
