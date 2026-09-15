@@ -458,9 +458,29 @@
             </div>
           </div>
 
+          <!-- Loading message -->
+          <div v-if="isLoadingRealisation" class="mb-4 p-4 bg-blue-100 text-blue-700 rounded-xl">
+            <div class="flex items-center gap-2">
+              <div class="inline-block animate-spin">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+              </div>
+              <span>Ajout en cours... (cela peut prendre quelques secondes pour les vidéos)</span>
+            </div>
+          </div>
+
           <div class="flex gap-4">
-            <button type="submit" class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all">Ajouter</button>
-            <button type="button" @click="showAddRealisation = false" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all">Annuler</button>
+            <button type="submit" :disabled="isLoadingRealisation" class="bg-blue-500 text-white px-6 py-3 rounded-xl hover:bg-blue-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+              <span v-if="isLoadingRealisation" class="flex items-center gap-2">
+                <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Ajout en cours...
+              </span>
+              <span v-else>Ajouter</span>
+            </button>
+            <button type="button" @click="showAddRealisation = false" :disabled="isLoadingRealisation" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed">Annuler</button>
           </div>
         </form>
 
@@ -487,7 +507,7 @@
               />
               <iframe
                 v-else-if="realisation.type === 'video'"
-                :src="realisation.url"
+                :src="toEmbedUrl(realisation.url)"
                 title="Vidéo Yolaab"
                 class="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -699,6 +719,39 @@ const toggleOrderDetails = (id: string) => {
 const isOrderExpanded = (id: string) => {
   if (!id) return false
   return expandedOrders.value.includes(id)
+}
+
+const toEmbedUrl = (url: string | undefined): string => {
+  if (!url) return ''
+  const trimmed = url.trim()
+  
+  // YouTube URL conversions
+  if (trimmed.includes('youtube.com') || trimmed.includes('youtu.be')) {
+    let videoId = ''
+    
+    // Handle youtube.com/watch?v=xxx
+    if (trimmed.includes('watch?v=')) {
+      videoId = trimmed.split('watch?v=')[1]?.split('&')[0] || ''
+    }
+    // Handle youtu.be/xxx
+    else if (trimmed.includes('youtu.be/')) {
+      videoId = trimmed.split('youtu.be/')[1]?.split('?')[0] || ''
+    }
+    // Handle youtube.com/embed/xxx
+    else if (trimmed.includes('embed/')) {
+      videoId = trimmed.split('embed/')[1]?.split('?')[0] || ''
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : trimmed
+  }
+  
+  // Vimeo URL conversions
+  if (trimmed.includes('vimeo.com')) {
+    const videoId = trimmed.split('/').pop()?.split('?')[0]
+    return videoId ? `https://vimeo.com/video/${videoId}` : trimmed
+  }
+  
+  return trimmed
 }
 
 const resolveRealisationUrl = (raw: string | undefined | null): string => {
@@ -918,6 +971,7 @@ const closeOrderModal = () => {
 // Realisations
 const realisations = ref<any[]>([])
 const showAddRealisation = ref(false)
+const isLoadingRealisation = ref(false)
 const realisationImageFile = ref<File | null>(null)
 const realisationVideoFile = ref<File | null>(null)
 
@@ -956,35 +1010,75 @@ const addRealisation = async () => {
       }
     }
 
+    isLoadingRealisation.value = true
+
+    // Create FormData
     const formData = new FormData()
     formData.append('titre', newRealisation.value.titre)
     formData.append('description', newRealisation.value.description)
     formData.append('type', newRealisation.value.type)
 
+    let previewUrl = newRealisation.value.url
+    
     if (newRealisation.value.type === 'image' && realisationImageFile.value) {
       formData.append('file', realisationImageFile.value)
+      previewUrl = URL.createObjectURL(realisationImageFile.value)
     } else if (newRealisation.value.type === 'video') {
       if (newRealisation.value.videoSource === 'file' && realisationVideoFile.value) {
         formData.append('file', realisationVideoFile.value)
+        previewUrl = URL.createObjectURL(realisationVideoFile.value)
       } else {
         formData.append('url', newRealisation.value.url)
       }
     }
 
-    const response = await fetch(`${apiUrl}/realisations`, { method: 'POST', body: formData })
-    if (!response.ok) throw new Error('Erreur lors de l\'ajout')
-
-    const newItem = await response.json()
-    realisations.value.push(newItem)
-
+    // Optimistic update - add immediately with temporary ID
+    const tempId = `temp-${Date.now()}`
+    const optimisticItem = {
+      id: tempId,
+      titre: newRealisation.value.titre,
+      description: newRealisation.value.description,
+      type: newRealisation.value.type,
+      url: previewUrl,
+      createdAt: new Date().toISOString(),
+    }
+    
+    realisations.value.unshift(optimisticItem)
+    
+    // Reset form immediately
     newRealisation.value = { titre: '', description: '', type: 'image', url: '', videoSource: 'url' }
     realisationImageFile.value = null
     realisationVideoFile.value = null
     showAddRealisation.value = false
+    isLoadingRealisation.value = false
+    
     alert('✅ Réalisation ajoutée')
+
+    // Send to server in background without blocking
+    fetch(`${apiUrl}/realisations`, { method: 'POST', body: formData })
+      .then(async (response) => {
+        if (!response.ok) {
+          const error = await response.text()
+          throw new Error(`Erreur ${response.status}: ${error}`)
+        }
+        const newItem = await response.json()
+        // Replace temp item with real item
+        const index = realisations.value.findIndex((r) => r.id === tempId)
+        if (index !== -1) {
+          realisations.value[index] = newItem
+        }
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la sauvegarde serveur:', error)
+        // Remove the temp item since it failed
+        realisations.value = realisations.value.filter((r) => r.id !== tempId)
+        alert('⚠️ La réalisation a été ajoutée localement mais la sauvegarde serveur a échoué')
+      })
   } catch (error) {
-    alert('❌ Erreur lors de l\'ajout de la réalisation')
-    console.error(error)
+    isLoadingRealisation.value = false
+    const errorMsg = error instanceof Error ? error.message : 'Erreur inconnue'
+    alert(`❌ Erreur lors de l'ajout de la réalisation:\n${errorMsg}`)
+    console.error('Détails:', error)
   }
 }
 

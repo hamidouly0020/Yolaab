@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUrl } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class CreateRealisationDto {
   @IsString()
@@ -9,7 +9,7 @@ export class CreateRealisationDto {
   description?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   imageUrl?: string;
 
   @IsOptional()
@@ -17,7 +17,7 @@ export class CreateRealisationDto {
   category?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   url?: string;
 
   @IsOptional()
@@ -35,7 +35,7 @@ export class UpdateRealisationDto {
   description?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   imageUrl?: string;
 
   @IsOptional()
@@ -43,7 +43,7 @@ export class UpdateRealisationDto {
   category?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   url?: string;
 
   @IsOptional()

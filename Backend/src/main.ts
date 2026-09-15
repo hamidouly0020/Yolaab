@@ -25,9 +25,11 @@ async function bootstrap() {
   // Do not add a global /api prefix; backend routes are served directly at the root paths.
   app.setGlobalPrefix('api');
   
-
-  // Security headers
-  app.use(helmet());
+  // Security headers - configured to not block CORS for media
+  app.use(helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: false,
+  }));
 
   // CORS configuration - allow local dev and production origins.
   const allowedOriginsEnv = (process.env.CORS_ORIGIN || '').trim();
@@ -76,18 +78,40 @@ async function bootstrap() {
     });
   }
 
-  // Enable compression middleware - reduce response size
-  app.use(compression());
-
-  // Reduce payload limits to reasonable sizes (from 100mb to 10mb)
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ limit: '10mb', extended: true }));
-
+  // Ensure uploads directory exists
   const uploadsPath = resolve(process.cwd(), 'uploads');
   if (!existsSync(uploadsPath)) {
     mkdirSync(uploadsPath, { recursive: true });
   }
-  app.use('/uploads', express.static(uploadsPath));
+
+  // Configure static files middleware BEFORE compression
+  // Add CORS headers to the uploads middleware for video streaming with range requests
+  app.use('/uploads', (req, res, next) => {
+    res.set({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'Access-Control-Allow-Headers': 'Range, Content-Type',
+      'Access-Control-Expose-Headers': 'Content-Length, Content-Range, Content-Type',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+    });
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+    next();
+  });
+
+  app.use('/uploads', express.static(uploadsPath, {
+    etag: true,
+    lastModified: true,
+  }));
+
+  // Enable compression middleware - reduce response size
+  app.use(compression());
+
+  // Increase payload limits for file uploads - NestJS app should handle form-data separately
+  // But set these high enough to not interfere
+  app.use(express.json({ limit: '500mb' }));
+  app.use(express.urlencoded({ limit: '500mb', extended: true }));
 
   const port = process.env.PORT || 3000;
 
@@ -100,7 +124,11 @@ async function bootstrap() {
     });
   }
 
-  await app.listen(port, '0.0.0.0');
+  // Configure HTTP server timeouts for large file uploads
+  const server = await app.listen(port, '0.0.0.0');
+  server.setTimeout(10 * 60 * 1000); // 10 minutes timeout for uploads
+  server.keepAliveTimeout = 65 * 1000; // 65 seconds keepalive
+  
   console.log(`Backend running on port ${port}`);
 }
 

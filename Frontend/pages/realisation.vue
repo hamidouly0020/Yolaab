@@ -105,8 +105,15 @@
             <div class="absolute inset-0 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center">
               <Play class="text-5xl animate-pulse text-white" />
             </div>
-            <iframe
+            <video
+              v-if="isLocalVideo(item.url)"
               :src="resolveUrl(item.url)"
+              class="w-full h-full relative z-10 object-cover"
+              controls
+            ></video>
+            <iframe
+              v-else
+              :src="toEmbedUrl(item.url)"
               title="Vidéo Yolaab"
               loading="lazy"
               class="w-full h-full relative z-10"
@@ -210,6 +217,46 @@ const filteredRealisations = computed(() => {
   }
   return realisations.value.filter(r => r.type === filterType.value)
 })
+
+const toEmbedUrl = (url: string | undefined): string => {
+  if (!url) return ''
+  const trimmed = url.trim()
+  
+  // YouTube URL conversions
+  if (trimmed.includes('youtube.com') || trimmed.includes('youtu.be')) {
+    let videoId = ''
+    
+    // Handle youtube.com/watch?v=xxx
+    if (trimmed.includes('watch?v=')) {
+      videoId = trimmed.split('watch?v=')[1]?.split('&')[0] || ''
+    }
+    // Handle youtu.be/xxx
+    else if (trimmed.includes('youtu.be/')) {
+      videoId = trimmed.split('youtu.be/')[1]?.split('?')[0] || ''
+    }
+    // Handle youtube.com/embed/xxx
+    else if (trimmed.includes('embed/')) {
+      videoId = trimmed.split('embed/')[1]?.split('?')[0] || ''
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : trimmed
+  }
+  
+  // Vimeo URL conversions
+  if (trimmed.includes('vimeo.com')) {
+    const videoId = trimmed.split('/').pop()?.split('?')[0]
+    return videoId ? `https://vimeo.com/video/${videoId}` : trimmed
+  }
+  
+  return trimmed
+}
+
+const isLocalVideo = (url: string | undefined): boolean => {
+  if (!url) return false
+  const trimmed = url.trim()
+  if (/^https?:\/\//i.test(trimmed) || /^\/\//.test(trimmed)) return false
+  return true
+}
 
 const resolveUrl = (raw: string | undefined | null) => {
   if (!raw) return ''

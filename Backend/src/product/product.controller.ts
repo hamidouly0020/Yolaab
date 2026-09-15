@@ -15,8 +15,7 @@ const storage = diskStorage({
   destination: uploadsPath,
   filename: (req, file, cb) => {
     const name = `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`;
-    const extension = extname(file.originalname) || '';
-    cb(null, `${name}${extension}`);
+    cb(null, name);
   },
 });
 

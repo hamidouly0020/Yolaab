@@ -2,7 +2,7 @@ import { Controller, Get, Post, Delete, Param, Body, UseInterceptors, UploadedFi
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { extname, resolve } from 'path';
+import { extname, resolve, basename } from 'path';
 import { existsSync, mkdirSync, unlinkSync } from 'fs';
 // Make AWS SDK optional to avoid compile errors when package is not installed
 let S3Client: any, PutObjectCommand: any;
@@ -18,8 +18,7 @@ const storage = diskStorage({
   destination: uploadsPath,
   filename: (req, file, cb) => {
     const name = `${Date.now()}-${file.originalname.replace(/\s+/g, '_')}`;
-    const extension = extname(file.originalname) || '';
-    cb(null, `${name}${extension}`);
+    cb(null, name);
   },
 });
 
@@ -66,16 +65,37 @@ export class RealisationController {
   async create(@Body() data: CreateRealisationDto, @UploadedFile() file?: Express.Multer.File) {
     try {
       if (file) {
-        const url = await this.cloudinaryService.uploadFile(file);
-        data.url = url;
-        try {
-          unlinkSync(file.path);
-        } catch {
-          // ignore local cleanup failures
+        console.log(`📁 File upload started: ${file.originalname} (${file.size} bytes, ${file.mimetype})`);
+        
+        // For videos: keep locally (fast), only upload images to Cloudinary
+        if (file.mimetype.startsWith('video/')) {
+          // Use local storage for videos - much faster
+          const fileName = basename(file.path);
+          data.url = `/uploads/${fileName}`;
+          console.log(`✅ Video stored locally: ${fileName}`);
+        } else {
+          // For images: upload to Cloudinary for optimization and CDN
+          try {
+            console.log(`📤 Uploading image to Cloudinary...`);
+            const url = await this.cloudinaryService.uploadFile(file);
+            data.url = url;
+            console.log(`✅ Image uploaded to Cloudinary`);
+            try {
+              unlinkSync(file.path);
+            } catch {
+              // ignore local cleanup failures
+            }
+          } catch (cloudinaryErr: any) {
+            // Cloudinary upload failed - use local file instead
+            console.warn('Cloudinary upload failed, using local file:', cloudinaryErr.message);
+            const fileName = basename(file.path);
+            data.url = `/uploads/${fileName}`;
+          }
         }
       }
 
       if (!data.type) data.type = 'image';
+      console.log(`📝 Creating realisation: ${data.titre} (type: ${data.type})`);
       return this.service.create(data);
     } catch (err: any) {
       console.error('Error creating realisation', err);
