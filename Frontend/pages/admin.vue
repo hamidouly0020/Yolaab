@@ -135,6 +135,20 @@
               {{ realisations.length }}
             </span>
           </button>
+
+          <button
+            @click="activeTab = 'lcf'"
+            :class="[
+              'flex-1 py-3 px-4 flex items-center justify-center gap-2 transition-all text-sm',
+              activeTab === 'lcf' ? 'bg-blue-500 text-white' : 'hover:bg-blue-50'
+            ]"
+          >
+            <Lock class="w-5 h-5" />
+            <span class="hidden sm:inline">LCF</span>
+            <span v-if="isLcfAuthenticated" class="px-2 py-1 rounded-full text-xs font-bold bg-green-500 text-white">
+              ✓
+            </span>
+          </button>
         </div>
       </div>
 
@@ -538,6 +552,33 @@
         </div>
       </div>
 
+      <!-- LCF Section -->
+      <div v-if="activeTab === 'lcf'" class="bg-white rounded-2xl shadow-lg p-6">
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+            <Lock :size="24" class="text-blue-600" />
+            Espace LCF - Clients fidèles
+          </h2>
+          <button
+            v-if="isLcfAuthenticated"
+            @click="handleLcfLogout"
+            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-all text-sm font-bold"
+          >
+            Déconnexion LCF
+          </button>
+        </div>
+
+        <!-- If not authenticated: show login form -->
+        <div v-if="!isLcfAuthenticated">
+          <LcfAccessForm :api-url="apiUrl" @success="handleLcfAuthSuccess" />
+        </div>
+
+        <!-- If authenticated: show customer list -->
+        <div v-else>
+          <LcfCustomerList :api-url="apiUrl" />
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -593,6 +634,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { Lock, Calendar, ShoppingCart, Plus, XCircle, Image, Play } from 'lucide-vue-next'
+import LcfAccessForm from '~/components/LcfAccessForm.vue'
+import LcfCustomerList from '~/components/LcfCustomerList.vue'
 
 interface Worker {
   id: string
@@ -645,7 +688,9 @@ interface Product {
 
 const isAuthenticated = ref(false)
 const password = ref('')
-const activeTab = ref<'reservations' | 'applications' | 'workers' | 'invoices' | 'orders' | 'products' | 'realisations'>('reservations')
+const activeTab = ref<'reservations' | 'applications' | 'workers' | 'invoices' | 'orders' | 'products' | 'realisations' | 'lcf'>('reservations')
+const isLcfAuthenticated = ref(false)
+const lcfToken = ref('')
 const workers = ref<Worker[]>([])
 const invoices = ref<Invoice[]>([])
 const products = ref<Product[]>([])
@@ -809,6 +854,25 @@ const logout = () => {
   isAuthenticated.value = false
   password.value = ''
 }
+
+const handleLcfAuthSuccess = (token: string, expiresIn: string) => {
+  isLcfAuthenticated.value = true
+  lcfToken.value = token
+}
+
+const handleLcfLogout = () => {
+  isLcfAuthenticated.value = false
+  lcfToken.value = ''
+  sessionStorage.removeItem('lcf_token')
+}
+
+onMounted(() => {
+  const storedLcfToken = sessionStorage.getItem('lcf_token')
+  if (storedLcfToken) {
+    isLcfAuthenticated.value = true
+    lcfToken.value = storedLcfToken
+  }
+})
 
 const addWorker = async () => {
   const worker: Worker = {

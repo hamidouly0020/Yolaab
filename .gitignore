@@ -2,6 +2,8 @@ node_modules/
 dist/
 .env
 .env.*
+Backend/.env
+Backend/.env.*
 npm-debug.log
 /.idea
 .vscode

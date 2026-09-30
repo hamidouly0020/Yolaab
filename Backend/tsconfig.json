@@ -10,7 +10,8 @@
     "sourceMap": true,
     "outDir": "dist",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
   }
 }
 
